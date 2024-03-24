@@ -17,6 +17,8 @@ import org.bukkit.inventory.PlayerInventory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CraftHandler implements Listener {
 
@@ -25,6 +27,27 @@ public class CraftHandler implements Listener {
 	public CraftHandler(MoreArmorsMain plugin) {
 		this.plugin = plugin;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	}
+
+	private boolean validCraft(NBTItem nbtResult, NBTItem nbtItem, String itemID, int amount, Map<String, Integer> materials) {
+		if(nbtResult.getString("CustomItemID").equals(itemID)) {
+			for (String s : materials.keySet()) {
+				if(nbtItem.getString("CustomItemID").equals(s) && amount < materials.get(s)) { return false; }
+			}
+		}
+		return true;
+	}
+
+	private ItemStack setAmount(NBTItem nbtResult, NBTItem nbtItem, String itemID, ItemStack material, Map<String, Integer> materials) {
+		if(nbtResult.getString("CustomItemID").equals(itemID)) {
+			for(String s : materials.keySet()) {
+				if(nbtItem.getString("CustomItemID").equals(s)) {
+					material.setAmount(material.getAmount() - materials.get(s) + 1);
+					return material;
+				}
+			}
+		}
+		return material;
 	}
 
 	@EventHandler
@@ -102,6 +125,13 @@ public class CraftHandler implements Listener {
 							}
 							//Miner Armor
 							if(nbtResult.getString("CustomItemID").equals("miner")) {if(!(nbtItem.getString("CustomItemID").equals("compacted_cobblestone") && item.getAmount() >= 32)) {ci.setResult(null);}}
+							//Nether Crown
+							Map<String, Integer> netherCrownCraft = new HashMap<>();
+							netherCrownCraft.put("compacted_blaze_rod", 8);
+							if(!validCraft(nbtResult, nbtItem, "nether_crown", item.getAmount(), netherCrownCraft)) { ci.setResult(null); }
+//							if (nbtResult.getString("CustomItemID").equals("nether_crown")) {
+//								if (nbtItem.getString("CustomItemID").equals("compacted_blaze_rod") && !(item.getAmount() >= 8)) { ci.setResult(null); }
+//							}
 							//Nether Armor
 							if(nbtResult.getString("CustomItemID").equals("nether")) {
 								if(!(nbtItem.getString("CustomItemID").equals("compacted_soul_sand") || nbtItem.getString("CustomItemID").equals("nether_crown") || item.getType().equals(Material.NETHER_STAR))) {ci.setResult(null);}
@@ -190,11 +220,11 @@ public class CraftHandler implements Listener {
 							}
 							//Miner Armor
 							if (nbtResult.getString("CustomItemID").equals("miner")) {
-								if (nbtItem.getString("CustomItemID").equals("compacted_cobblestone")) { values.add((int) Math.floor(item.getAmount() / 32)); }
+								if (nbtItem.getString("CustomItemID").equals("compacted_cobblestone")) { values.add(item.getAmount() / 32); }
 							}
 							//Nether Armor
 							if (nbtResult.getString("CustomItemID").equals("nether")) {
-								if (nbtItem.getString("CustomItemID").equals("compacted_soul_sand")) { values.add((int) Math.floor(item.getAmount() / 16)); }
+								if (nbtItem.getString("CustomItemID").equals("compacted_soul_sand")) { values.add(item.getAmount() / 16); }
 							}
 							//True Diamond Armor
 							if (nbtResult.getString("CustomItemID").equals("truediamond")) {
@@ -208,49 +238,49 @@ public class CraftHandler implements Listener {
 							}
 							//Nether Crown
 							if (nbtResult.getString("CustomItemID").equals("nether_crown")) {
-								if (nbtItem.getString("CustomItemID").equals("compacted_blaze_rod")) { values.add((int) Math.floor(item.getAmount() / 8)); }
+								if (nbtItem.getString("CustomItemID").equals("compacted_blaze_rod")) { values.add(item.getAmount() / 8); }
 							}
 							//Compacted Diamond
-							if (nbtResult.getString("CustomItemID").equals("compacted_diamond")) { values.add((int) Math.floor(item.getAmount() / 4)); }
+							if (nbtResult.getString("CustomItemID").equals("compacted_diamond")) { values.add(item.getAmount() / 4); }
 							//Compacted Diamond Block
 							if (nbtResult.getString("CustomItemID").equals("compacted_diamond_block")) {
-								if(nbtItem.getString("CustomItemID").equals("compacted_diamond")) { values.add((int) Math.floor(item.getAmount() / 4)); }}
+								if(nbtItem.getString("CustomItemID").equals("compacted_diamond")) { values.add(item.getAmount() / 4); }}
 							//Diamond Singularity
 							if (nbtResult.getString("CustomItemID").equals("diamond_singularity")) {
-								if (nbtItem.getString("CustomItemID").equals("compacted_diamond")) { values.add((int) Math.floor(item.getAmount() / 32)); }
-								if (nbtItem.getString("CustomItemID").equals("compacted_diamond_block")) { values.add((int) Math.floor(item.getAmount() / 4)); }
+								if (nbtItem.getString("CustomItemID").equals("compacted_diamond")) { values.add(item.getAmount() / 32); }
+								if (nbtItem.getString("CustomItemID").equals("compacted_diamond_block")) { values.add(item.getAmount() / 4); }
 							}
 						}
 						if(plugin.getServer().getPluginManager().getPlugin("MoreArmorsExtra") != null) {
 							if(nbtResult.getString("CustomItemID").equals("destroyer")) {
-								if(nbtItem.getString("CustomItemID").equals("compacted_iron_block")) { values.add((int) Math.floor(item.getAmount() / 8)); }
-								if(nbtItem.getString("CustomItemID").equals("machine_part")) { values.add((int) Math.floor(item.getAmount() / 4)); }
+								if(nbtItem.getString("CustomItemID").equals("compacted_iron_block")) { values.add(item.getAmount() / 8); }
+								if(nbtItem.getString("CustomItemID").equals("machine_part")) { values.add(item.getAmount() / 4); }
 								if(nbtItem.getString("CustomItemID").equals("machine_core")) { values.add(item.getAmount()); }
 							}
 							if(nbtResult.getString("CustomItemID").equals("compacted_iron_ingot")) {
-								values.add((int) Math.floor(item.getAmount() / 4));
+								values.add(item.getAmount() / 4);
 							}
 							if(nbtResult.getString("CustomItemID").equals("compacted_iron_block")) {
-								if(nbtItem.getString("CustomItemID").equals("compacted_iron_ingot")) { values.add((int) Math.floor(item.getAmount() / 4)); }
+								if(nbtItem.getString("CustomItemID").equals("compacted_iron_ingot")) { values.add(item.getAmount() / 4); }
 							}
 							if(nbtResult.getString("CustomItemID").equals("compacted_redstone")) {
-								values.add((int) Math.floor(item.getAmount() / 4));
+								values.add(item.getAmount() / 4);
 							}
 							if(nbtResult.getString("CustomItemID").equals("machine_part")) {
-								if(nbtItem.getString("CustomItemID").equals("compacted_iron_ingot")) { values.add((int) Math.floor(item.getAmount() / 4)); }
-								if(nbtItem.getString("CustomItemID").equals("compacted_redstone")) { values.add((int) Math.floor(item.getAmount() / 4)); }
+								if(nbtItem.getString("CustomItemID").equals("compacted_iron_ingot")) { values.add(item.getAmount() / 4); }
+								if(nbtItem.getString("CustomItemID").equals("compacted_redstone")) { values.add(item.getAmount() / 4); }
 							}
 							if(nbtResult.getString("CustomItemID").equals("star_dust")) {
-								if(nbtItem.getString("CustomItemID").equals("compacted_iron_ingot")) { values.add((int) Math.floor(item.getAmount() / 4)); }
+								if(nbtItem.getString("CustomItemID").equals("compacted_iron_ingot")) { values.add(item.getAmount() / 4); }
 								if(item.getType().equals(Material.NETHER_STAR)) { values.add(item.getAmount()); }
 							}
 							if(nbtResult.getString("CustomItemID").equals("energy_cell")) {
-								if(nbtItem.getString("CustomItemID").equals("compacted_iron_ingot")) { values.add((int) Math.floor(item.getAmount() / 4)); }
+								if(nbtItem.getString("CustomItemID").equals("compacted_iron_ingot")) { values.add(item.getAmount() / 4); }
 								if(nbtItem.getString("CustomItemID").equals("star_dust")) { values.add(item.getAmount()); }
 							}
 							if(nbtResult.getString("CustomItemID").equals("machine_core")) {
-								if(nbtItem.getString("CustomItemID").equals("compacted_iron_block")) { values.add((int) Math.floor(item.getAmount() / 8)); }
-								if(nbtItem.getString("CustomItemID").equals("machine_part")) { values.add((int) Math.floor(item.getAmount() / 4)); }
+								if(nbtItem.getString("CustomItemID").equals("compacted_iron_block")) { values.add(item.getAmount() / 8); }
+								if(nbtItem.getString("CustomItemID").equals("machine_part")) { values.add(item.getAmount() / 4); }
 								if(nbtItem.getString("CustomItemID").equals("energy_cell")) { values.add(item.getAmount()); }
 							}
 						}
@@ -319,7 +349,7 @@ public class CraftHandler implements Listener {
 							}
 							//Nether Armor
 							if (nbtResult.getString("CustomItemID").equals("nether")) {
-								if (nbtItem.getString("CustomItemID").equals("compacted_soul_sand")) { item.setAmount(item.getAmount() - (32 * leastvalue)); }
+								if (nbtItem.getString("CustomItemID").equals("compacted_soul_sand")) { item.setAmount(item.getAmount() - (16 * leastvalue)); }
 								if (!ArmorType.matchType(result).equals(ArmorType.HELMET)) {
 									if (item.getType().equals(Material.NETHER_STAR)) { item.setAmount(item.getAmount() - leastvalue); }
 								}
@@ -472,6 +502,10 @@ public class CraftHandler implements Listener {
 						if (nbtResult.getString("CustomItemID").equals("miner")) {
 							if (nbtItem.getString("CustomItemID").equals("compacted_cobblestone")) { item.setAmount(item.getAmount() - 31); }
 						}
+						//Nether Armor
+						Map<String, Integer> netherArmorCraft = new HashMap<>();
+						netherArmorCraft.put("compacted_soul_sand", 16);
+						item = setAmount(nbtResult, nbtItem, "nether", item, netherArmorCraft);
 						//Nether Crown
 						if (nbtResult.getString("CustomItemID").equals("nether_crown")) {
 							if (nbtItem.getString("CustomItemID").equals("compacted_blaze_rod")) { item.setAmount(item.getAmount() - 7); }

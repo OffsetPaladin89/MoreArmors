@@ -19,13 +19,13 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.metadata.FixedMetadataValue;
 
 public class DamageHandler implements Listener {
-//
-//	public static MoreArmorsMain plugin;
-//
-//	public DamageHandler(MoreArmorsMain plugin) {
-//		DamageHandler.plugin = plugin;
-//		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-//	}
+
+	public static MoreArmorsMain plugin;
+
+	public DamageHandler(MoreArmorsMain plugin) {
+		DamageHandler.plugin = plugin;
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	}
 //
 //	@EventHandler
 //	public void onBowShoot(EntityShootBowEvent event) {
@@ -57,21 +57,21 @@ public class DamageHandler implements Listener {
 //		}
 //	}
 //
-//	@EventHandler
-//	public void DamageEntity(EntityDamageByEntityEvent event) {
-//		if(event.getDamager() instanceof Player) {
-//			Player player = (Player) event.getDamager();
-//			PlayerInventory inventory = player.getInventory();
-//			ItemStack helmet = inventory.getHelmet();
-//			ItemStack chestplate = inventory.getChestplate();
-//			ItemStack leggings = inventory.getLeggings();
-//			ItemStack boots = inventory.getBoots();
-//			NBTItem nbtHelmet = null;
-//			NBTItem nbtChestplate = null;
-//			NBTItem nbtLeggings = null;
-//			NBTItem nbtBoots = null;
-//
-//			int damage = 0;
+	@EventHandler
+	public void DamageEntity(EntityDamageByEntityEvent event) {
+		if(event.getDamager() instanceof Player) {
+			Player player = (Player) event.getDamager();
+			PlayerInventory inventory = player.getInventory();
+			ItemStack helmet = inventory.getHelmet();
+			ItemStack chestplate = inventory.getChestplate();
+			ItemStack leggings = inventory.getLeggings();
+			ItemStack boots = inventory.getBoots();
+			NBTItem nbtHelmet = null;
+			NBTItem nbtChestplate = null;
+			NBTItem nbtLeggings = null;
+			NBTItem nbtBoots = null;
+
+			int damage = 0;
 //			if(!plugin.isAirOrNull(helmet)) {
 //				nbtHelmet = new NBTItem(helmet);
 //				if(nbtHelmet.getString("CustomItemID").equals("destroyer")) {
@@ -116,23 +116,27 @@ public class DamageHandler implements Listener {
 //					}
 //				}
 //			}
-//			event.setDamage(event.getDamage() + damage);
-////			player.sendMessage("Damage - " + event.getDamage());
-//			// plugin.damagedisplayhandler.displayDamage(1F, 0F, getCriticalHitChance(player), 100F, entityLocation);
-//			// plugin.createHologram(event.getEntity().getLocation(), "&4&lTest");
-//
-//			// if(plugin.weaponabilityhandler.titanbattleaxe.contains(player)) {if(plugin.versionhandler.hasNBTBooleanTag(mainhand, "IsCustomItem", true)) {if(plugin.versionhandler.hasNBTStringTag(mainhand, "CustomItemID", "titan_battleaxe")) {plugin.weaponabilityhandler.titanbattleaxe.remove(player);}}}
-//		}
-//		if(event.getDamager() instanceof Arrow) {
-//			Arrow damager = (Arrow) event.getDamager();
-//			if(damager.getShooter() instanceof Player) {
-//				Player player = (Player) damager.getShooter();
-//				PlayerInventory inventory = player.getInventory();
-//				ItemStack mainhand = inventory.getItemInMainHand();
-//				NBTItem nbtItem = new NBTItem(mainhand);
-//
+            event.setDamage(event.getDamage() + damage);
+            event.setDamage(event.getDamage() * getScaledDamage(player, player.getWorld().getEnvironment()));
+            plugin.hologramHandler.createDamageHologram(player.getLocation(), event.getEntity().getLocation(), 20L, event.getDamage());
+//			player.sendMessage("Damage - " + event.getDamage());
+//			 plugin.createHologram(event.getEntity().getLocation(), "&4&lTest");
+
+			// if(plugin.weaponabilityhandler.titanbattleaxe.contains(player)) {if(plugin.versionhandler.hasNBTBooleanTag(mainhand, "IsCustomItem", true)) {if(plugin.versionhandler.hasNBTStringTag(mainhand, "CustomItemID", "titan_battleaxe")) {plugin.weaponabilityhandler.titanbattleaxe.remove(player);}}}
+		}
+		if(event.getDamager() instanceof Arrow) {
+			Arrow damager = (Arrow) event.getDamager();
+			if(damager.getShooter() instanceof Player) {
+				Player player = (Player) damager.getShooter();
+				PlayerInventory inventory = player.getInventory();
+				ItemStack mainhand = inventory.getItemInMainHand();
+				NBTItem nbtItem = new NBTItem(mainhand);
+
+                event.setDamage(event.getDamage() + getBowDamage(player));
+                event.setDamage(event.getDamage() * getScaledDamage(player, player.getWorld().getEnvironment()));
+
 //				float bonusDamage = 0;
-//
+
 //				if(nbtItem.getBoolean("IsCustomItem")) {
 //					if(nbtItem.getString("WeaponType").equals("bow")) {
 //						if(nbtItem.getFloat("attackDamage") != null) { bonusDamage += nbtItem.getFloat("attackDamage"); }
@@ -147,14 +151,12 @@ public class DamageHandler implements Listener {
 //				if(damager.hasMetadata("MorePluginsCoreBowForce")) {bonusDamage *= Float.parseFloat(damager.getMetadata("MorePluginsCoreBowForce").get(0).value().toString());}
 //				event.setDamage(event.getDamage() + bonusDamage);
 //				float chance = getCriticalHitChance(player) / 100;
-//				event.setDamage(event.getDamage() + getBowDamage(player));
-//				event.setDamage(event.getDamage() * plugin.armydamageincrease.get(player) * getScaledDamage(player, player.getWorld().getEnvironment()));
 //				if(Math.random() < chance) {
 //					// player.sendMessage(plugin.convertColoredString("&4&lCRITICAL HIT!"));
 //					event.setDamage(event.getDamage() * 2);
 //				}
-//			}
-//		}
+			}
+		}
 //		if(event.getDamager() instanceof WitherSkull) {
 //			WitherSkull damager = (WitherSkull) event.getDamager();
 //			if(damager.getShooter() instanceof Player) {
@@ -181,7 +183,7 @@ public class DamageHandler implements Listener {
 //				}
 //			}
 //		}
-//	}
+	}
 //
 //	@EventHandler
 //	public void TNTPrime(ExplosionPrimeEvent event) {
@@ -192,96 +194,69 @@ public class DamageHandler implements Listener {
 //		}
 //	}
 //
-//	public float getScaledDamage(Player player, Environment environment) {
-//		PlayerInventory inventory = player.getInventory();
-//		ItemStack helmet = inventory.getHelmet();
-//		ItemStack chestplate = inventory.getChestplate();
-//		ItemStack leggings = inventory.getLeggings();
-//		ItemStack boots = inventory.getBoots();
-//		NBTItem nbtHelmet = new NBTItem(helmet);
-//		NBTItem nbtChestplate = new NBTItem(chestplate);
-//		NBTItem nbtLeggings = new NBTItem(leggings);
-//		NBTItem nbtBoots = new NBTItem(boots);
-//
-//		float damagescaling = 1;
-//		if(plugin.enabledPlugins().contains(plugin.getServer().getPluginManager().getPlugin("MoreArmors"))) {
-//			if(environment.equals(Environment.NORMAL)) {}
-//			if(environment.equals(Environment.NETHER)) {
-//				if(plugin.IsFullCustomSet("nether", inventory)) {damagescaling += 1f;}
-//				if(nbtHelmet.getString("CustomItemID").equals("nether")) {damagescaling += 0.1f;}
-//				if(nbtChestplate.getString("CustomItemID").equals("nether")) {damagescaling += 0.1f;}
-//				if(nbtLeggings.getString("CustomItemID").equals("nether")) {damagescaling += 0.1f;}
-//				if(nbtBoots.getString("CustomItemID").equals("nether")) {damagescaling += 0.1f;}
-//			}
-//			if(environment.equals(Environment.THE_END)) {
-//				if(plugin.IsFullCustomSet("end", inventory)) {damagescaling += 1f;}
-//				if(nbtHelmet.getString("CustomItemID").equals("end")) {damagescaling += 0.1f;}
-//				if(nbtChestplate.getString("CustomItemID").equals("end")) {damagescaling += 0.1f;}
-//				if(nbtLeggings.getString("CustomItemID").equals("end")) {damagescaling += 0.1f;}
-//				if(nbtBoots.getString("CustomItemID").equals("end")) {damagescaling += 0.1f;}
-//			}
-//		}
-//		return damagescaling;
-//	}
-//
-//	public float getBowDamage(Player player) {
-//		PlayerInventory inventory = player.getInventory();
-//		ItemStack helmet = inventory.getHelmet();
-//		ItemStack chestplate = inventory.getChestplate();
-//		ItemStack leggings = inventory.getLeggings();
-//		ItemStack boots = inventory.getBoots();
-//		NBTItem nbtHelmet = new NBTItem(helmet);
-//		NBTItem nbtChestplate = new NBTItem(chestplate);
-//		NBTItem nbtLeggings = new NBTItem(leggings);
-//		NBTItem nbtBoots = new NBTItem(boots);
-//
-//		float damage = 0;
-//		if(plugin.enabledPlugins().contains(plugin.getServer().getPluginManager().getPlugin("MoreArmorsExtra"))) {
-//			if(nbtHelmet.getString("CustomItemID").equals("destroyer")) {
-//				int kills = nbtHelmet.getInteger("Kills");
-//				if(kills >= 2500) {damage += 10;}
-//				else {damage += Math.floorMod(kills, 250);}
-//			}
-//			if(nbtChestplate.getString("CustomItemID").equals("destroyer")) {
-//				int kills = nbtChestplate.getInteger("Kills");
-//				if(kills >= 2500) {damage += 10;}
-//				else {damage += Math.floorMod(kills, 250);}
-//			}
-//			if(nbtLeggings.getString("CustomItemID").equals("destroyer")) {
-//				int kills = nbtLeggings.getInteger("Kills");
-//				if(kills >= 2500) {damage += 10;}
-//				else {damage += Math.floorMod(kills, 250);}
-//			}
-//			if(nbtBoots.getString("CustomItemID").equals("destroyer")) {
-//				int kills = nbtBoots.getInteger("Kills");
-//				if(kills >= 2500) {damage += 10;}
-//				else {damage += Math.floorMod(kills, 250);}
-//			}
-//		}
-//		if(plugin.enabledPlugins().contains(plugin.getServer().getPluginManager().getPlugin("MoreArmors"))) {
-//			if(nbtHelmet.getString("CustomItemID").equals("truediamond")) {
-//				float multiplier = (float) (1 + (Math.floor(nbtHelmet.getInteger("DiamondSacrifice") / 5) * 5) / 100);
-//				float level = nbtHelmet.getFloat("ArmorLevel");
-//				damage += (level * multiplier) / 2;
-//			}
-//			if(nbtChestplate.getString("CustomItemID").equals("truediamond")) {
-//				float multiplier = (float) (1 + (Math.floor(nbtChestplate.getInteger("DiamondSacrifice") / 5) * 5) / 100);
-//				float level = nbtChestplate.getFloat("ArmorLevel");
-//				damage += (level * multiplier) / 2;
-//			}
-//			if(nbtLeggings.getString("CustomItemID").equals("truediamond")) {
-//				float multiplier = (float) (1 + (Math.floor(nbtLeggings.getInteger("DiamondSacrifice") / 5) * 5) / 100);
-//				float level = nbtLeggings.getFloat("ArmorLevel");
-//				damage += (level * multiplier) / 2;
-//			}
-//			if(nbtBoots.getString("CustomItemID").equals("truediamond")) {
-//				float multiplier = (float) (1 + (Math.floor(nbtBoots.getInteger("DiamondSacrifice") / 5) * 5) / 100);
-//				float level = nbtBoots.getFloat("ArmorLevel");
-//				damage += (level * multiplier) / 2;
-//			}
-//		}
-//		return damage;
-//	}
+    public Float getScaledDamage(Player p, Environment env) {
+        PlayerInventory inventory = p.getInventory();
+        return env.equals(Environment.NETHER) ? (plugin.IsFullCustomSet("nether", inventory) ? 1f : 0f) +
+                (plugin.matchingCustomItem(inventory.getHelmet(), "nether") ? 0.1f : 0f) +
+                (plugin.matchingCustomItem(inventory.getChestplate(), "nether") ? 0.1f : 0f) +
+                (plugin.matchingCustomItem(inventory.getLeggings(), "nether") ? 0.1f : 0f) +
+                (plugin.matchingCustomItem(inventory.getBoots(), "nether") ? 0.1f : 0f) + 1f : 1f;
+    }
+
+	public float getBowDamage(Player player) {
+		PlayerInventory inventory = player.getInventory();
+		ItemStack helmet = inventory.getHelmet();
+		ItemStack chestplate = inventory.getChestplate();
+		ItemStack leggings = inventory.getLeggings();
+		ItemStack boots = inventory.getBoots();
+		NBTItem nbtHelmet = new NBTItem(helmet);
+		NBTItem nbtChestplate = new NBTItem(chestplate);
+		NBTItem nbtLeggings = new NBTItem(leggings);
+		NBTItem nbtBoots = new NBTItem(boots);
+
+		float damage = 0;
+        if(nbtHelmet.getString("CustomItemID").equals("destroyer")) {
+            int kills = nbtHelmet.getInteger("Kills");
+            if(kills >= 2500) {damage += 10;}
+            else {damage += Math.floorMod(kills, 250);}
+        }
+        if(nbtChestplate.getString("CustomItemID").equals("destroyer")) {
+            int kills = nbtChestplate.getInteger("Kills");
+            if(kills >= 2500) {damage += 10;}
+            else {damage += Math.floorMod(kills, 250);}
+        }
+        if(nbtLeggings.getString("CustomItemID").equals("destroyer")) {
+            int kills = nbtLeggings.getInteger("Kills");
+            if(kills >= 2500) {damage += 10;}
+            else {damage += Math.floorMod(kills, 250);}
+        }
+        if(nbtBoots.getString("CustomItemID").equals("destroyer")) {
+            int kills = nbtBoots.getInteger("Kills");
+            if(kills >= 2500) {damage += 10;}
+            else {damage += Math.floorMod(kills, 250);}
+        }
+        if(nbtHelmet.getString("CustomItemID").equals("truediamond")) {
+            float multiplier = (float) (1 + (Math.floor(nbtHelmet.getInteger("DiamondSacrifice") / 5) * 5) / 100);
+            float level = nbtHelmet.getFloat("ArmorLevel");
+            damage += (level * multiplier) / 2;
+        }
+        if(nbtChestplate.getString("CustomItemID").equals("truediamond")) {
+            float multiplier = (float) (1 + (Math.floor(nbtChestplate.getInteger("DiamondSacrifice") / 5) * 5) / 100);
+            float level = nbtChestplate.getFloat("ArmorLevel");
+            damage += (level * multiplier) / 2;
+        }
+        if(nbtLeggings.getString("CustomItemID").equals("truediamond")) {
+            float multiplier = (float) (1 + (Math.floor(nbtLeggings.getInteger("DiamondSacrifice") / 5) * 5) / 100);
+            float level = nbtLeggings.getFloat("ArmorLevel");
+            damage += (level * multiplier) / 2;
+        }
+        if(nbtBoots.getString("CustomItemID").equals("truediamond")) {
+            float multiplier = (float) (1 + (Math.floor(nbtBoots.getInteger("DiamondSacrifice") / 5) * 5) / 100);
+            float level = nbtBoots.getFloat("ArmorLevel");
+            damage += (level * multiplier) / 2;
+        }
+		return damage;
+	}
 //
 //	public float getCriticalHitChance(Player player) {
 //		PlayerInventory inventory = player.getInventory();

@@ -67,7 +67,7 @@ public record ArmorSets(MoreArmorsMain plugin) {
         plugin.getServer().addRecipe(new ShapedRecipe(new NamespacedKey(plugin, "nether_helmet"), NetherHelmet()).shape("XXX", "XZX").setIngredient('X', Material.SOUL_SAND).setIngredient('Z', Material.PLAYER_HEAD));
         plugin.getServer().addRecipe(new ShapedRecipe(new NamespacedKey(plugin, "nether_chestplate"), NetherChestplate()).shape("XZX", "XXX", "XXX").setIngredient('X', Material.SOUL_SAND).setIngredient('Z', Material.NETHER_STAR));
         plugin.getServer().addRecipe(new ShapedRecipe(new NamespacedKey(plugin, "nether_leggings"), NetherLeggings()).shape("XXX", "XZX", "X X").setIngredient('X', Material.SOUL_SAND).setIngredient('Z', Material.NETHER_STAR));
-        plugin.getServer().addRecipe(new ShapedRecipe(new NamespacedKey(plugin, "nether_boots"), NetherBoots()).shape("XZX", "XXX").setIngredient('X', Material.SOUL_SAND).setIngredient('Z', Material.NETHER_STAR));
+        plugin.getServer().addRecipe(new ShapedRecipe(new NamespacedKey(plugin, "nether_boots"), NetherBoots()).shape("XZX", "X X").setIngredient('X', Material.SOUL_SAND).setIngredient('Z', Material.NETHER_STAR));
     }
 
     public ItemStack SeaGreedHelmet() { return plugin.armorConstructor.createSeaGreedArmor(new ItemStack(Material.PLAYER_HEAD, 1), "Sea Greed Helmet", Rarity.MYTHIC, 3, 2, EquipmentSlot.HEAD); }
@@ -101,4 +101,11 @@ public record ArmorSets(MoreArmorsMain plugin) {
     public ItemStack TitanLeggings() { return plugin.armorConstructor.createTitanArmor(new ItemStack(Material.IRON_LEGGINGS, 1), "Titan Leggings", Rarity.UNCOMMON, 2, EquipmentSlot.LEGS); }
 
     public ItemStack TitanBoots() { return plugin.armorConstructor.createTitanArmor(new ItemStack(Material.IRON_BOOTS, 1), "Titan Boots", Rarity.UNCOMMON, 2, EquipmentSlot.FEET); }
+
+    public void TitanArmorRecipes() {
+        plugin.getServer().addRecipe(new ShapedRecipe(new NamespacedKey(plugin, "titan_helmet"), TitanHelmet()).shape("XXX", "X X").setIngredient('X', Material.IRON_BLOCK));
+        plugin.getServer().addRecipe(new ShapedRecipe(new NamespacedKey(plugin, "titan_chestplate"), TitanChestplate()).shape("X X", "XXX", "XXX").setIngredient('X', Material.IRON_BLOCK));
+        plugin.getServer().addRecipe(new ShapedRecipe(new NamespacedKey(plugin, "titan_leggings"), TitanLeggings()).shape("XXX", "X X", "X X").setIngredient('X', Material.IRON_BLOCK));
+        plugin.getServer().addRecipe(new ShapedRecipe(new NamespacedKey(plugin, "titan_boots"), TitanBoots()).shape("X X", "X X").setIngredient('X', Material.IRON_BLOCK));
+    }
 }

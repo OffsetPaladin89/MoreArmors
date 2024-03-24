@@ -30,34 +30,34 @@ public record GiveArmor(MoreArmorsMain plugin) {
         case BOOTS -> plugin.armorSets.ExperienceBoots();
       };
       case "miner" -> switch (armorType) {
-        case HELMET -> plugin.miner.MinerHelmet();
-        case CHESTPLATE -> plugin.miner.MinerChestplate();
-        case LEGGINGS -> plugin.miner.MinerLeggings();
-        case BOOTS -> plugin.miner.MinerBoots();
+        case HELMET -> plugin.armorSets.MinerHelmet();
+        case CHESTPLATE -> plugin.armorSets.MinerChestplate();
+        case LEGGINGS -> plugin.armorSets.MinerLeggings();
+        case BOOTS -> plugin.armorSets.MinerBoots();
       };
       case "nether" -> switch (armorType) {
-        case HELMET -> plugin.nether.NetherHelmet();
-        case CHESTPLATE -> plugin.nether.NetherChestplate();
-        case LEGGINGS -> plugin.nether.NetherLeggings();
-        case BOOTS -> plugin.nether.NetherBoots();
+        case HELMET -> plugin.armorSets.NetherHelmet();
+        case CHESTPLATE -> plugin.armorSets.NetherChestplate();
+        case LEGGINGS -> plugin.armorSets.NetherLeggings();
+        case BOOTS -> plugin.armorSets.NetherBoots();
       };
       case "seagreed" -> switch (armorType) {
-        case HELMET -> plugin.seagreed.SeaGreedHelmet();
-        case CHESTPLATE -> plugin.seagreed.SeaGreedChestplate();
-        case LEGGINGS -> plugin.seagreed.SeaGreedLeggings();
-        case BOOTS -> plugin.seagreed.SeaGreedBoots();
+        case HELMET -> plugin.armorSets.SeaGreedHelmet();
+        case CHESTPLATE -> plugin.armorSets.SeaGreedChestplate();
+        case LEGGINGS -> plugin.armorSets.SeaGreedLeggings();
+        case BOOTS -> plugin.armorSets.SeaGreedBoots();
       };
       case "speedster" -> switch (armorType) {
-        case HELMET -> plugin.speedster.SpeedsterHelmet();
-        case CHESTPLATE -> plugin.speedster.SpeedsterChestplate();
-        case LEGGINGS -> plugin.speedster.SpeedsterLeggings();
-        case BOOTS -> plugin.speedster.SpeedsterBoots();
+        case HELMET -> plugin.armorSets.SpeedsterHelmet();
+        case CHESTPLATE -> plugin.armorSets.SpeedsterChestplate();
+        case LEGGINGS -> plugin.armorSets.SpeedsterLeggings();
+        case BOOTS -> plugin.armorSets.SpeedsterBoots();
       };
       case "titan" -> switch (armorType) {
-        case HELMET -> plugin.titan.TitanHelmet();
-        case CHESTPLATE -> plugin.titan.TitanChestplate();
-        case LEGGINGS -> plugin.titan.TitanLeggings();
-        case BOOTS -> plugin.titan.TitanBoots();
+        case HELMET -> plugin.armorSets.TitanHelmet();
+        case CHESTPLATE -> plugin.armorSets.TitanChestplate();
+        case LEGGINGS -> plugin.armorSets.TitanLeggings();
+        case BOOTS -> plugin.armorSets.TitanBoots();
       };
       case "truediamond" -> switch (armorType) {
         case HELMET -> plugin.truediamond.TrueDiamondHelmet(level, amount);

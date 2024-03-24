@@ -10,6 +10,9 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.List;
+import java.util.Objects;
+
 public class ArmorSetAbilityHandler {
 
     private static MoreArmorsMain plugin;
@@ -33,22 +36,25 @@ public class ArmorSetAbilityHandler {
     	}
     }
 
-    public static void NetherArmor(Player player) {
-    	if(!plugin.netherarmor.contains(player)) {
-    		if(plugin.IsFullCustomSet("nether", player.getInventory()) && player.getLocation().getWorld().getEnvironment().equals(Environment.NETHER)) {
-    			player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40);
-    			player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE, 0, false, false));
-    			plugin.netherarmor.add(player);
-    		}
-    	}
-    	if(plugin.netherarmor.contains(player)) {
-    		if(!(plugin.IsFullCustomSet("nether", player.getInventory()) && player.getLocation().getWorld().getEnvironment().equals(Environment.NETHER))) {
-    			player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
-    			player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
-    			plugin.netherarmor.remove(player);
-    		}
-    	}
-    }
+	public void isWearingNetherArmor(Object[] players) {
+		for(Object obj : players) {
+			if(obj instanceof Player) {
+				Player p = (Player) obj;
+				if(plugin.IsFullCustomSet("nether", p.getInventory())) {
+					if(p.getLocation().getWorld().getEnvironment().equals(Environment.NETHER)) {
+						p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40);
+						p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 100, 0, false, false));
+					}
+					else {
+						p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
+						p.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
+
+					}
+				}
+			}
+
+		}
+	}
 
     public static void TrueDiamondArmor(Player player) {
     	if(plugin.IsFullCustomSet("truediamond", player.getInventory())) {

@@ -180,7 +180,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
         itemMeta.setDisplayName(plugin.convertColoredString(Rarity.getColorRarity(rarity) + displayName));
         // Lore
         lore.add(plugin.convertColoredString("&6Item Ability: Bane of the Nether"));
-        lore.add(plugin.convertColoredString("&7Deal &c+10% &7damage to mobs in the Nether."));
+        lore.add(plugin.convertColoredString("&7Deal &c+10% &7damage while in the Nether."));
         lore.add("");
         lore.add(plugin.convertColoredString("&6Full Set Bonus: Nether King"));
         lore.add(plugin.convertColoredString("&7Grants &aFire Resistance &7while"));
@@ -288,8 +288,8 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
         lore.add(plugin.convertColoredString("&7Increases max health by &a2&7."));
         lore.add("");
         lore.add(plugin.convertColoredString("&6Full Set Bonus: Resistance"));
-        lore.add(plugin.convertColoredString("&7Gives &aResistance I &7for &a10 seconds"));
-        lore.add(plugin.convertColoredString("&7after killing something."));
+        lore.add(plugin.convertColoredString("&7Grants &aResistance I &7for &a10 seconds"));
+        lore.add(plugin.convertColoredString("&7after defeating an enemy."));
         lore.add("");
         lore.add(plugin.convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
         itemMeta.setLore(lore);
