@@ -1,0 +1,4 @@
+name: MoreArmors
+version: '${version}'
+main: me.offsetpaladin89.MoreArmors.MoreArmorsMain
+api-version: 1.13
