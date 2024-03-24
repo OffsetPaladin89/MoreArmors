@@ -2,7 +2,7 @@ package me.offsetpaladin89.MoreArmors.materials;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import me.offsetpaladin89.MorePluginsCore.enums.Rarity;
+import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;

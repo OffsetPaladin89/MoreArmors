@@ -1,10 +1,9 @@
 package me.offsetpaladin89.MoreArmors.commands;
 
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import me.offsetpaladin89.MorePluginsCore.enums.ArmorType;
+import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 

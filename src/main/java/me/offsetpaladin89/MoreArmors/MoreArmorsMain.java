@@ -1,9 +1,8 @@
 package me.offsetpaladin89.MoreArmors;
 
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.armors.ArmorSets;
-import me.offsetpaladin89.MoreArmors.armors.emeraldarmor.EmeraldArmor;
 import me.offsetpaladin89.MoreArmors.armors.emeraldarmor.EmeraldArmorData;
-import me.offsetpaladin89.MoreArmors.armors.endarmor.EndArmor;
 import me.offsetpaladin89.MoreArmors.armors.endarmor.EndArmorData;
 import me.offsetpaladin89.MoreArmors.armors.experiencearmor.ExperienceArmor;
 import me.offsetpaladin89.MoreArmors.armors.experiencearmor.ExperienceArmorData;
@@ -21,19 +20,38 @@ import me.offsetpaladin89.MoreArmors.armors.truediamondarmor.TrueDiamondArmor;
 import me.offsetpaladin89.MoreArmors.armors.truediamondarmor.TrueDiamondArmorData;
 import me.offsetpaladin89.MoreArmors.commands.GiveArmor;
 import me.offsetpaladin89.MoreArmors.commands.GiveMaterial;
+import me.offsetpaladin89.MoreArmors.handlers.CraftHandler;
+import me.offsetpaladin89.MoreArmors.listeners.MoreArmorsListener;
 import me.offsetpaladin89.MoreArmors.materials.Materials;
 import me.offsetpaladin89.MoreArmors.materials.MaterialsData;
-import me.offsetpaladin89.MorePluginsCore.MorePluginsCoreMain;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
 public class MoreArmorsMain extends JavaPlugin {
-  
-  public EmeraldArmor emerald;
-  
+
+  private final String[] armors = {"emerald", "end", "experience", "miner", "nether", "seagreed", "speedster", "titan", "truediamond"};
+  public List<String> validArmors = new ArrayList<>(Arrays.asList(armors));
+
+  private final String[] slots = {"helmet", "chestplate", "leggings", "boots"};
+  public List<String> validSlots = new ArrayList<>(Arrays.asList(armors));
+
+  public ArrayList<Player> endarmor = new ArrayList<>();
+  public ArrayList<Player> netherarmor = new ArrayList<>();
+  public ArrayList<Player> destroyerarmor = new ArrayList<>();
+  public ArrayList<Player> destroyerhelmet = new ArrayList<>();
+  public HashMap<Player, Float> armydamageincrease = new HashMap<>();
+
   public EmeraldArmorData emeralddata;
-  
-  public EndArmor end;
   
   public EndArmorData enddata;
   
@@ -77,16 +95,46 @@ public class MoreArmorsMain extends JavaPlugin {
 
   public ArmorSets armorSets;
 
+  public void sendConsoleMessage(String s) { getServer().getConsoleSender().sendMessage(convertColoredString(s)); }
+  public void sendPlayerMessage(Player p, String s) { p.sendMessage(convertColoredString(s)); }
+
   public void onEnable() { RegistryHandler(); }
-  
+
+  public boolean isAirOrNull(ItemStack item) {return item == null || item.getType().equals(Material.AIR);}
   public String convertColoredString(String msg) { return ChatColor.translateAlternateColorCodes('&', msg); }
-  
+
+  public boolean IsFullCustomSet(String tag, PlayerInventory inventory) {
+    if(!WearingFullSet(inventory)) {
+      return false;
+    }
+    if(isAirOrNull(inventory.getHelmet()) || isAirOrNull(inventory.getChestplate()) || isAirOrNull(inventory.getLeggings()) || isAirOrNull(inventory.getBoots())) { return false; }
+    NBTItem nbtHelmet = new NBTItem(inventory.getHelmet());
+    NBTItem nbtChestplate = new NBTItem(inventory.getChestplate());
+    NBTItem nbtLeggings = new NBTItem(inventory.getLeggings());
+    NBTItem nbtBoots = new NBTItem(inventory.getBoots());
+
+    return nbtHelmet.getString("CustomItemID").equals(tag) &&
+            nbtChestplate.getString("CustomItemID").equals(tag) &&
+            nbtLeggings.getString("CustomItemID").equals(tag) &&
+            nbtBoots.getString("CustomItemID").equals(tag);
+  }
+
+  public boolean WearingFullSet(PlayerInventory inventory) {
+    ItemStack helmet = inventory.getHelmet();
+    ItemStack chestplate = inventory.getChestplate();
+    ItemStack leggings = inventory.getLeggings();
+    ItemStack boots = inventory.getBoots();
+    return helmet != null && chestplate != null && leggings != null && boots != null;
+  }
+
   public void RegistryHandler() {
+
+    new MoreArmorsListener(this);
+    new CraftHandler(this);
+
     armorConstructor = new ArmorConstructor(this);
     armorSets = new ArmorSets(this);
-    emerald = new EmeraldArmor(this);
     emeralddata = new EmeraldArmorData(this);
-    end = new EndArmor(this);
     enddata = new EndArmorData(this);
     experience = new ExperienceArmor(this);
     experiencedata = new ExperienceArmorData(this);

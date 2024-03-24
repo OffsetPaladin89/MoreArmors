@@ -1,7 +1,7 @@
 package me.offsetpaladin89.MoreArmors.armors;
 
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import me.offsetpaladin89.MorePluginsCore.enums.Rarity;
+import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.EquipmentSlot;
@@ -95,4 +95,10 @@ public record ArmorSets(MoreArmorsMain plugin) {
     }
 
     public ItemStack TitanHelmet() { return plugin.armorConstructor.createTitanArmor(new ItemStack(Material.IRON_HELMET, 1), "Titan Helmet", Rarity.UNCOMMON, 2, EquipmentSlot.HEAD); }
+
+    public ItemStack TitanChestplate() { return plugin.armorConstructor.createTitanArmor(new ItemStack(Material.IRON_CHESTPLATE, 1), "Titan Chestplate", Rarity.UNCOMMON, 2, EquipmentSlot.CHEST); }
+
+    public ItemStack TitanLeggings() { return plugin.armorConstructor.createTitanArmor(new ItemStack(Material.IRON_LEGGINGS, 1), "Titan Leggings", Rarity.UNCOMMON, 2, EquipmentSlot.LEGS); }
+
+    public ItemStack TitanBoots() { return plugin.armorConstructor.createTitanArmor(new ItemStack(Material.IRON_BOOTS, 1), "Titan Boots", Rarity.UNCOMMON, 2, EquipmentSlot.FEET); }
 }

@@ -5,7 +5,7 @@ import com.github.fracpete.romannumerals4j.RomanNumeralFormat;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import dev.dbassett.skullcreator.SkullCreator;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import me.offsetpaladin89.MorePluginsCore.enums.Rarity;
+import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
