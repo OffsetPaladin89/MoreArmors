@@ -1,6 +1,7 @@
 package me.offsetpaladin89.MoreArmors.enums;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 public enum ArmorType {
@@ -15,6 +16,15 @@ public enum ArmorType {
         else if (type.endsWith("_LEGGINGS")) return LEGGINGS;
         else if (type.endsWith("_BOOTS")) return BOOTS;
         else return null;
+    }
+
+    public static EquipmentSlot matchSlot(ArmorType type) {
+        return switch (type) {
+            case HELMET -> EquipmentSlot.HEAD;
+            case CHESTPLATE -> EquipmentSlot.CHEST;
+            case LEGGINGS -> EquipmentSlot.LEGS;
+            case BOOTS -> EquipmentSlot.FEET;
+        };
     }
 
     private static boolean isAirOrNull(ItemStack item) { return item == null || item.getType().equals(Material.AIR); }

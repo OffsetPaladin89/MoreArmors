@@ -3,7 +3,6 @@ package me.offsetpaladin89.MoreArmors.handlers;
 import com.cryptomorin.xseries.XMaterial;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import me.offsetpaladin89.MoreArmors.armors.ArmorSets;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.CraftingInventory;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -420,41 +420,41 @@ public class CraftHandler implements Listener {
 							switch (ArmorType.matchType(result)) {
 								case HELMET -> {
 									//End Helmet
-									if (nbtResult.getString("CustomItemID").equals("end")) { inventory.addItem(plugin.armorSets.EndHelmet()); }
+									if (nbtResult.getString("CustomItemID").equals("end")) { inventory.addItem(plugin.armorSets.EndArmor(EquipmentSlot.HEAD)); }
 									//Miner Helmet
-									if (nbtResult.getString("CustomItemID").equals("miner")) { inventory.addItem(plugin.armorSets.MinerHelmet()); }
+									if (nbtResult.getString("CustomItemID").equals("miner")) { inventory.addItem(plugin.armorSets.MinerArmor(EquipmentSlot.HEAD)); }
 									//Nether Helmet
-									if (nbtResult.getString("CustomItemID").equals("nether")) { inventory.addItem(plugin.armorSets.NetherHelmet()); }
+									if (nbtResult.getString("CustomItemID").equals("nether")) { inventory.addItem(plugin.armorSets.NetherArmor(EquipmentSlot.HEAD)); }
 									//True Diamond Helmet
 //									if (nbtResult.getString("CustomItemID").equals("truediamond")) { inventory.addItem(plugin.armorSets.TrueDiamondHelmet(1, 0)); }
 								}
 								case CHESTPLATE -> {
 									//End Chestplate
-									if (nbtResult.getString("CustomItemID").equals("end")) { inventory.addItem(plugin.armorSets.EndChestplate()); }
+									if (nbtResult.getString("CustomItemID").equals("end")) { inventory.addItem(plugin.armorSets.EndArmor(EquipmentSlot.CHEST)); }
 									//Miner Chestplate
-									if (nbtResult.getString("CustomItemID").equals("miner")) { inventory.addItem(plugin.armorSets.MinerChestplate()); }
+									if (nbtResult.getString("CustomItemID").equals("miner")) { inventory.addItem(plugin.armorSets.MinerArmor(EquipmentSlot.CHEST)); }
 									//Nether Chestplate
-									if (nbtResult.getString("CustomItemID").equals("nether")) { inventory.addItem(plugin.armorSets.NetherChestplate()); }
+									if (nbtResult.getString("CustomItemID").equals("nether")) { inventory.addItem(plugin.armorSets.NetherArmor(EquipmentSlot.CHEST)); }
 									//True Diamond Chestplate
 //									if (nbtResult.getString("CustomItemID").equals("truediamond")) { inventory.addItem(plugin.armorSets.TrueDiamondChestplate(1, 0)); }
 								}
 								case LEGGINGS -> {
 									//End Leggings
-									if (nbtResult.getString("CustomItemID").equals("end")) { inventory.addItem(plugin.armorSets.EndLeggings()); }
+									if (nbtResult.getString("CustomItemID").equals("end")) { inventory.addItem(plugin.armorSets.EndArmor(EquipmentSlot.LEGS)); }
 									//Miner Leggings
-									if (nbtResult.getString("CustomItemID").equals("miner")) { inventory.addItem(plugin.armorSets.MinerLeggings()); }
+									if (nbtResult.getString("CustomItemID").equals("miner")) { inventory.addItem(plugin.armorSets.MinerArmor(EquipmentSlot.LEGS)); }
 									//Nether Leggings
-									if (nbtResult.getString("CustomItemID").equals("nether")) { inventory.addItem(plugin.armorSets.NetherLeggings()); }
+									if (nbtResult.getString("CustomItemID").equals("nether")) { inventory.addItem(plugin.armorSets.NetherArmor(EquipmentSlot.LEGS)); }
 									//True Diamond Leggings
 //									if (nbtResult.getString("CustomItemID").equals("truediamond")) { inventory.addItem(plugin.armorSets.TrueDiamondLeggings(1, 0)); }
 								}
 								case BOOTS -> {
 									//End Boots
-									if (nbtResult.getString("CustomItemID").equals("end")) { inventory.addItem(plugin.armorSets.EndBoots()); }
+									if (nbtResult.getString("CustomItemID").equals("end")) { inventory.addItem(plugin.armorSets.EndArmor(EquipmentSlot.FEET)); }
 									//Miner Boots
-									if (nbtResult.getString("CustomItemID").equals("miner")) { inventory.addItem(plugin.armorSets.MinerBoots()); }
+									if (nbtResult.getString("CustomItemID").equals("miner")) { inventory.addItem(plugin.armorSets.MinerArmor(EquipmentSlot.FEET)); }
 									//Nether Boots
-									if (nbtResult.getString("CustomItemID").equals("nether")) { inventory.addItem(plugin.armorSets.NetherBoots()); }
+									if (nbtResult.getString("CustomItemID").equals("nether")) { inventory.addItem(plugin.armorSets.NetherArmor(EquipmentSlot.FEET)); }
 									//True Diamond Boots
 //									if (nbtResult.getString("CustomItemID").equals("truediamond")) { inventory.addItem(plugin.armorSets.TrueDiamondBoots(1, 0)); }
 								}

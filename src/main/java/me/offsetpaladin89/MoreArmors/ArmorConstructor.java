@@ -21,23 +21,6 @@ import java.util.UUID;
 
 public record ArmorConstructor(MoreArmorsMain plugin) {
 
-    private NBTItem addNBT(ItemStack item, String customItemID, Rarity rarity, int armor, int armorToughness, EquipmentSlot slot) {
-        NBTItem nbtItem = new NBTItem(item);
-        nbtItem.setBoolean("IsCustomItem", true);
-        nbtItem.setString("CustomItemID", customItemID);
-        nbtItem.setString("CustomItemType", "armor");
-        nbtItem.setInteger("Rarity", rarity.ordinal() + 1);
-        nbtItem.setInteger("Armor", armor);
-        nbtItem.setInteger("ArmorToughness", armorToughness);
-        nbtItem.setString("AttributeSlot", slot.name());
-        if(item.getType().equals(Material.PLAYER_HEAD)) nbtItem.setString("UUID", UUID.randomUUID().toString());
-        return nbtItem;
-    }
-
-    private String getTrueDiamondName(String displayName, int level) { return "Level " + new RomanNumeralFormat().format(level) + " " + displayName; }
-
-    private Rarity getTrueDiamondRarity(int level) { return Rarity.getRarity((level - 1) / 4 + 3); }
-
     public ItemStack createEmeraldArmor(@NotNull ItemStack item) {
         NBTItem nbtItem = new NBTItem(item);
         return createEmeraldArmor(item, item.getItemMeta().getDisplayName(), Rarity.getRarity(nbtItem.getInteger("Rarity")), nbtItem.getInteger("Armor"), nbtItem.getInteger("ArmorToughness"), nbtItem.getInteger("EmeraldCount"), EquipmentSlot.valueOf(nbtItem.getString("AttributeSlot")));
@@ -363,5 +346,21 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
         nbtItem.setInteger("ArmorLevel", armorLevel);
         nbtItem.setInteger("DiamondSacrifice", diamondSacrifice);
         return nbtItem.getItem();
+    }
+
+
+    private String getTrueDiamondName(String displayName, int level) { return "Level " + new RomanNumeralFormat().format(level) + " " + displayName; }
+    private Rarity getTrueDiamondRarity(int level) { return Rarity.getRarity((level - 1) / 4 + 3); }
+    private NBTItem addNBT(ItemStack item, String customItemID, Rarity rarity, int armor, int armorToughness, EquipmentSlot slot) {
+        NBTItem nbtItem = new NBTItem(item);
+        nbtItem.setBoolean("IsCustomItem", true);
+        nbtItem.setString("CustomItemID", customItemID);
+        nbtItem.setString("CustomItemType", "armor");
+        nbtItem.setInteger("Rarity", rarity.ordinal() + 1);
+        nbtItem.setInteger("Armor", armor);
+        nbtItem.setInteger("ArmorToughness", armorToughness);
+        nbtItem.setString("AttributeSlot", slot.name());
+        if(item.getType().equals(Material.PLAYER_HEAD)) nbtItem.setString("UUID", UUID.randomUUID().toString());
+        return nbtItem;
     }
 }

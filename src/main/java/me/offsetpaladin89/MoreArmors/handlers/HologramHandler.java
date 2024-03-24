@@ -20,8 +20,6 @@ public class HologramHandler {
 
     private static MoreArmorsMain plugin;
 
-    private ArrayList<Entity> entityList;
-
     public HologramHandler(MoreArmorsMain plugin) {
         HologramHandler.plugin = plugin;
     }
