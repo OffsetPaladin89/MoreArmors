@@ -60,7 +60,7 @@ public class CommandCompleter implements TabCompleter {
 								arguments.add("SeaGreed");
 								arguments.add("Speedster");
 								arguments.add("Titan");
-								arguments.add("TrueDiamond");
+//								arguments.add("TrueDiamond");
 							}
 							if(getPlugin("MoreArmorsExtra") != null) {
 								arguments.add("Destroyer");
@@ -85,27 +85,26 @@ public class CommandCompleter implements TabCompleter {
 					}
 				}
 				if(args[2].equalsIgnoreCase("material")) {
-					if(getPlugin("MoreArmors") != null) {
-						arguments.add("CompactedBlazeRod");
-						arguments.add("CompactedCobblestone");
-						arguments.add("CompactedEndStone");
-						arguments.add("CompactedEyeOfEnder");
-						arguments.add("CompactedSoulSand");
-						arguments.add("CompactedSugarCane");
-						arguments.add("NetherCrown");
-						arguments.add("CompactedDiamond");
-						arguments.add("CompactedDiamondBlock");
-						arguments.add("DiamondSingularity");
-					}
-					if(getPlugin("MoreArmorsExtra") != null) {
-						arguments.add("CompactedIronIngot");
-						arguments.add("CompactedIronBlock");
-						arguments.add("CompactedRedstone");
-						arguments.add("EnergyCell");
-						arguments.add("MachineCore");
-						arguments.add("MachinePart");
-						arguments.add("StarDust");
-					}
+					arguments.add("CompactedBlazeRod");
+					arguments.add("CompactedCobblestone");
+					arguments.add("CompactedEndStone");
+					arguments.add("CompactedEyeOfEnder");
+					arguments.add("CompactedSoulSand");
+					arguments.add("CompactedSugarCane");
+					arguments.add("NetherCrown");
+					arguments.add("CompactedDiamond");
+					arguments.add("CompactedDiamondBlock");
+					arguments.add("DiamondSingularity");
+					arguments.add("CompactedGold");
+					arguments.add("CompactedGoldBlock");
+					arguments.add("CompactedPrismarine");
+//					arguments.add("CompactedIronIngot");
+//					arguments.add("CompactedIronBlock");
+//					arguments.add("CompactedRedstone");
+//					arguments.add("EnergyCell");
+//					arguments.add("MachineCore");
+//					arguments.add("MachinePart");
+//					arguments.add("StarDust");
 				}
 			}
 		}

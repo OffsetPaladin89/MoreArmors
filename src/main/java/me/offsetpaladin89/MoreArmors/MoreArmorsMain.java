@@ -145,7 +145,7 @@ public class MoreArmorsMain extends JavaPlugin {
 	public void ArmorChecker() {
 		new BukkitRunnable() {
 			public void run() {
-				armorSetAbilities.isWearingNetherArmor(getServer().getOnlinePlayers().toArray());
+				armorSetAbilities.scanPlayers(getServer().getOnlinePlayers().toArray());
 			}
 		}.runTaskTimer(this, 0, 20);
 	}

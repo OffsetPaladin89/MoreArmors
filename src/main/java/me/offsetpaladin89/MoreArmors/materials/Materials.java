@@ -8,7 +8,6 @@ import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -28,6 +27,9 @@ public record Materials(MoreArmorsMain plugin) {
 	public ItemStack CompactedDiamond(Integer amount) { return addData(new ItemStack(Material.DIAMOND, amount), Rarity.UNCOMMON, "Compacted Diamond", "compacted_diamond"); }
 	public ItemStack CompactedDiamondBlock(Integer amount) { return addData(new ItemStack(Material.DIAMOND_BLOCK, amount), Rarity.RARE, "Compacted Diamond Block", "compacted_diamond_block"); }
 	public ItemStack DiamondSingularity() { return createMaterialSkull("f073d84d6fda6a3404e77ad8d0f190893ae66d195fbb44d3c4607a6b71d9b9d5", Rarity.EPIC, "Diamond Singularity", "diamond_singularity"); }
+	public ItemStack CompactedGold(Integer amount) { return addData(new ItemStack(Material.GOLD_INGOT, amount), Rarity.UNCOMMON, "Compacted Gold Ingot", "compacted_gold_ingot"); }
+	public ItemStack CompactedGoldBlock(Integer amount) { return addData(new ItemStack(Material.GOLD_BLOCK, amount), Rarity.RARE, "Compacted Gold Block", "compacted_gold_block"); }
+	public ItemStack CompactedPrismarine(Integer amount) { return addData(new ItemStack(Material.PRISMARINE, amount), Rarity.UNCOMMON, "Compacted Prismarine", "compacted_prismarine"); }
 	public void RegisterMaterialsRecipes() {
 		plugin.getServer().addRecipe(registerRecipe("compacted_sugar_cane", CompactedSugarCane(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.SUGAR_CANE));
 		plugin.getServer().addRecipe(registerRecipe("compacted_cobblestone", CompactedCobblestone(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.COBBLESTONE));
@@ -36,9 +38,12 @@ public record Materials(MoreArmorsMain plugin) {
 		plugin.getServer().addRecipe(registerRecipe("nether_crown", NetherCrown()).shape("XXX", "XSX", "XXX").setIngredient('X', Material.BLAZE_ROD).setIngredient('S', Material.NETHER_STAR));
 		plugin.getServer().addRecipe(registerRecipe("compacted_end_stone", CompactedEndStone(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.END_STONE));
 		plugin.getServer().addRecipe(registerRecipe("compacted_eye_of_ender", CompactedEyeOfEnder(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.ENDER_EYE));
-		plugin.getServer().addRecipe(registerRecipe("compacted_diamond", CompactedDiamond(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.DIAMOND));
+		plugin.getServer().addRecipe(registerRecipe("compacted_diamond", CompactedDiamond(1)).shape(" X ", "XXX", " X ").setIngredient('X', Material.DIAMOND));
 		plugin.getServer().addRecipe(registerRecipe("compacted_diamond_block", CompactedDiamondBlock(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.DIAMOND));
 		plugin.getServer().addRecipe(registerRecipe("diamond_singularity", DiamondSingularity()).shape("XXX", "XSX", "XXX").setIngredient('X', Material.DIAMOND_BLOCK).setIngredient('S', Material.DIAMOND));
+		plugin.getServer().addRecipe(registerRecipe("compacted_gold_ingot", CompactedGold(1)).shape(" X ", "XXX", " X ").setIngredient('X', Material.GOLD_INGOT));
+		plugin.getServer().addRecipe(registerRecipe("compacted_gold_block", CompactedGoldBlock(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.GOLD_INGOT));
+		plugin.getServer().addRecipe(registerRecipe("compacted_prismarine", CompactedPrismarine(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.PRISMARINE));
 	}
 	private ItemStack addData(ItemStack item, Rarity rarity, String name, String itemID) {
 		ItemMeta itemmeta = item.getItemMeta();

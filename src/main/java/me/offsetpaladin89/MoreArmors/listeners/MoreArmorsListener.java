@@ -16,15 +16,19 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static org.bukkit.Material.*;
 
 public class MoreArmorsListener implements Listener {
 
@@ -61,6 +65,43 @@ public class MoreArmorsListener implements Listener {
 			if (player.hasPotionEffect(PotionEffectType.FAST_DIGGING)) { if (player.getPotionEffect(PotionEffectType.FAST_DIGGING).getAmplifier() == 1) { player.removePotionEffect(PotionEffectType.FAST_DIGGING); }}
 			player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 100, 1));
 		}
+
+		if(player.isInWater()) {
+			if (!inventory.getItemInMainHand().getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)) {
+				Block b = event.getBlock();
+				Random r = new Random();
+				int m = (int) Math.floor(oreMultiplier(player)) + (r.nextDouble() <= oreMultiplier(player) % 1 ? 1 : 0);
+				if (b.getType().toString().endsWith("_ORE")) {
+					for (ItemStack i : b.getDrops()) {
+						plugin.sendPlayerMessage(player, "Amount : " + i.getAmount());
+						plugin.sendPlayerMessage(player, "Additional Amount : " + i.getAmount() * m);
+						plugin.sendPlayerMessage(player, "Multiplier : " + m);
+						b.getWorld().dropItemNaturally(b.getLocation(), new ItemStack(i.getType(), i.getAmount() * m));
+					}
+				}
+			}
+		}
+	}
+
+	private Float oreMultiplier(Player p) {
+		PlayerInventory inventory = p.getInventory();
+		return ((plugin.matchingCustomItem(inventory.getHelmet(), "seagreed") ? 0.5f : 0f)) +
+				((plugin.matchingCustomItem(inventory.getChestplate(), "seagreed") ? 0.5f : 0f)) +
+				((plugin.matchingCustomItem(inventory.getLeggings(), "seagreed") ? 0.5f : 0f)) +
+				((plugin.matchingCustomItem(inventory.getBoots(), "seagreed") ? 0.5f : 0f));
+	}
+
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent e) {
+		Player p = e.getPlayer();
+		if (plugin.IsFullCustomSet("seagreed", p.getInventory())) {
+			p.setWalkSpeed(0.2F);
+			if (p.isSwimming()) {
+				Vector dir = p.getLocation().getDirection().normalize().multiply(1.4D); // 3 - 1.6
+				Vector vec = new Vector(dir.getX(), dir.getY(), dir.getZ());
+				p.setVelocity(vec);
+			}
+		}
 	}
 
 	@EventHandler
@@ -73,16 +114,15 @@ public class MoreArmorsListener implements Listener {
 				if (plugin.IsFullCustomSet("experience", inventory)) { event.setDroppedExp(event.getDroppedExp() * 2); }
 				if (plugin.IsFullCustomSet("titan", inventory)) {
 					if (killer.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE)) { if (killer.getPotionEffect(PotionEffectType.DAMAGE_RESISTANCE).getAmplifier() == 0) { killer.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE); }}
-					killer.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 200, 0));
+					killer.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 200, 0, false, false));
 				}
 				if(plugin.IsFullCustomSet("seagreed", inventory)) {
-					if(entity.getType().equals(EntityType.ELDER_GUARDIAN)) {
+					Random r = new Random();
+
+					if(entity.getType().equals(EntityType.ELDER_GUARDIAN) && r.nextDouble() <= 0.25d) {
 						killer.sendTitle(plugin.convertColoredString("&c&l&kzzz &r&4&lBLESSING OF THE SEA GOD &c&l&kzzz"), "", -1, -1, -1);
 						killer.playSound(killer, Sound.BLOCK_END_PORTAL_SPAWN, SoundCategory.MASTER, 1, 1.4f);
-						for(int i = 0; i < 3; i++) {
-							Random r = new Random();
-							killer.getWorld().strikeLightningEffect(killer.getLocation().subtract((r.nextInt(0, 280) - 140f) / 100f, 1, (r.nextInt(0, 280) - 140f) / 100f));
-						}
+						for(int i = 0; i < 3; i++) { killer.getWorld().strikeLightningEffect(killer.getLocation().subtract((r.nextInt(0, 280) - 140f) / 100f, 1, (r.nextInt(0, 280) - 140f) / 100f)); }
 						seaGreedEffects(killer);
 					}
 				}
@@ -91,12 +131,12 @@ public class MoreArmorsListener implements Listener {
 	}
 
 	public void seaGreedEffects(Player player) {
-		giveItem(new ItemStack(Material.DIAMOND_BLOCK, 10), player);
-		giveItem(new ItemStack(Material.GOLD_BLOCK, 10), player);
-		player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 36000, 2));
-		player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 36000, 2));
-		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 36000, 2));
-		player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 36000, 1));
+		giveItem(new ItemStack(Material.DIAMOND_BLOCK, 20), player);
+		giveItem(new ItemStack(Material.GOLD_BLOCK, 100), player);
+		player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 72000, 2, false, false));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 72000, 1, false, false));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 72000, 1, false, false));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 72000, 1, false, false));
 	}
 
 	public void giveItem(ItemStack item, Player player) {

@@ -44,6 +44,9 @@ public record CommandsMessages(MoreArmorsMain plugin) {
 		sendColoredMessage(sender, "&6> &eCompactedDiamond");
 		sendColoredMessage(sender, "&6> &eCompactedDiamondBlock");
 		sendColoredMessage(sender, "&6> &eDiamondSingularity");
+		sendColoredMessage(sender, "&6> &eCompactedGold");
+		sendColoredMessage(sender, "&6> &eCompactedGoldBlock");
+		sendColoredMessage(sender, "&6> &eCompactedPrismarine");
 		sendColoredMessage(sender, "&6> &eCompactedIronIngot");
 		sendColoredMessage(sender, "&6> &eCompactedIronBlock");
 		sendColoredMessage(sender, "&6> &eCompactedRedstone");

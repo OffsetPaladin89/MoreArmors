@@ -21,6 +21,9 @@ public record GiveMaterial(MoreArmorsMain plugin) {
 			case COMPACTED_DIAMOND -> plugin.materials.CompactedDiamond(amount);
 			case COMPACTED_DIAMOND_BLOCK -> plugin.materials.CompactedDiamondBlock(amount);
 			case DIAMOND_SINGULARITY -> plugin.materials.DiamondSingularity();
+			case COMPACTED_GOLD -> plugin.materials.CompactedGold(amount);
+			case COMPACTED_GOLD_BLOCK -> plugin.materials.CompactedGoldBlock(amount);
+			case COMPACTED_PRISMARINE -> plugin.materials.CompactedPrismarine(amount);
 		};
 	}
 
