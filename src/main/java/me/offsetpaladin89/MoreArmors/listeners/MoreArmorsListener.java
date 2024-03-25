@@ -97,7 +97,6 @@ public class MoreArmorsListener implements Listener {
 		player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 36000, 2));
 		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 36000, 2));
 		player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 36000, 1));
-
 	}
 
 	public void giveItem(ItemStack item, Player player) {

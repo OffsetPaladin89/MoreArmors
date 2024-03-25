@@ -1,5 +1,6 @@
 package me.offsetpaladin89.MoreArmors.commands;
 
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
@@ -7,6 +8,7 @@ import me.offsetpaladin89.MoreArmors.enums.SetType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public record CommandsMessages(MoreArmorsMain plugin) {
 
@@ -147,14 +149,22 @@ public record CommandsMessages(MoreArmorsMain plugin) {
 								if (length == 5) {
 									plugin.givearmor.GiveArmorCommand(sender, target, item.toLowerCase(), slotType, 0);
 								} else {
-									if (setType.equals(SetType.EMERALD)) {
-										plugin.givearmor.GiveArmorCommand(sender, target, item.toLowerCase(), slotType, Integer.parseInt(specialValue));
+									if (isInteger(specialValue)) {
+										if (setType.equals(SetType.EMERALD)) {
+											plugin.givearmor.GiveArmorCommand(sender, target, item.toLowerCase(), slotType, Integer.parseInt(specialValue));
+										} else {
+											tooManyArguments(sender);
+										}
 									} else {
 										invalidArgument(sender, specialValue);
 									}
 								}
+							} else {
+								invalidArgument(sender, slot);
 							}
 						}
+					} else {
+						invalidArgument(sender, item);
 					}
 				}
 			}
@@ -166,164 +176,70 @@ public record CommandsMessages(MoreArmorsMain plugin) {
 						MaterialType materialType = MaterialType.getMaterialType(item);
 						if (length == 4) {
 							plugin.givematerial.GiveMaterialCommand(sender, target, materialType, 1);
-						} else {
+						} else if (length == 5) {
 							if (isInteger(slot) && Integer.parseInt(slot) > 0) {
 								plugin.givematerial.GiveMaterialCommand(sender, target, materialType, Integer.parseInt(slot));
 							} else {
 								invalidArgument(sender, slot);
 							}
+						} else {
+							tooManyArguments(sender);
 						}
 					}
 				}
 			}
-			default -> {
-				invalidArgument(sender, type);
-			}
+			default -> invalidArgument(sender, type);
 		}
 	}
 
-//	public void editMessage(Integer length, CommandSender sender, String player, String type, String amount) {
-//
-//		Player target = null;
-//
-//		if (length > 1) {
-//			if (plugin.getServer().getPlayerExact(player) != null) {
-//				target = plugin.getServer().getPlayerExact(player);
-//				if (length == 2) { player = target.getName(); }
-//			} else {
-//				invalidArgument(sender, player);
-//				return;
-//			}
-//		}
-//
-//		if (length == 1 || type == null) {
-//			sendColoredMessage(sender, prefix() + " &6Give Command Options: &e(/morepluginscore edit " + player + " ... )");
-//			if (getPlugin("MoreArmors") != null) {
-//				sendColoredMessage(sender, "&6> &eEmeraldCount");
-//				sendColoredMessage(sender, "&6> &eArmorLevel");
-//				sendColoredMessage(sender, "&6> &eDiamondSingularity");
-//			}
-//			if (getPlugin("MoreArmorsExtra") != null) { sendColoredMessage(sender, "&6> &eKills"); }
-//			return;
-//		}
-//
-//		PlayerInventory inventory = target.getInventory();
-//		if (!plugin.isAirOrNull(inventory.getItemInMainHand())) {
-//			ItemStack hand = inventory.getItemInMainHand();
-//			NBTItem nbtItem = new NBTItem(hand);
-//			if (type != null) {
-//				switch (type.toLowerCase()) {
-//					case "emeraldcount":
-//						if (getPlugin("MoreArmors") != null) {
-//							if (nbtItem.getString("CustomItemID").equals("emerald")) {
-//								switch (length) {
-//									case 3:
-//										// inventory.setItemInMainHand(plugin.morearmors.emerald.UpdateItem(hand, 0));
-//										resetItemMessage(sender, target, hand);
-//										break;
-//									case 4:
-//										if (isInteger(amount)) {
-//											if (!(Integer.parseInt(amount) > 0)) {
-//												invalidArgument(sender, amount);
-//												return;
-//											}
-//											// inventory.setItemInMainHand(plugin.morearmors.emerald.UpdateItem(hand, Integer.parseInt(amount)));
-//											editItemMessage(sender, target, hand);
-//										}
-//										else { invalidArgument(sender, amount); }
-//										break;
-//									default:
-//										tooManyArguments(sender);
-//										break;
-//								}
-//							}
-//						}
-//						break;
-//					case "armorlevel":
-//						if (getPlugin("MoreArmors") != null) {
-//							if (nbtItem.getString("CustomItemID").equals("truediamond")) {
-//								int diamondsacrifice = nbtItem.getInteger("DiamondSacrifice");
-//								switch (length) {
-//									case 3:
-////										inventory.setItemInMainHand(plugin.morearmors.truediamond.UpdateItem(hand, Integer.parseInt(amount), diamondsacrifice));
-//										resetItemMessage(sender, target, hand);
-//										break;
-//									case 4:
-//										if (isInteger(amount)) {
-//											if (!(Integer.parseInt(amount) > 0 && Integer.parseInt(amount) <= 10)) {
-//												invalidArgument(sender, amount);
-//												return;
-//											}
-////											inventory.setItemInMainHand(plugin.morearmors.truediamond.UpdateItem(hand, Integer.parseInt(amount), diamondsacrifice));
-//											editItemMessage(sender, target, hand);
-//										}
-//										else { invalidArgument(sender, amount); }
-//										break;
-//									default:
-//										tooManyArguments(sender);
-//										break;
-//								}
-//							}
-//						}
-//						break;
-//					case "diamondsacrifice":
-//						if (getPlugin("MoreArmors") != null) {
-//							if (nbtItem.getString("CustomItemID").equals("truediamond")) {
-//								int armorlevel = nbtItem.getInteger("ArmorLevel");
-//								switch (length) {
-//									case 3:
-////										inventory.setItemInMainHand(plugin.morearmors.truediamond.UpdateItem(hand, armorlevel, Integer.parseInt(amount)));
-//										resetItemMessage(sender, target, hand);
-//										break;
-//									case 4:
-//										if (isInteger(amount)) {
-//											if (!(Integer.parseInt(amount) > 0 && Integer.parseInt(amount) <= 50)) {
-//												invalidArgument(sender, amount);
-//												return;
-//											}
-////											inventory.setItemInMainHand(plugin.morearmors.truediamond.UpdateItem(hand, armorlevel, Integer.parseInt(amount)));
-//											editItemMessage(sender, target, hand);
-//										}
-//										else { invalidArgument(sender, amount); }
-//										break;
-//									default:
-//										tooManyArguments(sender);
-//										break;
-//								}
-//							}
-//						}
-//						break;
-//					case "kills":
-//						if (getPlugin("MoreArmorsExtra") != null) {
-//							if (nbtItem.getString("CustomItemID").equals("destroyer")) {
-//								switch (length) {
-//									case 3:
-//										inventory.setItemInMainHand(plugin.morearmorsextra.destroyer.UpdateItem(hand, 0));
-//										resetItemMessage(sender, target, hand);
-//										break;
-//									case 4:
-//										if (isInteger(amount)) {
-//											if (!(Integer.parseInt(amount) > 0)) {
-//												invalidArgument(sender, amount);
-//												return;
-//											}
-//											inventory.setItemInMainHand(plugin.morearmorsextra.destroyer.UpdateItem(hand, Integer.parseInt(amount)));
-//											editItemMessage(sender, target, hand);
-//										}
-//										else { invalidArgument(sender, amount); }
-//										break;
-//									default:
-//										tooManyArguments(sender);
-//										break;
-//								}
-//							}
-//						}
-//						break;
-//					default:
-//						invalidArgument(sender, type);
-//						break;
-//				}
-//			}
-//		}
-//	}
+	public void editMessage(Integer length, CommandSender sender, String player, String type, String specialValue) {
+
+		if (length > 1) {
+			if (plugin.getServer().getPlayer(player) == null) {
+				invalidArgument(sender, player);
+				return;
+			}
+		}
+		if (length < 3) {
+			sendColoredMessage(sender, prefix() + " &6Edit Command Options: &e(/morearmors give " + player + " ... )");
+			if (length == 2) {
+				sendColoredMessage(sender, "&6> &eEmeraldCount");
+				sendColoredMessage(sender, "&6> &eArmorLevel");
+				sendColoredMessage(sender, "&6> &eDiamondSingularity");
+			}
+			return;
+		}
+		Player target = plugin.getServer().getPlayer(player);
+		PlayerInventory inventory = target.getInventory();
+		if (plugin.isAirOrNull(inventory.getItemInMainHand())) return;
+		ItemStack hand = inventory.getItemInMainHand();
+		NBTItem nbtItem = new NBTItem(hand);
+		String cID = nbtItem.getString("CustomItemID");
+		switch (type.toLowerCase()) {
+			case "emeraldcount" -> {
+				if (cID.equals("emerald")) {
+					if (length == 3) {
+						nbtItem.setInteger("EmeraldCount", 0);
+						inventory.setItemInMainHand(plugin.armorConstructor.createEmeraldArmor(nbtItem.getItem()));
+						resetItemMessage(sender, target, hand);
+					} else if (length == 4) {
+						if (isInteger(specialValue)) {
+							nbtItem.setInteger("EmeraldCount", Integer.parseInt(specialValue));
+							inventory.setItemInMainHand(plugin.armorConstructor.createEmeraldArmor(nbtItem.getItem()));
+							editItemMessage(sender, target, hand);
+						} else {
+							invalidArgument(sender, specialValue);
+						}
+					} else {
+						tooManyArguments(sender);
+					}
+				}
+			}
+			case "armorlevel" -> {
+			}
+			case "diamondsingularity" -> {
+			}
+			default -> invalidArgument(sender, type);
+		}
+	}
 }
