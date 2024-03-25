@@ -105,11 +105,6 @@ public record CommandsMessages(MoreArmorsMain plugin) {
 		sendColoredMessage(sender, "&6> &e/morearmors info");
 	}
 
-	public void infoHelpMessage(CommandSender sender) {
-		sendColoredMessage(sender, prefix() + " &6Info Command Options: &e(/morearmors info ...)");
-		sendColoredMessage(sender, "&6> &eMoreArmors");
-	}
-
 	public void pluginInfoMessage(CommandSender sender) {
 		sendColoredMessage(sender, prefix() + " &eRunning &6" + plugin.getName() + " " + plugin.getDescription().getVersion() + " &ecreated by &6OffsetPaladin89&e.");
 		sendColoredMessage(sender, "&6> &eOfficial Site: https://dev.bukkit.org/projects/MoreArmors");

@@ -45,6 +45,8 @@ public class ArmorSetAbilityHandler {
 					} else {
 						p.removePotionEffect(PotionEffectType.CONDUIT_POWER);
 					}
+				} else {
+					p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
 				}
 			}
 

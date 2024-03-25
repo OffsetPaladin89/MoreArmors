@@ -37,17 +37,17 @@ public class Commands implements CommandExecutor {
 					}
 					case "info" -> {
 						if (sender.hasPermission("morearmors.info")) {
-							switch (args.length) {
-								case 1 -> messages.infoHelpMessage(sender);
-								case 2 -> messages.pluginInfoMessage(sender);
-								default -> messages.tooManyArguments(sender);
+							if (args.length == 1) {
+								messages.pluginInfoMessage(sender);
+							} else {
+								messages.tooManyArguments(sender);
 							}
 						} else {
 							messages.noPermission(sender);
 						}
 					}
 					case "give" -> {
-						if (sender.hasPermission("morepluginscore.give")) {
+						if (sender.hasPermission("morearmors.give")) {
 							if (args.length < 7) {
 								messages.giveMessage(args.length, sender,
 										args.length == 1 ? "<user>" : args[1],
@@ -63,7 +63,7 @@ public class Commands implements CommandExecutor {
 						}
 					}
 					case "edit" -> {
-						if (sender.hasPermission("morepluginscore.edit")) {
+						if (sender.hasPermission("morearmors.edit")) {
 							if (args.length < 5) {
 								messages.editMessage(args.length, sender,
 										args.length == 1 ? "user" : args[1],

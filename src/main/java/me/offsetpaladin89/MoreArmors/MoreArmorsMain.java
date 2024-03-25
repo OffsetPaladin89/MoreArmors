@@ -22,6 +22,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -147,6 +148,10 @@ public class MoreArmorsMain extends JavaPlugin {
 			public void run() {
 				armorSetAbilities.scanPlayers(getServer().getOnlinePlayers().toArray());
 			}
-		}.runTaskTimer(this, 0, 20);
+		}.runTaskTimer(this, 0, 10);
+	}
+
+	public ShapedRecipe shapedRecipe(String key, ItemStack i) {
+		return new ShapedRecipe(new NamespacedKey(this, key), i);
 	}
 }

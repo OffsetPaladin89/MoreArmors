@@ -73,9 +73,6 @@ public class MoreArmorsListener implements Listener {
 				int m = (int) Math.floor(oreMultiplier(player)) + (r.nextDouble() <= oreMultiplier(player) % 1 ? 1 : 0);
 				if (b.getType().toString().endsWith("_ORE")) {
 					for (ItemStack i : b.getDrops()) {
-						plugin.sendPlayerMessage(player, "Amount : " + i.getAmount());
-						plugin.sendPlayerMessage(player, "Additional Amount : " + i.getAmount() * m);
-						plugin.sendPlayerMessage(player, "Multiplier : " + m);
 						b.getWorld().dropItemNaturally(b.getLocation(), new ItemStack(i.getType(), i.getAmount() * m));
 					}
 				}

@@ -117,7 +117,7 @@ public class DamageHandler implements Listener {
 //				}
 //			}
             event.setDamage(event.getDamage() + damage);
-            event.setDamage(event.getDamage() * getScaledDamage(player, player.getWorld().getEnvironment()));
+            event.setDamage(event.getDamage() * netherDamage(player, player.getWorld().getEnvironment()) * seaGreedDamage(player) * endDamage(player, player.getWorld().getEnvironment()));
             plugin.hologramHandler.createDamageHologram(player.getLocation(), event.getEntity().getLocation(), 20L, event.getDamage());
 //			player.sendMessage("Damage - " + event.getDamage());
 //			 plugin.createHologram(event.getEntity().getLocation(), "&4&lTest");
@@ -132,8 +132,10 @@ public class DamageHandler implements Listener {
 				ItemStack mainhand = inventory.getItemInMainHand();
 				NBTItem nbtItem = new NBTItem(mainhand);
 
+				plugin.sendPlayerMessage(player, "Damage Bonus : " + seaGreedDamage(player));
+
                 event.setDamage(event.getDamage() + getBowDamage(player));
-                event.setDamage(event.getDamage() * getScaledDamage(player, player.getWorld().getEnvironment()));
+                event.setDamage(event.getDamage() * netherDamage(player, player.getWorld().getEnvironment()) * seaGreedDamage(player) * endDamage(player, player.getWorld().getEnvironment()));
 				plugin.hologramHandler.createDamageHologram(damager.getLocation(), event.getEntity().getLocation(), 20L, event.getDamage());
 //				float bonusDamage = 0;
 
@@ -194,7 +196,7 @@ public class DamageHandler implements Listener {
 //		}
 //	}
 //
-    public Float getScaledDamage(Player p, Environment env) {
+    public Float netherDamage(Player p, Environment env) {
         PlayerInventory inventory = p.getInventory();
         return env.equals(Environment.NETHER) ? (plugin.IsFullCustomSet("nether", inventory) ? 1f : 0f) +
                 (plugin.matchingCustomItem(inventory.getHelmet(), "nether") ? 0.1f : 0f) +
@@ -202,6 +204,20 @@ public class DamageHandler implements Listener {
                 (plugin.matchingCustomItem(inventory.getLeggings(), "nether") ? 0.1f : 0f) +
                 (plugin.matchingCustomItem(inventory.getBoots(), "nether") ? 0.1f : 0f) + 1f : 1f;
     }
+
+	public Float endDamage(Player p, Environment env) {
+		PlayerInventory inventory = p.getInventory();
+		return env.equals(Environment.THE_END) ? (plugin.IsFullCustomSet("end", inventory) ? 1f : 0f) +
+				(plugin.matchingCustomItem(inventory.getHelmet(), "end") ? 0.1f : 0f) +
+				(plugin.matchingCustomItem(inventory.getChestplate(), "end") ? 0.1f : 0f) +
+				(plugin.matchingCustomItem(inventory.getLeggings(), "end") ? 0.1f : 0f) +
+				(plugin.matchingCustomItem(inventory.getBoots(), "end") ? 0.1f : 0f) + 1f : 1f;
+	}
+
+	public Float seaGreedDamage(Player p) {
+		PlayerInventory inventory = p.getInventory();
+		return p.isInWater() ? (plugin.IsFullCustomSet("seagreed", inventory) ? 1f : 0f) + 1f : 1f;
+	}
 
 	public float getBowDamage(Player player) {
 		PlayerInventory inventory = player.getInventory();

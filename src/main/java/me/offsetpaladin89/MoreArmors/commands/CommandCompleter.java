@@ -30,17 +30,10 @@ public class CommandCompleter implements TabCompleter {
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		arguments.clear();
 		if(args.length == 1) {
-			if(sender.hasPermission("morepluginscore.edit")) {arguments.add("Edit");}
-			if(sender.hasPermission("morepluginscore.give")) {arguments.add("Give");}
-			if(sender.hasPermission("morepluginscore.help")) {arguments.add("Help");}
-			if(sender.hasPermission("morepluginscore.info")) {arguments.add("Info");}
-		}
-		else if(args[0].equalsIgnoreCase("info")) {
-			if(args.length == 2) {
-				arguments.add("MorePluginsCore");
-				if(getPlugin("MoreArmors") != null) {arguments.add("MoreArmors");}
-				if(getPlugin("MoreArmorsExtra") != null) {arguments.add("MoreArmorsExtra");}
-			}
+			if(sender.hasPermission("morearmors.edit")) {arguments.add("Edit");}
+			if(sender.hasPermission("morearmors.give")) {arguments.add("Give");}
+			if(sender.hasPermission("morearmors.help")) {arguments.add("Help");}
+			if(sender.hasPermission("morearmors.info")) {arguments.add("Info");}
 		}
 		else if(args[0].equalsIgnoreCase("give") && sender.hasPermission("morepluginscore.give")) {
 			if(args.length == 3) {

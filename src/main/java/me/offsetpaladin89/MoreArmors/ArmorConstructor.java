@@ -259,6 +259,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		// Attributes
 		itemMeta.removeAttributeModifier(equipmentSlot);
 		itemMeta.addAttributeModifier(Attribute.GENERIC_ARMOR, new AttributeModifier(UUID.randomUUID(), "armor", armor, AttributeModifier.Operation.ADD_NUMBER, equipmentSlot));
+		itemMeta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, new AttributeModifier(UUID.randomUUID(), "movementSpeed", 0.04, AttributeModifier.Operation.ADD_NUMBER, equipmentSlot));
 		item.setItemMeta(itemMeta);
 		// NBT Values
 		return addNBT(item, "speedster", rarity, armor, 0, equipmentSlot).getItem();
