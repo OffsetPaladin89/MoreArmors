@@ -18,6 +18,23 @@ public enum ArmorType {
         else return null;
     }
 
+    public static ArmorType typeFromString(String s) {
+        return switch (s.toLowerCase()) {
+            case "helmet" -> HELMET;
+            case "chestplate" -> CHESTPLATE;
+            case "leggings" -> LEGGINGS;
+            case "boots" -> BOOTS;
+	        default -> null;
+        };
+    }
+
+    public static Boolean validSlot(String s) {
+        switch(s.toLowerCase()) {
+            case "helmet", "chestplate", "leggings", "boots" -> { return true; }
+        };
+        return false;
+    }
+
     public static EquipmentSlot matchSlot(ArmorType type) {
         return switch (type) {
             case HELMET -> EquipmentSlot.HEAD;

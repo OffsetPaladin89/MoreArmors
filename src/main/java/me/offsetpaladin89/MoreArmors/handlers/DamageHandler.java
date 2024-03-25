@@ -134,7 +134,7 @@ public class DamageHandler implements Listener {
 
                 event.setDamage(event.getDamage() + getBowDamage(player));
                 event.setDamage(event.getDamage() * getScaledDamage(player, player.getWorld().getEnvironment()));
-
+				plugin.hologramHandler.createDamageHologram(damager.getLocation(), event.getEntity().getLocation(), 20L, event.getDamage());
 //				float bonusDamage = 0;
 
 //				if(nbtItem.getBoolean("IsCustomItem")) {

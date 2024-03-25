@@ -7,22 +7,26 @@ import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Item;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public record Materials(MoreArmorsMain plugin) {
-	public ItemStack CompactedSugarCane(Integer amount) { return plugin.materialsdata.addInfo(new ItemStack(Material.SUGAR_CANE, amount), Rarity.UNCOMMON, "Compacted Sugar Cane", "compacted_sugar_cane"); }
-	public ItemStack CompactedCobblestone(Integer amount) { return plugin.materialsdata.addInfo(new ItemStack(Material.COBBLESTONE, amount), Rarity.COMMON, "Compacted Cobblestone", "compacted_cobblestone"); }
-	public ItemStack CompactedSoulSand(Integer amount) { return plugin.materialsdata.addInfo(new ItemStack(Material.SOUL_SAND, amount), Rarity.UNCOMMON, "Compacted Soul Sand", "compacted_soul_sand"); }
-	public ItemStack CompactedBlazeRod(Integer amount) { return plugin.materialsdata.addInfo(new ItemStack(Material.BLAZE_ROD, amount), Rarity.UNCOMMON, "Compacted Blaze Rod", "compacted_blaze_rod"); }
+	public ItemStack CompactedSugarCane(Integer amount) { return addData(new ItemStack(Material.SUGAR_CANE, amount), Rarity.UNCOMMON, "Compacted Sugar Cane", "compacted_sugar_cane"); }
+	public ItemStack CompactedCobblestone(Integer amount) { return addData(new ItemStack(Material.COBBLESTONE, amount), Rarity.COMMON, "Compacted Cobblestone", "compacted_cobblestone"); }
+	public ItemStack CompactedSoulSand(Integer amount) { return addData(new ItemStack(Material.SOUL_SAND, amount), Rarity.UNCOMMON, "Compacted Soul Sand", "compacted_soul_sand"); }
+	public ItemStack CompactedBlazeRod(Integer amount) { return addData(new ItemStack(Material.BLAZE_ROD, amount), Rarity.UNCOMMON, "Compacted Blaze Rod", "compacted_blaze_rod"); }
 	public ItemStack NetherCrown() { return createMaterialSkull("3e4f49535a276aacc4dc84133bfe81be5f2a4799a4c04d9a4ddb72d819ec2b2b", Rarity.EPIC, "Nether Crown", "nether_crown"); }
-	public ItemStack CompactedEndStone(Integer amount) { return plugin.materialsdata.addInfo(new ItemStack(Material.END_STONE, amount), Rarity.COMMON, "Compacted End Stone", "compacted_end_stone"); }
-	public ItemStack CompactedEyeOfEnder(Integer amount) { return plugin.materialsdata.addInfo(new ItemStack(Material.ENDER_EYE, amount), Rarity.UNCOMMON, "Compacted Eye of Ender", "compacted_eye_of_ender"); }
-	public ItemStack CompactedDiamond(Integer amount) { return plugin.materialsdata.addInfo(new ItemStack(Material.DIAMOND, amount), Rarity.UNCOMMON, "Compacted Diamond", "compacted_diamond"); }
-	public ItemStack CompactedDiamondBlock(Integer amount) { return plugin.materialsdata.addInfo(new ItemStack(Material.DIAMOND_BLOCK, amount), Rarity.RARE, "Compacted Diamond Block", "compacted_diamond_block"); }
+	public ItemStack CompactedEndStone(Integer amount) { return addData(new ItemStack(Material.END_STONE, amount), Rarity.COMMON, "Compacted End Stone", "compacted_end_stone"); }
+	public ItemStack CompactedEyeOfEnder(Integer amount) { return addData(new ItemStack(Material.ENDER_EYE, amount), Rarity.UNCOMMON, "Compacted Eye of Ender", "compacted_eye_of_ender"); }
+	public ItemStack CompactedDiamond(Integer amount) { return addData(new ItemStack(Material.DIAMOND, amount), Rarity.UNCOMMON, "Compacted Diamond", "compacted_diamond"); }
+	public ItemStack CompactedDiamondBlock(Integer amount) { return addData(new ItemStack(Material.DIAMOND_BLOCK, amount), Rarity.RARE, "Compacted Diamond Block", "compacted_diamond_block"); }
 	public ItemStack DiamondSingularity() { return createMaterialSkull("f073d84d6fda6a3404e77ad8d0f190893ae66d195fbb44d3c4607a6b71d9b9d5", Rarity.EPIC, "Diamond Singularity", "diamond_singularity"); }
 	public void RegisterMaterialsRecipes() {
 		plugin.getServer().addRecipe(registerRecipe("compacted_sugar_cane", CompactedSugarCane(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.SUGAR_CANE));
@@ -36,14 +40,29 @@ public record Materials(MoreArmorsMain plugin) {
 		plugin.getServer().addRecipe(registerRecipe("compacted_diamond_block", CompactedDiamondBlock(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.DIAMOND));
 		plugin.getServer().addRecipe(registerRecipe("diamond_singularity", DiamondSingularity()).shape("XXX", "XSX", "XXX").setIngredient('X', Material.DIAMOND_BLOCK).setIngredient('S', Material.DIAMOND));
 	}
+	private ItemStack addData(ItemStack item, Rarity rarity, String name, String itemID) {
+		ItemMeta itemmeta = item.getItemMeta();
+		ArrayList<String> lore = new ArrayList<>();
+		lore.add("");
+		lore.add(plugin.convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity.toString() + " MATERIAL"));
+		itemmeta.setDisplayName(plugin.convertColoredString(Rarity.getColorRarity(rarity) + name));
+		itemmeta.setLore(lore);
+		itemmeta.addEnchant(Enchantment.MENDING, 1, false);
+		itemmeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+		item.setItemMeta(itemmeta);
+		NBTItem nbtItem = new NBTItem(item);
+		nbtItem.setBoolean("IsCustomItem", true);
+		nbtItem.setString("CustomItemID", itemID);
+		nbtItem.setString("CustomItemType", "material");
+		return nbtItem.getItem();
+	}
 	private ItemStack createMaterialSkull(String skinID, Rarity rarity, String itemName, String itemID) {
 		ItemStack item = SkullCreator.createSkull();
 		ItemMeta itemmeta = item.getItemMeta();
 		itemmeta = SkullUtils.applySkin(itemmeta, skinID);
 		item.setItemMeta(itemmeta);
-		item = plugin.materialsdata.addInfo(item, rarity, itemName, itemID);
 
-		NBTItem nbtItem = new NBTItem(item);
+		NBTItem nbtItem = new NBTItem(addData(item, rarity, itemName, itemID));
 		nbtItem.setString("UUID", UUID.randomUUID().toString());
 		return nbtItem.getItem();
 	}

@@ -1,9 +1,9 @@
 package me.offsetpaladin89.MoreArmors.enums;
 
-public enum SetTypes {
+public enum SetType {
     EMERALD, END, EXPERIENCE, MINER, NETHER, SEA_GREED, SPEEDSTER, TITAN, TRUE_DIAMOND;
 
-    public static SetTypes getSetType(String s) {
+    public static SetType getSetType(String s) {
         return switch(s.toLowerCase()) {
             case "emerald" -> EMERALD;
             case "end" -> END;

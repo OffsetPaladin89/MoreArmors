@@ -1,4 +1,4 @@
-package me.offsetpaladin89.MorePluginsCore.handlers;
+package me.offsetpaladin89.MoreArmors.handlers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

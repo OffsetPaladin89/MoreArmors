@@ -2,72 +2,36 @@ package me.offsetpaladin89.MoreArmors.commands;
 
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
-import me.offsetpaladin89.MoreArmors.enums.SetTypes;
+import me.offsetpaladin89.MoreArmors.enums.SetType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 public record GiveArmor(MoreArmorsMain plugin) {
 
-  public ItemStack GiveArmorPiece(SetTypes type, ArmorType armorType, Integer level, Integer amount) {
+  public ItemStack GiveArmor(SetType type, ArmorType armorType, Integer specialValue) {
     return switch (type) {
-      case EMERALD -> plugin.armorSets.EmeraldArmor(ArmorType.matchSlot(armorType), amount);
-//      case "end" -> switch (armorType) {
-//        case HELMET -> plugin.armorSets.EndHelmet();
-//        case CHESTPLATE -> plugin.armorSets.EndChestplate();
-//        case LEGGINGS -> plugin.armorSets.EndLeggings();
-//        case BOOTS -> plugin.armorSets.EndBoots();
+      case EMERALD -> plugin.armorSets.EmeraldArmor(ArmorType.matchSlot(armorType), specialValue);
+      case END -> plugin.armorSets.EndArmor(ArmorType.matchSlot(armorType));
+      case EXPERIENCE -> plugin.armorSets.ExperienceArmor(ArmorType.matchSlot(armorType));
+      case MINER -> plugin.armorSets.MinerArmor(ArmorType.matchSlot(armorType));
+      case NETHER -> plugin.armorSets.NetherArmor(ArmorType.matchSlot(armorType));
+      case SEA_GREED -> plugin.armorSets.SeaGreedArmor(ArmorType.matchSlot(armorType));
+      case SPEEDSTER -> plugin.armorSets.SpeedsterArmor(ArmorType.matchSlot(armorType));
+      case TITAN -> plugin.armorSets.TitanArmor(ArmorType.matchSlot(armorType));
+//      case TRUE_DIAMOND -> switch (armorType) {
+//        case HELMET -> plugin.truediamond.TrueDiamondHelmet(level, amount);
+//        case CHESTPLATE -> plugin.truediamond.TrueDiamondChestplate(level, amount);
+//        case LEGGINGS -> plugin.truediamond.TrueDiamondLeggings(level, amount);
+//        case BOOTS -> plugin.truediamond.TrueDiamondBoots(level, amount);
 //      };
-//      case "experience" -> switch (armorType) {
-//        case HELMET -> plugin.armorSets.ExperienceHelmet();
-//        case CHESTPLATE -> plugin.armorSets.ExperienceChestplate();
-//        case LEGGINGS -> plugin.armorSets.ExperienceLeggings();
-//        case BOOTS -> plugin.armorSets.ExperienceBoots();
-//      };
-//      case "miner" -> switch (armorType) {
-//        case HELMET -> plugin.armorSets.MinerHelmet();
-//        case CHESTPLATE -> plugin.armorSets.MinerChestplate();
-//        case LEGGINGS -> plugin.armorSets.MinerLeggings();
-//        case BOOTS -> plugin.armorSets.MinerBoots();
-//      };
-//      case "nether" -> switch (armorType) {
-//        case HELMET -> plugin.armorSets.NetherHelmet();
-//        case CHESTPLATE -> plugin.armorSets.NetherChestplate();
-//        case LEGGINGS -> plugin.armorSets.NetherLeggings();
-//        case BOOTS -> plugin.armorSets.NetherBoots();
-//      };
-//      case "seagreed" -> switch (armorType) {
-//        case HELMET -> plugin.armorSets.SeaGreedHelmet();
-//        case CHESTPLATE -> plugin.armorSets.SeaGreedChestplate();
-//        case LEGGINGS -> plugin.armorSets.SeaGreedLeggings();
-//        case BOOTS -> plugin.armorSets.SeaGreedBoots();
-//      };
-//      case "speedster" -> switch (armorType) {
-//        case HELMET -> plugin.armorSets.SpeedsterHelmet();
-//        case CHESTPLATE -> plugin.armorSets.SpeedsterChestplate();
-//        case LEGGINGS -> plugin.armorSets.SpeedsterLeggings();
-//        case BOOTS -> plugin.armorSets.SpeedsterBoots();
-//      };
-//      case "titan" -> switch (armorType) {
-//        case HELMET -> plugin.armorSets.TitanHelmet();
-//        case CHESTPLATE -> plugin.armorSets.TitanChestplate();
-//        case LEGGINGS -> plugin.armorSets.TitanLeggings();
-//        case BOOTS -> plugin.armorSets.TitanBoots();
-//      };
-      case TRUE_DIAMOND -> switch (armorType) {
-        case HELMET -> plugin.truediamond.TrueDiamondHelmet(level, amount);
-        case CHESTPLATE -> plugin.truediamond.TrueDiamondChestplate(level, amount);
-        case LEGGINGS -> plugin.truediamond.TrueDiamondLeggings(level, amount);
-        case BOOTS -> plugin.truediamond.TrueDiamondBoots(level, amount);
-      };
       default -> null;
     };
   }
 
-  public void GiveArmorCommand(CommandSender sender, Player target, String type, ArmorType armorType, int level, int amount) {
-    ItemStack item = GiveArmorPiece(SetTypes.getSetType(type), armorType, level, amount);
+  public void GiveArmorCommand(CommandSender sender, Player target, String type, ArmorType armorType, Integer specialValue) {
+    ItemStack item = GiveArmor(SetType.getSetType(type), armorType, specialValue);
     PlayerInventory inventory = target.getInventory();
     if (inventory.firstEmpty() == -1) target.getWorld().dropItem(target.getLocation().add(0.0D, 0.5D, 0.0D), item);
     else inventory.addItem(item);

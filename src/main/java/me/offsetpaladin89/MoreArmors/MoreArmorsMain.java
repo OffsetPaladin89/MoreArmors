@@ -4,17 +4,15 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.armors.Armors;
 import me.offsetpaladin89.MoreArmors.armors.truediamondarmor.TrueDiamondArmor;
 import me.offsetpaladin89.MoreArmors.armors.truediamondarmor.TrueDiamondArmorData;
+import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
+import me.offsetpaladin89.MoreArmors.commands.Commands;
 import me.offsetpaladin89.MoreArmors.commands.GiveArmor;
 import me.offsetpaladin89.MoreArmors.commands.GiveMaterial;
-import me.offsetpaladin89.MoreArmors.handlers.ArmorSetAbilityHandler;
-import me.offsetpaladin89.MoreArmors.handlers.CraftHandler;
-import me.offsetpaladin89.MoreArmors.handlers.DamageHandler;
-import me.offsetpaladin89.MoreArmors.handlers.HologramHandler;
+import me.offsetpaladin89.MoreArmors.handlers.*;
 import me.offsetpaladin89.MoreArmors.listeners.MainListener;
 import me.offsetpaladin89.MoreArmors.listeners.MaterialsListener;
 import me.offsetpaladin89.MoreArmors.listeners.MoreArmorsListener;
 import me.offsetpaladin89.MoreArmors.materials.Materials;
-import me.offsetpaladin89.MoreArmors.materials.MaterialsData;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -40,20 +38,13 @@ public class MoreArmorsMain extends JavaPlugin {
 	public List<String> validArmors = new ArrayList<>(Arrays.asList(armors));
 	private final String[] slots = {"helmet", "chestplate", "leggings", "boots"};
 	public List<String> validSlots = new ArrayList<>(Arrays.asList(armors));
-
 	public ArrayList<Player> endarmor = new ArrayList<>();
-	public ArrayList<Player> netherArmorBonus = new ArrayList<>();
 	public ArrayList<Player> destroyerarmor = new ArrayList<>();
 	public ArrayList<Player> destroyerhelmet = new ArrayList<>();
 	public HashMap<Player, Float> armydamageincrease = new HashMap<>();
-
 	public TrueDiamondArmor truediamond;
-
 	public TrueDiamondArmorData truediamonddata;
-
 	public Materials materials;
-
-	public MaterialsData materialsdata;
 
 	public HologramHandler hologramHandler;
 	public GiveMaterial givematerial;
@@ -73,6 +64,9 @@ public class MoreArmorsMain extends JavaPlugin {
 		new MoreArmorsListener(this);
 		new CraftHandler(this);
 		new DamageHandler(this);
+		new Commands(this);
+		new CommandCompleter(this);
+		new TextHandler(this);
 
 		hologramHandler = new HologramHandler(this);
 		armorConstructor = new ArmorConstructor(this);
@@ -81,7 +75,6 @@ public class MoreArmorsMain extends JavaPlugin {
 		truediamond = new TrueDiamondArmor(this);
 		truediamonddata = new TrueDiamondArmorData(this);
 		materials = new Materials(this);
-		materialsdata = new MaterialsData(this);
 		givematerial = new GiveMaterial(this);
 		givearmor = new GiveArmor(this);
 
@@ -90,9 +83,11 @@ public class MoreArmorsMain extends JavaPlugin {
 		materials.RegisterMaterialsRecipes();
 		removeHolograms();
 	}
+
 	public boolean isAirOrNull(ItemStack item) {
 		return item == null || item.getType().equals(Material.AIR);
 	}
+
 	public boolean isAirOrNull(ItemStack[] items) {
 		for (ItemStack i : items) {
 			if (i == null || i.getType().equals(Material.AIR)) {
@@ -101,9 +96,11 @@ public class MoreArmorsMain extends JavaPlugin {
 		}
 		return false;
 	}
+
 	public String convertColoredString(String msg) {
 		return ChatColor.translateAlternateColorCodes('&', msg);
 	}
+
 	public boolean IsFullCustomSet(String tag, PlayerInventory inventory) {
 		if (WearingFullSet(inventory)) {
 			return false;
@@ -114,16 +111,23 @@ public class MoreArmorsMain extends JavaPlugin {
 				new NBTItem(inventory.getLeggings()).getString("CustomItemID").equals(tag) &&
 				new NBTItem(inventory.getBoots()).getString("CustomItemID").equals(tag);
 	}
+
 	public boolean WearingFullSet(PlayerInventory inventory) {
 		return isAirOrNull(new ItemStack[]{inventory.getHelmet(), inventory.getChestplate(), inventory.getLeggings(), inventory.getBoots()});
 	}
-	public Boolean matchingCustomItem(ItemStack item, String itemID) { return !isAirOrNull(item) && new NBTItem(item).getString("CustomItemID").equals(itemID); }
+
+	public Boolean matchingCustomItem(ItemStack item, String itemID) {
+		return !isAirOrNull(item) && new NBTItem(item).getString("CustomItemID").equals(itemID);
+	}
+
 	public void sendConsoleMessage(String s) {
 		getServer().getConsoleSender().sendMessage(convertColoredString(s));
 	}
+
 	public void sendPlayerMessage(Player p, String s) {
 		p.sendMessage(convertColoredString(s));
 	}
+
 	public void removeHolograms() {
 		for (World world : getServer().getWorlds()) {
 			for (Entity entity : world.getEntities()) {
@@ -137,6 +141,7 @@ public class MoreArmorsMain extends JavaPlugin {
 			}
 		}
 	}
+
 	public void ArmorChecker() {
 		new BukkitRunnable() {
 			public void run() {
