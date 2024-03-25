@@ -1,7 +1,7 @@
 package me.offsetpaladin89.MoreArmors.commands;
 
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import me.offsetpaladin89.MoreArmors.handlers.TextHandler;
+import me.offsetpaladin89.MoreArmors.handlers.CommandHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,11 +9,11 @@ import org.bukkit.command.CommandSender;
 public class Commands implements CommandExecutor {
 
 	public MoreArmorsMain plugin;
-	public CommandsMessages messages;
+	public CommandHandler messages;
 
 	public Commands(MoreArmorsMain plugin) {
 		this.plugin = plugin;
-		messages = new CommandsMessages(plugin);
+		messages = new CommandHandler(plugin);
 		plugin.getServer().getPluginCommand("morearmors").setExecutor(this);
 	}
 
@@ -21,7 +21,7 @@ public class Commands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("morearmors")) {
 			if (args.length == 0) {
-				TextHandler.sendInfo(sender, "MoreArmors", "Custom Armors.", true, "https://dev.bukkit.org/projects/MoreArmors");
+				messages.pluginInfoMessage(sender);
 			} else {
 				switch (args[0].toLowerCase()) {
 					case "help" -> {

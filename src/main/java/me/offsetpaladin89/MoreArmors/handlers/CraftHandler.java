@@ -3,7 +3,7 @@ package me.offsetpaladin89.MoreArmors.handlers;
 import com.cryptomorin.xseries.XMaterial;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import me.offsetpaladin89.MoreArmors.enums.ArmorType;
+import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -63,72 +63,6 @@ public class CraftHandler implements Listener {
 					for (ItemStack item : ci.getMatrix()) {
 						if (!plugin.isAirOrNull(item)) {
 							NBTItem nbtItem = new NBTItem(item);
-							if (nbtResult.getString("CustomItemID").equals("truediamond")) {
-								boolean upgrading = false;
-								boolean singularityupgrading = false;
-
-								if (!(nbtItem.getString("CustomItemID").equals("truediamond")
-										|| nbtItem.getString("CustomItemID").equals("diamond_singularity")
-										|| nbtItem.getString("CustomItemID").equals("compacted_diamond_block"))) {
-									ci.setResult(null);
-								}
-
-								if (nbtItem.getString("CustomItemID").equals("truediamond")) {
-									if (nbtResult.getInteger("ArmorLevel") == 100) {
-										upgrading = true;
-									}
-									if (nbtResult.getInteger("DiamondSacrifice") == 100) {
-										singularityupgrading = true;
-									}
-								}
-								if (upgrading || singularityupgrading) {
-									int level = nbtItem.getInteger("ArmorLevel");
-									int diamondsacrifice = nbtItem.getInteger("DiamondSacrifice");
-									if ((upgrading && level >= 10) || (singularityupgrading && diamondsacrifice >= 50)) {
-										ci.setResult(null);
-									} else {
-										switch (ArmorType.matchType(item)) {
-											case HELMET -> {
-												if (upgrading) {
-													ci.setResult(plugin.truediamond.TrueDiamondHelmet(level + 1, diamondsacrifice));
-													return;
-												} else if (singularityupgrading) {
-													ci.setResult(plugin.truediamond.TrueDiamondHelmet(level, diamondsacrifice + 1));
-													return;
-												}
-											}
-											case CHESTPLATE -> {
-												if (upgrading) {
-													ci.setResult(plugin.truediamond.TrueDiamondChestplate(level + 1, diamondsacrifice));
-													return;
-												} else if (singularityupgrading) {
-													ci.setResult(plugin.truediamond.TrueDiamondChestplate(level, diamondsacrifice + 1));
-													return;
-												}
-											}
-											case LEGGINGS -> {
-												if (upgrading) {
-													ci.setResult(plugin.truediamond.TrueDiamondLeggings(level + 1, diamondsacrifice));
-													return;
-												} else if (singularityupgrading) {
-													ci.setResult(plugin.truediamond.TrueDiamondLeggings(level, diamondsacrifice + 1));
-													return;
-												}
-											}
-											case BOOTS -> {
-												if (upgrading) {
-													ci.setResult(plugin.truediamond.TrueDiamondBoots(level + 1, diamondsacrifice));
-													return;
-												} else if (singularityupgrading) {
-													ci.setResult(plugin.truediamond.TrueDiamondBoots(level, diamondsacrifice + 1));
-													return;
-												}
-											}
-										}
-									}
-								}
-							}
-
 							//Compacted Diamond
 							if (nbtResult.getString("CustomItemID").equals("compacted_diamond") && !(item.getAmount() >= 4)) {
 								ci.setResult(null);
@@ -144,17 +78,11 @@ public class CraftHandler implements Listener {
 									}
 								}
 							}
-							//Diamond Singularity
-							if (nbtResult.getString("CustomItemID").equals("diamond_singularity")) {
-								if (!((nbtItem.getString("CustomItemID").equals("compacted_diamond_block") && item.getAmount() >= 4) || (nbtItem.getString("CustomItemID").equals("compacted_diamond") && item.getAmount() >= 32))) {
-									ci.setResult(null);
-								}
-							}
 							//Compacted Gold
 							if (nbtResult.getString("CustomItemID").equals("compacted_gold_ingot") && !(item.getAmount() >= 4)) {
 								ci.setResult(null);
 							}
-//							//Compacted Gold Block
+							//Compacted Gold Block
 							if (nbtResult.getString("CustomItemID").equals("compacted_gold_block")) {
 								if (!nbtItem.getBoolean("IsCustomItem")) {
 									ci.setResult(new ItemStack(Material.GOLD_BLOCK, 1));
@@ -189,9 +117,6 @@ public class CraftHandler implements Listener {
 							if (!validCraft(nbtResult, nbtItem, "nether_crown", item.getAmount(), netherCrownCraft)) {
 								ci.setResult(null);
 							}
-//							if (nbtResult.getString("CustomItemID").equals("nether_crown")) {
-//								if (nbtItem.getString("CustomItemID").equals("compacted_blaze_rod") && !(item.getAmount() >= 8)) { ci.setResult(null); }
-//							}
 							//Nether Armor
 							if (nbtResult.getString("CustomItemID").equals("nether")) {
 								if (!(nbtItem.getString("CustomItemID").equals("compacted_soul_sand") || nbtItem.getString("CustomItemID").equals("nether_crown") || item.getType().equals(Material.NETHER_STAR))) {
@@ -213,11 +138,6 @@ public class CraftHandler implements Listener {
 							seaGreedCraft.put("compacted_gold_block", 4);
 							if (!validCraft(nbtResult, nbtItem, "seagreed", item.getAmount(), seaGreedCraft)) {
 								ci.setResult(null);
-							}
-							if (nbtResult.getString("CustomItemID").equals("truediamond")) {
-								if (!(nbtItem.getString("CustomItemID").equals("compacted_diamond_block") || nbtItem.getString("CustomItemID").equals("truediamond") || nbtItem.getString("CustomItemID").equals("diamond_singularity"))) {
-									ci.setResult(null);
-								}
 							}
 //							if(TextHandler.getPlugin("MoreArmorsExtra") != null) {
 //								if(nbtResult.getString("CustomItemID").equals("destroyer")) {
@@ -295,7 +215,7 @@ public class CraftHandler implements Listener {
 								if (nbtItem.getString("CustomItemID").equals("compacted_end_stone")) {
 									values.add((int) Math.floor(item.getAmount() / 32));
 								}
-								if (!ArmorType.matchType(result).equals(ArmorType.HELMET)) {
+								if (!SlotType.matchType(result).equals(SlotType.HELMET)) {
 									if (nbtItem.getString("CustomItemID").equals("compacted_eye_of_ender")) {
 										values.add((int) Math.floor(item.getAmount() / 16));
 									}
@@ -441,30 +361,7 @@ public class CraftHandler implements Listener {
 				if (!values.isEmpty()) {
 					leastvalue = values.get(0);
 				} else {
-					if (nbtResult.getString("CustomItemID").equals("truediamond")) {
-						if (nbtResult.getInteger("ArmorLevel") == 100 || nbtResult.getInteger("DiamondSacrifice") == 100) {
-							return;
-						}
-						int level = nbtResult.getInteger("ArmorLevel");
-						int diamondsacrifice = nbtResult.getInteger("DiamondSacrifice");
-						ci.setResult(null);
-						for (ItemStack item : ci.getMatrix()) {
-							if (!plugin.isAirOrNull(item)) {
-								item.setAmount(item.getAmount() - 1);
-							}
-						}
-						switch (ArmorType.matchType(result)) {
-							case HELMET ->
-									inventory.addItem(plugin.truediamond.TrueDiamondHelmet(level, diamondsacrifice));
-							case CHESTPLATE ->
-									inventory.addItem(plugin.truediamond.TrueDiamondChestplate(level, diamondsacrifice));
-							case LEGGINGS ->
-									inventory.addItem(plugin.truediamond.TrueDiamondLeggings(level, diamondsacrifice));
-							case BOOTS ->
-									inventory.addItem(plugin.truediamond.TrueDiamondBoots(level, diamondsacrifice));
-						}
-						return;
-					}
+
 				}
 				//Gets how many empty slots there are in the player's inventory
 				int empty = 0;
@@ -476,7 +373,7 @@ public class CraftHandler implements Listener {
 				}
 				//Checks if there is enough space in the player's inventory to add items
 				if (leastvalue > empty) {
-					if (nbtResult.getString("CustomItemID").equals("nether_crown") || nbtResult.getString("CustomItemID").equals("diamond_singularity") || nbtResult.getString("CustomItemID").equals("end") || nbtResult.getString("CustomItemID").equals("miner") || nbtResult.getString("CustomItemID").equals("nether") || nbtResult.getString("CustomItemID").equals("truediamond")) {
+					if (nbtResult.getString("CustomItemID").equals("nether_crown") || nbtResult.getString("CustomItemID").equals("end") || nbtResult.getString("CustomItemID").equals("miner") || nbtResult.getString("CustomItemID").equals("nether")) {
 						leastvalue = empty;
 					}
 					if (nbtResult.getString("CustomItemID").equals("compacted_cobblestone") || nbtResult.getString("CustomItemID").equals("compacted_sugar_cane") || nbtResult.getString("CustomItemID").equals("compacted_eye_of_ender") || nbtResult.getString("CustomItemID").equals("compacted_end_stone") || nbtResult.getString("CustomItemID").equals("compacted_soul_sand") || nbtResult.getString("CustomItemID").equals("compacted_blaze_rod")) {
@@ -504,7 +401,7 @@ public class CraftHandler implements Listener {
 								if (nbtItem.getString("CustomItemID").equals("compacted_end_stone")) {
 									item.setAmount(item.getAmount() - (32 * leastvalue));
 								}
-								if (!ArmorType.matchType(result).equals(ArmorType.HELMET)) {
+								if (!SlotType.matchType(result).equals(SlotType.HELMET)) {
 									if (nbtItem.getString("CustomItemID").equals("compacted_eye_of_ender")) {
 										item.setAmount(item.getAmount() - (16 * leastvalue));
 									}
@@ -523,7 +420,7 @@ public class CraftHandler implements Listener {
 								if (nbtItem.getString("CustomItemID").equals("compacted_soul_sand")) {
 									item.setAmount(item.getAmount() - (16 * leastvalue));
 								}
-								if (!ArmorType.matchType(result).equals(ArmorType.HELMET)) {
+								if (!SlotType.matchType(result).equals(SlotType.HELMET)) {
 									if (item.getType().equals(Material.NETHER_STAR)) {
 										item.setAmount(item.getAmount() - leastvalue);
 									}
@@ -541,10 +438,6 @@ public class CraftHandler implements Listener {
 								if (nbtItem.getString("CustomItemID").equals("compacted_diamond_block")) {
 									item.setAmount(item.getAmount() - (4 * leastvalue));
 								}
-							}
-							//True Diamond Armor
-							if (nbtResult.getString("CustomItemID").equals("truediamond")) {
-								item.setAmount(item.getAmount() - leastvalue);
 							}
 							//Nether Crown
 							if (nbtResult.getString("CustomItemID").equals("nether_crown")) {
@@ -570,15 +463,6 @@ public class CraftHandler implements Listener {
 							//Compacted Gold Block
 							if (nbtResult.getString("CustomItemID").equals("compacted_gold_block")) {
 								item.setAmount(item.getAmount() - (4 * leastvalue));
-							}
-							//Diamond Singularity
-							if (nbtResult.getString("CustomItemID").equals("diamond_singularity")) {
-								if (nbtItem.getString("CustomItemID").equals("compacted_diamond")) {
-									item.setAmount(item.getAmount() - (32 * leastvalue));
-								}
-								if (nbtItem.getString("CustomItemID").equals("compacted_diamond_block")) {
-									item.setAmount(item.getAmount() - (4 * leastvalue));
-								}
 							}
 //							if(TextHandler.getPlugin("MoreArmorsExtra") != null) {
 //								if(nbtResult.getString("CustomItemID").equals("destroyer")) {
@@ -651,7 +535,7 @@ public class CraftHandler implements Listener {
 //					}
 					for (int x = 0; x < leastvalue; x++) {
 						if (nbtResult.getString("CustomItemType").equals("armor")) {
-							switch (ArmorType.matchType(result)) {
+							switch (SlotType.matchType(result)) {
 								case HELMET -> {
 									//End Helmet
 									if (nbtResult.getString("CustomItemID").equals("end")) {
@@ -668,8 +552,6 @@ public class CraftHandler implements Listener {
 									if(nbtResult.getString("CustomItemID").equals("seagreed")) {
 										inventory.addItem(plugin.armorSets.SeaGreedArmor(EquipmentSlot.HEAD));
 									}
-									//True Diamond Helmet
-//									if (nbtResult.getString("CustomItemID").equals("truediamond")) { inventory.addItem(plugin.armorSets.TrueDiamondHelmet(1, 0)); }
 								}
 								case CHESTPLATE -> {
 									//End Chestplate
@@ -687,8 +569,6 @@ public class CraftHandler implements Listener {
 									if(nbtResult.getString("CustomItemID").equals("seagreed")) {
 										inventory.addItem(plugin.armorSets.SeaGreedArmor(EquipmentSlot.CHEST));
 									}
-									//True Diamond Chestplate
-//									if (nbtResult.getString("CustomItemID").equals("truediamond")) { inventory.addItem(plugin.armorSets.TrueDiamondChestplate(1, 0)); }
 								}
 								case LEGGINGS -> {
 									//End Leggings
@@ -706,8 +586,6 @@ public class CraftHandler implements Listener {
 									if(nbtResult.getString("CustomItemID").equals("seagreed")) {
 										inventory.addItem(plugin.armorSets.SeaGreedArmor(EquipmentSlot.LEGS));
 									}
-									//True Diamond Leggings
-//									if (nbtResult.getString("CustomItemID").equals("truediamond")) { inventory.addItem(plugin.armorSets.TrueDiamondLeggings(1, 0)); }
 								}
 								case BOOTS -> {
 									//End Boots
@@ -725,14 +603,8 @@ public class CraftHandler implements Listener {
 									if(nbtResult.getString("CustomItemID").equals("seagreed")) {
 										inventory.addItem(plugin.armorSets.SeaGreedArmor(EquipmentSlot.FEET));
 									}
-									//True Diamond Boots
-//									if (nbtResult.getString("CustomItemID").equals("truediamond")) { inventory.addItem(plugin.armorSets.TrueDiamondBoots(1, 0)); }
 								}
 							}
-						}
-						//Diamond Singularities
-						if (nbtResult.getString("CustomItemID").equals("diamond_singularity")) {
-							inventory.addItem(plugin.materials.DiamondSingularity());
 						}
 						//Nether Crowns
 						if (nbtResult.getString("CustomItemID").equals("nether_crown")) {
@@ -769,7 +641,7 @@ public class CraftHandler implements Listener {
 							if (nbtItem.getString("CustomItemID").equals("compacted_end_stone")) {
 								item.setAmount(item.getAmount() - 31);
 							}
-							if (!ArmorType.matchType(result).equals(ArmorType.HELMET)) {
+							if (!SlotType.matchType(result).equals(SlotType.HELMET)) {
 								if (nbtItem.getString("CustomItemID").equals("compacted_eye_of_ender")) {
 									item.setAmount(item.getAmount() - 15);
 								}
@@ -814,15 +686,6 @@ public class CraftHandler implements Listener {
 						//Compacted Gold Block
 						if (nbtResult.getString("CustomItemID").equals("compacted_gold_block")) {
 							item.setAmount(item.getAmount() - 3);
-						}
-						//Diamond Singularity
-						if (nbtResult.getString("CustomItemID").equals("diamond_singularity")) {
-							if (nbtItem.getString("CustomItemID").equals("compacted_diamond")) {
-								item.setAmount(item.getAmount() - 31);
-							}
-							if (nbtItem.getString("CustomItemID").equals("compacted_diamond_block")) {
-								item.setAmount(item.getAmount() - 3);
-							}
 						}
 //						if(TextHandler.getPlugin("MoreArmorsExtra") != null) {
 //							if(nbtResult.getString("CustomItemID").equals("destroyer")) {

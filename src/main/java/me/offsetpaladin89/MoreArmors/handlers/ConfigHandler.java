@@ -7,7 +7,7 @@ import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public record ConfigUtil(MoreArmorsMain plugin) {
+public record ConfigHandler(MoreArmorsMain plugin) {
 
     public FileConfiguration getConfig(String name) {
         File file = new File(plugin.getDataFolder() + "/" + name + ".yml");

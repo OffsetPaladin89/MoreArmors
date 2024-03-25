@@ -3,8 +3,8 @@ package me.offsetpaladin89.MoreArmors.handlers;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.World.Environment;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
@@ -23,30 +23,20 @@ public class ArmorSetAbilityHandler {
 		for (Object obj : players) {
 			if (obj instanceof Player) {
 				Player p = (Player) obj;
+				World w = p.getLocation().getWorld();
 				if (plugin.IsFullCustomSet("nether", p.getInventory())) {
-					if (p.getLocation().getWorld().getEnvironment().equals(Environment.NETHER)) {
-						p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40);
-						p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 100, 0, false, false));
-					} else {
-						p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
-						p.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
-
+					if (w.getEnvironment().equals(Environment.NETHER)) {
+						p.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 60, 4, false, false, false));
+						p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 60, 0, false, false));
 					}
-
 				} else if (plugin.IsFullCustomSet("end", p.getInventory())) {
-					if (p.getLocation().getWorld().getEnvironment().equals(Environment.THE_END)) {
-						p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40);
-					} else {
-						p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
+					if (w.getEnvironment().equals(Environment.THE_END)) {
+						p.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 60, 4, false, false, false));
 					}
 				} else if (plugin.IsFullCustomSet("seagreed", p.getInventory())) {
 					if (inWater(p)) {
-						p.addPotionEffect(new PotionEffect(PotionEffectType.CONDUIT_POWER, 100, 0, false, false));
-					} else {
-						p.removePotionEffect(PotionEffectType.CONDUIT_POWER);
+						p.addPotionEffect(new PotionEffect(PotionEffectType.CONDUIT_POWER, 60, 0, false, false));
 					}
-				} else {
-					p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
 				}
 			}
 
@@ -55,21 +45,6 @@ public class ArmorSetAbilityHandler {
 
 	private boolean inWater(Player p) {
 		return p.getLocation().getBlock().getType().equals(Material.WATER);
-	}
-
-	public static void TrueDiamondArmor(Player player) {
-		if (plugin.IsFullCustomSet("truediamond", player.getInventory())) {
-			int playercount = 0;
-			for (Entity entity : player.getNearbyEntities(10, 10, 10)) {
-				if (entity instanceof Player) {
-					playercount++;
-				}
-			}
-			if (playercount > 10) {
-				playercount = 10;
-			}
-			plugin.armydamageincrease.put(player, 1 + (float) playercount / 50);
-		}
 	}
 
 	public static void DestroyerArmor(Player player) {
