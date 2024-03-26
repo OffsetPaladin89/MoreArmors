@@ -62,12 +62,10 @@ public record Give(MoreArmorsMain plugin) {
 		if (type.equals(MaterialType.NETHER_CROWN) || type.equals(MaterialType.ENERGY_CELL) || type.equals(MaterialType.MACHINE_CORE)) {
 			for (int x = 0; x < amount; x++) {
 				item = give(type, amount);
-				if (inventory.firstEmpty() == -1)
-					target.getWorld().dropItem(target.getLocation().add(0.0D, 0.5D, 0.0D), item);
+				if (inventory.firstEmpty() == -1) target.getWorld().dropItem(target.getLocation().add(0.0D, 0.5D, 0.0D), item);
 				else inventory.addItem(item);
 			}
-		} else if (inventory.firstEmpty() == -1)
-			target.getWorld().dropItem(target.getLocation().add(0.0D, 0.5D, 0.0D), item);
+		} else if (inventory.firstEmpty() == -1) target.getWorld().dropItem(target.getLocation().add(0.0D, 0.5D, 0.0D), item);
 		else inventory.addItem(item);
 		giveMessage(sender, target, amount, item);
 	}

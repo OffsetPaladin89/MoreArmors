@@ -40,9 +40,7 @@ public class Commands implements CommandExecutor {
 										args.length > 3 ? args[3] : null,
 										args.length > 4 ? args[4] : null,
 										args.length > 5 ? args[5] : null);
-							} else {
-								messages.tooManyArguments(sender);
-							}
+							} else messages.tooManyArguments(sender);
 						} else {
 							messages.noPermission(sender);
 						}
@@ -54,9 +52,7 @@ public class Commands implements CommandExecutor {
 										args.length == 1 ? "user" : args[1],
 										args.length > 2 ? args[2] : null,
 										args.length > 3 ? args[3] : null);
-							} else {
-								messages.tooManyArguments(sender);
-							}
+							} else messages.tooManyArguments(sender);
 						}
 					}
 				}

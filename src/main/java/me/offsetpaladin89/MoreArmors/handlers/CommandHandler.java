@@ -32,55 +32,36 @@ public record CommandHandler(MoreArmorsMain plugin) {
 
 		switch (type.toLowerCase()) {
 			case "armor" -> {
-				if (length == 3) {
-					sendArmorTypes(sender, player, type);
-				} else {
+				if (length == 3) sendArmorTypes(sender, player, type);
+				else {
 					if (ArmorType.getSetType(item) != null) {
 						ArmorType armorType = ArmorType.getSetType(item);
-						if (length == 4) {
-							sendEquipmentTypes(sender, player, type, item);
-						} else {
+						if (length == 4) sendEquipmentTypes(sender, player, type, item);
+						else {
 							if (SlotType.typeFromString(slot) != null) {
 								SlotType slotType = SlotType.typeFromString(slot);
-								if (length == 5) {
-									plugin.give.giveCommand(sender, target, item.toLowerCase(), slotType, 0);
-								} else {
+								if (length == 5) plugin.give.giveCommand(sender, target, item.toLowerCase(), slotType, 0);
+								else {
 									if (plugin.isInteger(specialValue)) {
-										if (armorType.equals(ArmorType.EMERALD) || armorType.equals(ArmorType.DESTROYER)) {
-											plugin.give.giveCommand(sender, target, item.toLowerCase(), slotType, Integer.parseInt(specialValue));
-										} else {
-											tooManyArguments(sender);
-										}
-									} else {
-										invalidArgument(sender, specialValue);
-									}
+										if (armorType.equals(ArmorType.EMERALD) || armorType.equals(ArmorType.DESTROYER)) plugin.give.giveCommand(sender, target, item.toLowerCase(), slotType, Integer.parseInt(specialValue));
+										else tooManyArguments(sender);
+									} else invalidArgument(sender, specialValue);
 								}
-							} else {
-								invalidArgument(sender, slot);
-							}
+							} else invalidArgument(sender, slot);
 						}
-					} else {
-						invalidArgument(sender, item);
-					}
+					} else invalidArgument(sender, item);
 				}
 			}
 			case "material" -> {
-				if (length == 3) {
-					sendMaterialTypes(sender, player, type);
-				} else {
+				if (length == 3) sendMaterialTypes(sender, player, type);
+				else {
 					if (MaterialType.getMaterialType(item) != null) {
 						MaterialType materialType = MaterialType.getMaterialType(item);
-						if (length == 4) {
-							plugin.give.giveCommand(sender, target, materialType, 1);
-						} else if (length == 5) {
-							if (plugin.isInteger(slot) && Integer.parseInt(slot) > 0) {
-								plugin.give.giveCommand(sender, target, materialType, Integer.parseInt(slot));
-							} else {
-								invalidArgument(sender, slot);
-							}
-						} else {
-							tooManyArguments(sender);
-						}
+						if (length == 4) plugin.give.giveCommand(sender, target, materialType, 1);
+						else if (length == 5) {
+							if (plugin.isInteger(slot) && Integer.parseInt(slot) > 0) plugin.give.giveCommand(sender, target, materialType, Integer.parseInt(slot));
+							else invalidArgument(sender, slot);
+						} else tooManyArguments(sender);
 					}
 				}
 			}
@@ -124,15 +105,9 @@ public record CommandHandler(MoreArmorsMain plugin) {
 						nbtItem.setInteger("EmeraldCount", Integer.parseInt(specialValue));
 						inventory.setItemInMainHand(plugin.armorConstructor.createEmeraldArmor(nbtItem.getItem()));
 						editItemMessage(sender, target, hand);
-					} else {
-						invalidArgument(sender, specialValue);
-					}
-				} else {
-					tooManyArguments(sender);
-				}
-			} else {
-				notHoldingItem(sender);
-			}
+					} else invalidArgument(sender, specialValue);
+				} else tooManyArguments(sender);
+			} else notHoldingItem(sender);
 		} else if (type.equals("kill_amount")) {
 			if (length == 3) {
 				nbtItem.setInteger("KillAmount", 0);
@@ -143,15 +118,9 @@ public record CommandHandler(MoreArmorsMain plugin) {
 					nbtItem.setInteger("KillAmount", Integer.parseInt(specialValue));
 					inventory.setItemInMainHand(plugin.armorConstructor.createDestroyerArmor(nbtItem.getItem()));
 					editItemMessage(sender, target, hand);
-				} else {
-					invalidArgument(sender, specialValue);
-				}
-			} else {
-				tooManyArguments(sender);
-			}
-		} else {
-			invalidArgument(sender, type);
-		}
+				} else invalidArgument(sender, specialValue);
+			} else tooManyArguments(sender);
+		} else invalidArgument(sender, type);
 	}
 
 	public void notHoldingItem(CommandSender s) {
@@ -187,25 +156,19 @@ public record CommandHandler(MoreArmorsMain plugin) {
 	public void sendMaterialTypes(CommandSender sender, String player, String type) {
 		plugin.sendColoredMessage(sender, "");
 		plugin.sendColoredMessage(sender, prefix() + " &6Give Command Options: &e(/morearmors give " + player + " " + type.toLowerCase() + " ... )");
-		for (String s : plugin.materialTypes) {
-			plugin.sendColoredMessage(sender, "&6> &e" + s);
-		}
+		for (String s : plugin.materialTypes) plugin.sendColoredMessage(sender, "&6> &e" + s);
 	}
 
 	public void sendArmorTypes(CommandSender sender, String player, String type) {
 		plugin.sendColoredMessage(sender, "");
 		plugin.sendColoredMessage(sender, prefix() + " &6Give Command Options: &e(/morearmors give " + player + " " + type.toLowerCase() + " ... )");
-		for (String s : plugin.armorTypes) {
-			plugin.sendColoredMessage(sender, "&6> &e" + s);
-		}
+		for (String s : plugin.armorTypes) plugin.sendColoredMessage(sender, "&6> &e" + s);
 	}
 
 	public void sendEquipmentTypes(CommandSender sender, String player, String type, String item) {
 		plugin.sendColoredMessage(sender, "");
 		plugin.sendColoredMessage(sender, prefix() + " &6Give Command Options: &e(/morearmors give " + player + " " + type.toLowerCase() + " " + item.toLowerCase() + " ... )");
-		for (String s : plugin.slotTypes) {
-			plugin.sendColoredMessage(sender, "&6> &e" + s);
-		}
+		for (String s : plugin.slotTypes) plugin.sendColoredMessage(sender, "&6> &e" + s);
 	}
 
 	public void helpMessage(CommandSender sender) {
