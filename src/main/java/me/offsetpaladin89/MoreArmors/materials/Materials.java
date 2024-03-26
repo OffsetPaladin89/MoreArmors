@@ -26,7 +26,7 @@ public record Materials(MoreArmorsMain plugin) {
 	public ItemStack CompactedEyeOfEnder(Integer amount) { return addData(new ItemStack(Material.ENDER_EYE, amount), Rarity.UNCOMMON, "Compacted Eye of Ender", "compacted_eye_of_ender"); }
 	public ItemStack CompactedDiamond(Integer amount) { return addData(new ItemStack(Material.DIAMOND, amount), Rarity.UNCOMMON, "Compacted Diamond", "compacted_diamond"); }
 	public ItemStack CompactedDiamondBlock(Integer amount) { return addData(new ItemStack(Material.DIAMOND_BLOCK, amount), Rarity.RARE, "Compacted Diamond Block", "compacted_diamond_block"); }
-	public ItemStack CompactedGold(Integer amount) { return addData(new ItemStack(Material.GOLD_INGOT, amount), Rarity.UNCOMMON, "Compacted Gold Ingot", "compacted_gold_ingot"); }
+	public ItemStack CompactedGold(Integer amount) { return addData(new ItemStack(Material.GOLD_INGOT, amount), Rarity.UNCOMMON, "Compacted Gold Ingot", "compacted_gold"); }
 	public ItemStack CompactedGoldBlock(Integer amount) { return addData(new ItemStack(Material.GOLD_BLOCK, amount), Rarity.RARE, "Compacted Gold Block", "compacted_gold_block"); }
 	public ItemStack CompactedPrismarine(Integer amount) { return addData(new ItemStack(Material.PRISMARINE, amount), Rarity.UNCOMMON, "Compacted Prismarine", "compacted_prismarine"); }
 	public ItemStack CompactedRedstone(Integer amount) { return addData(new ItemStack(Material.REDSTONE, amount), Rarity.UNCOMMON, "Compacted Redstone", "compacted_redstone"); }
@@ -46,7 +46,7 @@ public record Materials(MoreArmorsMain plugin) {
 		plugin.getServer().addRecipe(registerRecipe("compacted_eye_of_ender", CompactedEyeOfEnder(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.ENDER_EYE));
 		plugin.getServer().addRecipe(registerRecipe("compacted_diamond", CompactedDiamond(1)).shape(" X ", "XXX", " X ").setIngredient('X', Material.DIAMOND));
 		plugin.getServer().addRecipe(registerRecipe("compacted_diamond_block", CompactedDiamondBlock(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.DIAMOND));
-		plugin.getServer().addRecipe(registerRecipe("compacted_gold_ingot", CompactedGold(1)).shape(" X ", "XXX", " X ").setIngredient('X', Material.GOLD_INGOT));
+		plugin.getServer().addRecipe(registerRecipe("compacted_gold", CompactedGold(1)).shape(" X ", "XXX", " X ").setIngredient('X', Material.GOLD_INGOT));
 		plugin.getServer().addRecipe(registerRecipe("compacted_gold_block", CompactedGoldBlock(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.GOLD_INGOT));
 		plugin.getServer().addRecipe(registerRecipe("compacted_prismarine", CompactedPrismarine(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.PRISMARINE));
 		plugin.getServer().addRecipe(registerRecipe("compacted_redstone", CompactedRedstone(1)).shape(" X ", "XXX", " X ").setIngredient('X', Material.REDSTONE));
@@ -80,8 +80,8 @@ public record Materials(MoreArmorsMain plugin) {
 		itemmeta = SkullUtils.applySkin(itemmeta, skinID);
 		item.setItemMeta(itemmeta);
 		item.setAmount(amount);
-
-		return item;
+		NBTItem nbtItem = new NBTItem(addData(item, rarity, itemName, itemID));
+		return nbtItem.getItem();
 	}
 
 	private ItemStack createMaterialSkull(String skinID, Rarity rarity, String itemName, String itemID) {
