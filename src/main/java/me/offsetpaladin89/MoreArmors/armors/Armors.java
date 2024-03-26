@@ -8,165 +8,92 @@ import org.bukkit.inventory.ItemStack;
 
 public record Armors(MoreArmorsMain plugin) {
 	public ItemStack EmeraldArmor(EquipmentSlot slot, Integer emeraldAmount) {
-		switch (slot) {
-			case HEAD -> {
-				return plugin.armorConstructor.createEmeraldArmor(new ItemStack(Material.LEATHER_HELMET, 1), "Emerald Helmet", Rarity.EPIC, 3, 2, emeraldAmount, slot);
-			}
-			case CHEST -> {
-				return plugin.armorConstructor.createEmeraldArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), "Emerald Chestplate", Rarity.EPIC, 8, 2, emeraldAmount, slot);
-			}
-			case LEGS -> {
-				return plugin.armorConstructor.createEmeraldArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), "Emerald Leggings", Rarity.EPIC, 6, 2, emeraldAmount, slot);
-			}
-			case FEET -> {
-				return plugin.armorConstructor.createEmeraldArmor(new ItemStack(Material.LEATHER_BOOTS, 1), "Emerald Boots", Rarity.EPIC, 3, 2, emeraldAmount, slot);
-			}
-		}
-		return null;
+		return switch (slot) {
+			case HEAD -> plugin.armorConstructor.createEmeraldArmor(new ItemStack(Material.LEATHER_HELMET, 1), "Emerald Helmet", Rarity.EPIC, 3, 2, emeraldAmount, slot);
+			case CHEST -> plugin.armorConstructor.createEmeraldArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), "Emerald Chestplate", Rarity.EPIC, 8, 2, emeraldAmount, slot);
+			case LEGS -> plugin.armorConstructor.createEmeraldArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), "Emerald Leggings", Rarity.EPIC, 6, 2, emeraldAmount, slot);
+			case FEET -> plugin.armorConstructor.createEmeraldArmor(new ItemStack(Material.LEATHER_BOOTS, 1), "Emerald Boots", Rarity.EPIC, 3, 2, emeraldAmount, slot);
+			default -> null;
+		};
 	}
 
 	public ItemStack EndArmor(EquipmentSlot slot) {
-		switch (slot) {
-			case HEAD -> {
-				return plugin.armorConstructor.createEndArmor(new ItemStack(Material.PLAYER_HEAD, 1), "End Helmet", Rarity.LEGENDARY, 3, 2, slot);
-			}
-			case CHEST -> {
-				return plugin.armorConstructor.createEndArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), "End Chestplate", Rarity.LEGENDARY, 8, 2, slot);
-			}
-			case LEGS -> {
-				return plugin.armorConstructor.createEndArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), "End Leggings", Rarity.LEGENDARY, 6, 2, slot);
-			}
-			case FEET -> {
-				return plugin.armorConstructor.createEndArmor(new ItemStack(Material.LEATHER_BOOTS, 1), "End Boots", Rarity.LEGENDARY, 3, 2, slot);
-			}
-		}
-		return null;
+		return switch (slot) {
+			case HEAD -> plugin.armorConstructor.createEndArmor(new ItemStack(Material.PLAYER_HEAD, 1), "End Helmet", Rarity.LEGENDARY, 3, 2, slot);
+			case CHEST -> plugin.armorConstructor.createEndArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), "End Chestplate", Rarity.LEGENDARY, 8, 2, slot);
+			case FEET -> plugin.armorConstructor.createEndArmor(new ItemStack(Material.LEATHER_BOOTS, 1), "End Boots", Rarity.LEGENDARY, 3, 2, slot);
+			default -> null;
+		};
 	}
 
 	public ItemStack ExperienceArmor(EquipmentSlot slot) {
-		switch (slot) {
-			case HEAD -> {
-				return plugin.armorConstructor.createExperienceArmor(new ItemStack(Material.LEATHER_HELMET, 1), "Experience Helmet", Rarity.RARE, 1, slot);
-			}
-			case CHEST -> {
-				return plugin.armorConstructor.createExperienceArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), "Experience Chestplate", Rarity.RARE, 5, slot);
-			}
-			case LEGS -> {
-				return plugin.armorConstructor.createExperienceArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), "Experience Leggings", Rarity.RARE, 4, slot);
-			}
-			case FEET -> {
-				return plugin.armorConstructor.createExperienceArmor(new ItemStack(Material.LEATHER_BOOTS, 1), "Experience Boots", Rarity.RARE, 1, slot);
-			}
-		}
-		return null;
+		return switch (slot) {
+			case HEAD -> plugin.armorConstructor.createExperienceArmor(new ItemStack(Material.LEATHER_HELMET, 1), "Experience Helmet", Rarity.RARE, 1, slot);
+			case CHEST -> plugin.armorConstructor.createExperienceArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), "Experience Chestplate", Rarity.RARE, 5, slot);
+			case LEGS -> plugin.armorConstructor.createExperienceArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), "Experience Leggings", Rarity.RARE, 4, slot);
+			case FEET -> plugin.armorConstructor.createExperienceArmor(new ItemStack(Material.LEATHER_BOOTS, 1), "Experience Boots", Rarity.RARE, 1, slot);
+			default -> null;
+		};
 	}
 
 	public ItemStack MinerArmor(EquipmentSlot slot) {
-		switch (slot) {
-			case HEAD -> {
-				return plugin.armorConstructor.createMinerArmor(new ItemStack(Material.LEATHER_HELMET, 1), "Miner Helmet", Rarity.UNCOMMON, 1, slot);
-			}
-			case CHEST -> {
-				return plugin.armorConstructor.createMinerArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), "Miner Chestplate", Rarity.UNCOMMON, 5, slot);
-			}
-			case LEGS -> {
-				return plugin.armorConstructor.createMinerArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), "Miner Leggings", Rarity.UNCOMMON, 4, slot);
-			}
-			case FEET -> {
-				return plugin.armorConstructor.createMinerArmor(new ItemStack(Material.LEATHER_BOOTS, 1), "Miner Boots", Rarity.UNCOMMON, 1, slot);
-			}
-		}
-		return null;
+		return switch (slot) {
+			case HEAD -> plugin.armorConstructor.createMinerArmor(new ItemStack(Material.LEATHER_HELMET, 1), "Miner Helmet", Rarity.UNCOMMON, 1, slot);
+			case CHEST -> plugin.armorConstructor.createMinerArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), "Miner Chestplate", Rarity.UNCOMMON, 5, slot);
+			case LEGS -> plugin.armorConstructor.createMinerArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), "Miner Leggings", Rarity.UNCOMMON, 4, slot);
+			case FEET -> plugin.armorConstructor.createMinerArmor(new ItemStack(Material.LEATHER_BOOTS, 1), "Miner Boots", Rarity.UNCOMMON, 1, slot);
+			default -> null;
+		};
 	}
 
 	public ItemStack NetherArmor(EquipmentSlot slot) {
-		switch (slot) {
-			case HEAD -> {
-				return plugin.armorConstructor.createNetherArmor(new ItemStack(Material.PLAYER_HEAD, 1), "Nether Helmet", Rarity.LEGENDARY, 3, 2, slot);
-			}
-			case CHEST -> {
-				return plugin.armorConstructor.createNetherArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), "Nether Chestplate", Rarity.LEGENDARY, 8, 2, slot);
-			}
-			case LEGS -> {
-				return plugin.armorConstructor.createNetherArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), "Nether Leggings", Rarity.LEGENDARY, 6, 2, slot);
-			}
-			case FEET -> {
-				return plugin.armorConstructor.createNetherArmor(new ItemStack(Material.LEATHER_BOOTS, 1), "Nether Boots", Rarity.LEGENDARY, 3, 2, slot);
-			}
-		}
-		return null;
+		return switch (slot) {
+			case HEAD -> plugin.armorConstructor.createNetherArmor(new ItemStack(Material.PLAYER_HEAD, 1), "Nether Helmet", Rarity.LEGENDARY, 3, 2, slot);
+			case CHEST -> plugin.armorConstructor.createNetherArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), "Nether Chestplate", Rarity.LEGENDARY, 8, 2, slot);
+			case LEGS -> plugin.armorConstructor.createNetherArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), "Nether Leggings", Rarity.LEGENDARY, 6, 2, slot);
+			case FEET -> plugin.armorConstructor.createNetherArmor(new ItemStack(Material.LEATHER_BOOTS, 1), "Nether Boots", Rarity.LEGENDARY, 3, 2, slot);
+			default -> null;
+		};
 	}
 
 	public ItemStack SeaGreedArmor(EquipmentSlot slot) {
-		switch (slot) {
-			case HEAD -> {
-				return plugin.armorConstructor.createSeaGreedArmor(new ItemStack(Material.PLAYER_HEAD, 1), "Sea Greed Helmet", Rarity.MYTHIC, 3, 2, slot);
-			}
-			case CHEST -> {
-				return plugin.armorConstructor.createSeaGreedArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), "Sea Greed Chestplate", Rarity.MYTHIC, 8, 2, slot);
-			}
-			case LEGS -> {
-				return plugin.armorConstructor.createSeaGreedArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), "Sea Greed Leggings", Rarity.MYTHIC, 6, 2, slot);
-			}
-			case FEET -> {
-				return plugin.armorConstructor.createSeaGreedArmor(new ItemStack(Material.LEATHER_BOOTS, 1), "Sea Greed Boots", Rarity.MYTHIC, 3, 2, slot);
-			}
-		}
-		return null;
+		return switch (slot) {
+			case HEAD -> plugin.armorConstructor.createSeaGreedArmor(new ItemStack(Material.PLAYER_HEAD, 1), "Sea Greed Helmet", Rarity.MYTHIC, 3, 2, slot);
+			case CHEST -> plugin.armorConstructor.createSeaGreedArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), "Sea Greed Chestplate", Rarity.MYTHIC, 8, 2, slot);
+			case LEGS -> plugin.armorConstructor.createSeaGreedArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), "Sea Greed Leggings", Rarity.MYTHIC, 6, 2, slot);
+			case FEET -> plugin.armorConstructor.createSeaGreedArmor(new ItemStack(Material.LEATHER_BOOTS, 1), "Sea Greed Boots", Rarity.MYTHIC, 3, 2, slot);
+			default -> null;
+		};
 	}
 
 	public ItemStack SpeedsterArmor(EquipmentSlot slot) {
-		switch (slot) {
-			case HEAD -> {
-				return plugin.armorConstructor.createSpeedsterArmor(new ItemStack(Material.LEATHER_HELMET, 1), "Speedster Helmet", Rarity.RARE, 2, slot);
-			}
-			case CHEST -> {
-				return plugin.armorConstructor.createSpeedsterArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), "Speedster Chestplate", Rarity.RARE, 6, slot);
-			}
-			case LEGS -> {
-				return plugin.armorConstructor.createSpeedsterArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), "Speedster Leggings", Rarity.RARE, 5, slot);
-			}
-			case FEET -> {
-				return plugin.armorConstructor.createSpeedsterArmor(new ItemStack(Material.LEATHER_BOOTS, 1), "Speedster Boots", Rarity.RARE, 2, slot);
-			}
-		}
-		return null;
+		return switch (slot) {
+			case HEAD -> plugin.armorConstructor.createSpeedsterArmor(new ItemStack(Material.LEATHER_HELMET, 1), "Speedster Helmet", Rarity.RARE, 2, slot);
+			case CHEST -> plugin.armorConstructor.createSpeedsterArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), "Speedster Chestplate", Rarity.RARE, 6, slot);
+			case LEGS -> plugin.armorConstructor.createSpeedsterArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), "Speedster Leggings", Rarity.RARE, 5, slot);
+			case FEET -> plugin.armorConstructor.createSpeedsterArmor(new ItemStack(Material.LEATHER_BOOTS, 1), "Speedster Boots", Rarity.RARE, 2, slot);
+			default -> null;
+		};
 	}
 
 	public ItemStack TitanArmor(EquipmentSlot slot) {
-		switch (slot) {
-			case HEAD -> {
-				return plugin.armorConstructor.createTitanArmor(new ItemStack(Material.IRON_HELMET, 1), "Titan Helmet", Rarity.UNCOMMON, 2, slot);
-			}
-			case CHEST -> {
-				return plugin.armorConstructor.createTitanArmor(new ItemStack(Material.IRON_CHESTPLATE, 1), "Titan Chestplate", Rarity.UNCOMMON, 6, slot);
-			}
-			case LEGS -> {
-				return plugin.armorConstructor.createTitanArmor(new ItemStack(Material.IRON_LEGGINGS, 1), "Titan Leggings", Rarity.UNCOMMON, 5, slot);
-			}
-			case FEET -> {
-				return plugin.armorConstructor.createTitanArmor(new ItemStack(Material.IRON_BOOTS, 1), "Titan Boots", Rarity.UNCOMMON, 2, slot);
-			}
-		}
-		return null;
+		return switch (slot) {
+			case HEAD -> plugin.armorConstructor.createTitanArmor(new ItemStack(Material.IRON_HELMET, 1), "Titan Helmet", Rarity.UNCOMMON, 2, slot);
+			case CHEST -> plugin.armorConstructor.createTitanArmor(new ItemStack(Material.IRON_CHESTPLATE, 1), "Titan Chestplate", Rarity.UNCOMMON, 6, slot);
+			case LEGS -> plugin.armorConstructor.createTitanArmor(new ItemStack(Material.IRON_LEGGINGS, 1), "Titan Leggings", Rarity.UNCOMMON, 5, slot);
+			case FEET -> plugin.armorConstructor.createTitanArmor(new ItemStack(Material.IRON_BOOTS, 1), "Titan Boots", Rarity.UNCOMMON, 2, slot);
+			default -> null;
+		};
 	}
 
 	public ItemStack DestroyerArmor(EquipmentSlot slot, Integer amount) {
-		switch (slot) {
-			case HEAD -> {
-				return plugin.armorConstructor.createDestroyerArmor(new ItemStack(Material.PLAYER_HEAD, 1), "Destroyer Helmet", Rarity.MYTHIC, 3, 2, amount, slot);
-			}
-			case CHEST -> {
-				return plugin.armorConstructor.createDestroyerArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), "Destroyer Chestplate", Rarity.MYTHIC, 8, 2, amount, slot);
-			}
-			case LEGS -> {
-				return plugin.armorConstructor.createDestroyerArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), "Destroyer Leggings", Rarity.MYTHIC, 6, 2, amount, slot);
-			}
-			case FEET -> {
-				return plugin.armorConstructor.createDestroyerArmor(new ItemStack(Material.LEATHER_BOOTS, 1), "Destroyer Boots", Rarity.MYTHIC, 3, 2, amount, slot);
-			}
-		}
-		return null;
+		return switch (slot) {
+			case HEAD -> plugin.armorConstructor.createDestroyerArmor(new ItemStack(Material.PLAYER_HEAD, 1), "Destroyer Helmet", Rarity.MYTHIC, 3, 2, amount, slot);
+			case CHEST -> plugin.armorConstructor.createDestroyerArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), "Destroyer Chestplate", Rarity.MYTHIC, 8, 2, amount, slot);
+			case LEGS -> plugin.armorConstructor.createDestroyerArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), "Destroyer Leggings", Rarity.MYTHIC, 6, 2, amount, slot);
+			case FEET -> plugin.armorConstructor.createDestroyerArmor(new ItemStack(Material.LEATHER_BOOTS, 1), "Destroyer Boots", Rarity.MYTHIC, 3, 2, amount, slot);
+			default -> null;
+		};
 	}
 
 	public void RegisterArmorRecipes() {
@@ -179,9 +106,9 @@ public record Armors(MoreArmorsMain plugin) {
 		plugin.getServer().addRecipe(plugin.shapedRecipe("end_leggings", EndArmor(EquipmentSlot.LEGS)).shape("XXX", "XZX", "X X").setIngredient('X', Material.END_STONE).setIngredient('Z', Material.ENDER_EYE));
 		plugin.getServer().addRecipe(plugin.shapedRecipe("end_boots", EndArmor(EquipmentSlot.FEET)).shape("XZX", "X X").setIngredient('X', Material.END_STONE).setIngredient('Z', Material.ENDER_EYE));
 		plugin.getServer().addRecipe(plugin.shapedRecipe("experience_helmet", ExperienceArmor(EquipmentSlot.HEAD)).shape("XXX", "X X").setIngredient('X', Material.LAPIS_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("experience_chestplate", ExperienceArmor(EquipmentSlot.HEAD)).shape("X X", "XXX", "XXX").setIngredient('X', Material.LAPIS_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("experience_leggings", ExperienceArmor(EquipmentSlot.CHEST)).shape("XXX", "X X", "X X").setIngredient('X', Material.LAPIS_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("experience_boots", ExperienceArmor(EquipmentSlot.LEGS)).shape("X X", "X X").setIngredient('X', Material.LAPIS_BLOCK));
+		plugin.getServer().addRecipe(plugin.shapedRecipe("experience_chestplate", ExperienceArmor(EquipmentSlot.CHEST)).shape("X X", "XXX", "XXX").setIngredient('X', Material.LAPIS_BLOCK));
+		plugin.getServer().addRecipe(plugin.shapedRecipe("experience_leggings", ExperienceArmor(EquipmentSlot.LEGS)).shape("XXX", "X X", "X X").setIngredient('X', Material.LAPIS_BLOCK));
+		plugin.getServer().addRecipe(plugin.shapedRecipe("experience_boots", ExperienceArmor(EquipmentSlot.FEET)).shape("X X", "X X").setIngredient('X', Material.LAPIS_BLOCK));
 		plugin.getServer().addRecipe(plugin.shapedRecipe("miner_helmet", MinerArmor(EquipmentSlot.HEAD)).shape("XXX", "X X").setIngredient('X', Material.COBBLESTONE));
 		plugin.getServer().addRecipe(plugin.shapedRecipe("miner_chestplate", MinerArmor(EquipmentSlot.CHEST)).shape("X X", "XXX", "XXX").setIngredient('X', Material.COBBLESTONE));
 		plugin.getServer().addRecipe(plugin.shapedRecipe("miner_leggings", MinerArmor(EquipmentSlot.LEGS)).shape("XXX", "X X", "X X").setIngredient('X', Material.COBBLESTONE));

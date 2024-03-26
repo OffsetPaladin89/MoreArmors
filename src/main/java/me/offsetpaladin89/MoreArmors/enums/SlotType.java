@@ -5,7 +5,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 public enum SlotType {
-    HELMET, CHESTPLATE, LEGGINGS, BOOTS;
+    HELMET, CHESTPLATE, LEGGINGS, BOOTS, NONE;
 
     public static SlotType matchType(final ItemStack item){
         if(isAirOrNull(item)) return null;
@@ -41,6 +41,7 @@ public enum SlotType {
             case CHESTPLATE -> EquipmentSlot.CHEST;
             case LEGGINGS -> EquipmentSlot.LEGS;
             case BOOTS -> EquipmentSlot.FEET;
+            case NONE -> null;
         };
     }
 
