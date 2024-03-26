@@ -29,6 +29,13 @@ public record Materials(MoreArmorsMain plugin) {
 	public ItemStack CompactedGold(Integer amount) { return addData(new ItemStack(Material.GOLD_INGOT, amount), Rarity.UNCOMMON, "Compacted Gold Ingot", "compacted_gold_ingot"); }
 	public ItemStack CompactedGoldBlock(Integer amount) { return addData(new ItemStack(Material.GOLD_BLOCK, amount), Rarity.RARE, "Compacted Gold Block", "compacted_gold_block"); }
 	public ItemStack CompactedPrismarine(Integer amount) { return addData(new ItemStack(Material.PRISMARINE, amount), Rarity.UNCOMMON, "Compacted Prismarine", "compacted_prismarine"); }
+	public ItemStack CompactedRedstone(Integer amount) { return addData(new ItemStack(Material.REDSTONE, amount), Rarity.UNCOMMON, "Compacted Redstone", "compacted_redstone"); }
+	public ItemStack CompactedIron(Integer amount) { return addData(new ItemStack(Material.IRON_INGOT, amount), Rarity.UNCOMMON, "Compacted Iron Ingot", "compacted_iron"); }
+	public ItemStack CompactedIronBlock(Integer amount) { return addData(new ItemStack(Material.IRON_BLOCK, amount), Rarity.RARE, "Compacted Iron Block", "compacted_iron_block"); }
+	public ItemStack StarDust(Integer amount) { return addData(new ItemStack(Material.GHAST_TEAR, amount), Rarity.RARE, "Star Dust", "star_dust"); }
+	public ItemStack MachinePart(Integer amount) { return createMaterialSkull("6131a36e70ffaa7ca7e672ae6ac20b7fc1e457c43a8e1069e7b14ecdb8576", Rarity.RARE, "Machine Part", "machine_part", amount); }
+	public ItemStack EnergyCell() { return createMaterialSkull("9ac52419b99025828c89fa825945e6948e45bb5a22e4425a59e9096e4c1ac38", Rarity.EPIC, "Energy Cell", "energy_cell"); }
+	public ItemStack MachineCore() { return createMaterialSkull("76856a8f37b6c3146854f2caa7101b9dd592f4669a3c75f941e2859552bd1ae8", Rarity.LEGENDARY, "Machine Core", "machine_core"); }
 	public void RegisterMaterialsRecipes() {
 		plugin.getServer().addRecipe(registerRecipe("compacted_sugar_cane", CompactedSugarCane(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.SUGAR_CANE));
 		plugin.getServer().addRecipe(registerRecipe("compacted_cobblestone", CompactedCobblestone(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.COBBLESTONE));
@@ -42,6 +49,13 @@ public record Materials(MoreArmorsMain plugin) {
 		plugin.getServer().addRecipe(registerRecipe("compacted_gold_ingot", CompactedGold(1)).shape(" X ", "XXX", " X ").setIngredient('X', Material.GOLD_INGOT));
 		plugin.getServer().addRecipe(registerRecipe("compacted_gold_block", CompactedGoldBlock(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.GOLD_INGOT));
 		plugin.getServer().addRecipe(registerRecipe("compacted_prismarine", CompactedPrismarine(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.PRISMARINE));
+		plugin.getServer().addRecipe(registerRecipe("compacted_redstone", CompactedRedstone(1)).shape(" X ", "XXX", " X ").setIngredient('X', Material.REDSTONE));
+		plugin.getServer().addRecipe(registerRecipe("compacted_iron", CompactedIron(1)).shape(" X ", "XXX", " X ").setIngredient('X', Material.IRON_INGOT));
+		plugin.getServer().addRecipe(registerRecipe("compacted_iron_block", CompactedIronBlock(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.IRON_INGOT));
+		plugin.getServer().addRecipe(registerRecipe("star_dust", StarDust(8)).shape("XXX", "XSX", "XXX").setIngredient('X', Material.IRON_INGOT).setIngredient('S', Material.NETHER_STAR));
+		plugin.getServer().addRecipe(registerRecipe("machine_part", MachinePart(1)).shape("XXX", "XSX", "XXX").setIngredient('X', Material.IRON_INGOT).setIngredient('S', Material.REDSTONE));
+		plugin.getServer().addRecipe(registerRecipe("energy_cell", EnergyCell()).shape("XXX", "XSX", "XXX").setIngredient('X', Material.IRON_INGOT).setIngredient('S', Material.GHAST_TEAR));
+		plugin.getServer().addRecipe(registerRecipe("machine_core", MachineCore()).shape("XZX", "XSX", "XZX").setIngredient('X', Material.IRON_BLOCK).setIngredient('S', Material.PLAYER_HEAD).setIngredient('Z', Material.PLAYER_HEAD));
 	}
 	private ItemStack addData(ItemStack item, Rarity rarity, String name, String itemID) {
 		ItemMeta itemmeta = item.getItemMeta();
@@ -59,6 +73,17 @@ public record Materials(MoreArmorsMain plugin) {
 		nbtItem.setString("CustomItemType", "material");
 		return nbtItem.getItem();
 	}
+
+	private ItemStack createMaterialSkull(String skinID, Rarity rarity, String itemName, String itemID, Integer amount) {
+		ItemStack item = SkullCreator.createSkull();
+		ItemMeta itemmeta = item.getItemMeta();
+		itemmeta = SkullUtils.applySkin(itemmeta, skinID);
+		item.setItemMeta(itemmeta);
+		item.setAmount(amount);
+
+		return item;
+	}
+
 	private ItemStack createMaterialSkull(String skinID, Rarity rarity, String itemName, String itemID) {
 		ItemStack item = SkullCreator.createSkull();
 		ItemMeta itemmeta = item.getItemMeta();

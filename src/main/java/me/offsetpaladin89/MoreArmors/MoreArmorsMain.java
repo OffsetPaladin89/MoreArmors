@@ -2,7 +2,9 @@ package me.offsetpaladin89.MoreArmors;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.armors.Armors;
-import me.offsetpaladin89.MoreArmors.commands.*;
+import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
+import me.offsetpaladin89.MoreArmors.commands.Commands;
+import me.offsetpaladin89.MoreArmors.commands.Give;
 import me.offsetpaladin89.MoreArmors.handlers.ArmorSetAbilityHandler;
 import me.offsetpaladin89.MoreArmors.handlers.CraftHandler;
 import me.offsetpaladin89.MoreArmors.handlers.DamageHandler;
@@ -30,9 +32,9 @@ import java.util.ArrayList;
 
 public class MoreArmorsMain extends JavaPlugin {
 
-	public final String[] armorTypes = {"Emerald", "End", "Experience", "Miner", "Nether", "SeaGreed", "Speedster", "Titan", "TrueDiamond"};
-	public final String[] materialTypes = {"CompactedBlazeRod", "CompactedCobblestone", "CompactedEndStone", "CompactedEyeOfEnder", "CompactedSoulSand", "CompactedSugarCane", "NetherCrown", "CompactedDiamond", "CompactedDiamondBlock", "DiamondSingularity", "CompactedGold", "CompactedGoldBlock", "CompactedPrismarine"};
-	public final String[] slotTypes = {"Helmet", "Chestplate", "Leggings", "Boots"};
+	public final String[] armorTypes = {"emerald", "end", "experience", "miner", "nether", "seagreed", "speedster", "titan", "destroyer"};
+	public final String[] materialTypes = {"compacted_blaze_rod", "compacted_cobblestone", "compacted_end_stone", "compacted_eye_of_ender", "compacted_soul_sand", "compacted_sugar_cane", "nether_crown", "compacted_diamond", "compacted_diamond_block", "compacted_gold", "compacted_gold_block", "compacted_prismarine", "compacted_iron", "compacted_iron_block", "compacted_redstone", "machine_part", "machine_core", "energy_cell"};
+	public final String[] slotTypes = {"helmet", "chestplate", "leggings", "boots"};
 	public ArrayList<Player> destroyerarmor = new ArrayList<>();
 	public ArrayList<Player> destroyerhelmet = new ArrayList<>();
 	public Materials materials;
@@ -44,6 +46,7 @@ public class MoreArmorsMain extends JavaPlugin {
 	public ArmorSetAbilityHandler armorSetAbilities;
 
 	public void onEnable() {
+
 
 		new MainListener(this);
 		new MoreArmorsListener(this);
@@ -142,6 +145,6 @@ public class MoreArmorsMain extends JavaPlugin {
 			public void run() {
 				armorSetAbilities.scanPlayers(getServer().getOnlinePlayers().toArray());
 			}
-		}.runTaskTimer(this, 0, 10);
+		}.runTaskTimer(this, 0, 5);
 	}
 }

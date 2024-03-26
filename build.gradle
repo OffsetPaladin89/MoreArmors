@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'me.offsetpaladin89'
-version = '3.5'
+version = '3.6'
 
 repositories {
     mavenCentral()
@@ -12,11 +12,11 @@ repositories {
     maven { url = 'https://oss.sonatype.org/content/groups/public/' }
     maven { url = 'https://repo.codemc.org/repository/maven-public/' }
     maven { url = 'https://github.com/deanveloper/SkullCreator/raw/mvn-repo/' }
+    maven { url "https://repo.dmulloy2.net/repository/public/" }
 }
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT'
-//    compileOnly files('libs/MorePluginsCore-3.7-all.jar')
     shadow 'de.tr7zw:item-nbt-api:+'
     shadow 'dev.dbassett:skullcreator:+'
     shadow 'com.github.fracpete:romannumerals4j:+'

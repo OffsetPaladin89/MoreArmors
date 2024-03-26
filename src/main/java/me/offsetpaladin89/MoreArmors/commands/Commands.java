@@ -21,29 +21,14 @@ public class Commands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("morearmors")) {
 			if (args.length == 0) {
-				messages.pluginInfoMessage(sender);
+				messages.helpMessage(sender);
 			} else {
 				switch (args[0].toLowerCase()) {
-					case "help" -> {
-						if (sender.hasPermission("morearmors.help")) {
-							if (args.length == 1) {
-								messages.helpMessage(sender);
-							} else {
-								messages.tooManyArguments(sender);
-							}
-						} else {
-							messages.noPermission(sender);
-						}
-					}
 					case "info" -> {
-						if (sender.hasPermission("morearmors.info")) {
-							if (args.length == 1) {
-								messages.pluginInfoMessage(sender);
-							} else {
-								messages.tooManyArguments(sender);
-							}
+						if (args.length == 1) {
+							messages.pluginInfoMessage(sender);
 						} else {
-							messages.noPermission(sender);
+							messages.tooManyArguments(sender);
 						}
 					}
 					case "give" -> {

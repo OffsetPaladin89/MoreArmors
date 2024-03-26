@@ -22,17 +22,12 @@ public class CommandCompleter implements TabCompleter {
 		List<String> arguments = new ArrayList<>();
 		if (args.length == 1) {
 			if (sender.hasPermission("morearmors.edit")) {
-				arguments.add("Edit");
+				arguments.add("edit");
 			}
 			if (sender.hasPermission("morearmors.give")) {
-				arguments.add("Give");
+				arguments.add("give");
 			}
-			if (sender.hasPermission("morearmors.help")) {
-				arguments.add("Help");
-			}
-			if (sender.hasPermission("morearmors.info")) {
-				arguments.add("Info");
-			}
+			arguments.add("info");
 		} else if (args.length > 2) {
 			if (args[0].equalsIgnoreCase("give") && sender.hasPermission("morearmors.give")) {
 				if (args.length > 3) {
@@ -42,22 +37,30 @@ public class CommandCompleter implements TabCompleter {
 						} else if (args.length == 4) {
 							arguments.addAll(Arrays.asList(plugin.armorTypes));
 						}
-					} else if (args[2].equalsIgnoreCase("material")) {
+					} else if (args[2].equalsIgnoreCase("material") && args.length == 4) {
 						arguments.addAll(Arrays.asList(plugin.materialTypes));
 					}
 				} else {
-					arguments.add("Armor");
-					arguments.add("Material");
+					arguments.add("armor");
+					arguments.add("material");
 				}
 			} else if (args[0].equalsIgnoreCase("edit") && sender.hasPermission("morearmors.edit")) {
 				if (args.length == 3) {
-					arguments.add("EmeraldCount");
+					arguments.add("emerald_count");
+					arguments.add("kill_amount");
 				}
 			}
-		} else {
+		}
+		else {
 			return null;
 		}
 
-		return arguments;
+		List<String> options = new ArrayList<>();
+		for (String s : arguments) {
+			if (s.toLowerCase().contains(args[args.length - 1])) {
+				options.add(s);
+			}
+		}
+		return options;
 	}
 }

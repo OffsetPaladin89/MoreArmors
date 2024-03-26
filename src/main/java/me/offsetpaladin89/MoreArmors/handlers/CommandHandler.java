@@ -2,9 +2,9 @@ package me.offsetpaladin89.MoreArmors.handlers;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import me.offsetpaladin89.MoreArmors.enums.SlotType;
-import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
+import me.offsetpaladin89.MoreArmors.enums.MaterialType;
+import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -20,10 +20,11 @@ public record CommandHandler(MoreArmorsMain plugin) {
 			}
 		}
 		if (length < 3) {
+			plugin.sendColoredMessage(sender, "");
 			plugin.sendColoredMessage(sender, prefix() + " &6Give Command Options: &e(/morearmors give " + player + " ... )");
 			if (length == 2) {
-				plugin.sendColoredMessage(sender, "&6> &eArmor");
-				plugin.sendColoredMessage(sender, "&6> &eMaterial");
+				plugin.sendColoredMessage(sender, "&6> &earmor");
+				plugin.sendColoredMessage(sender, "&6> &ematerial");
 			}
 			return;
 		}
@@ -45,7 +46,7 @@ public record CommandHandler(MoreArmorsMain plugin) {
 									plugin.give.giveCommand(sender, target, item.toLowerCase(), slotType, 0);
 								} else {
 									if (plugin.isInteger(specialValue)) {
-										if (armorType.equals(ArmorType.EMERALD)) {
+										if (armorType.equals(ArmorType.EMERALD) || armorType.equals(ArmorType.DESTROYER)) {
 											plugin.give.giveCommand(sender, target, item.toLowerCase(), slotType, Integer.parseInt(specialValue));
 										} else {
 											tooManyArguments(sender);
@@ -96,22 +97,24 @@ public record CommandHandler(MoreArmorsMain plugin) {
 			}
 		}
 		if (length < 3) {
-			plugin.sendColoredMessage(sender, prefix() + " &6Edit Command Options: &e(/morearmors give " + player + " ... )");
+			plugin.sendColoredMessage(sender, "");
+			plugin.sendColoredMessage(sender, prefix() + " &6Edit Command Options: &e(/morearmors edit " + player + " ... )");
 			if (length == 2) {
-				plugin.sendColoredMessage(sender, "&6> &eEmeraldCount");
-				plugin.sendColoredMessage(sender, "&6> &eArmorLevel");
-				plugin.sendColoredMessage(sender, "&6> &eDiamondSingularity");
+				plugin.sendColoredMessage(sender, "&6> &eemerald_count");
+				plugin.sendColoredMessage(sender, "&6> &ekill_amount");
 			}
 			return;
 		}
 		Player target = plugin.getServer().getPlayer(player);
 		PlayerInventory inventory = target.getInventory();
-		if (plugin.isAirOrNull(inventory.getItemInMainHand())) return;
+		if (plugin.isAirOrNull(inventory.getItemInMainHand())) {
+			notHoldingItem(sender);
+			return;
+		}
 		ItemStack hand = inventory.getItemInMainHand();
 		NBTItem nbtItem = new NBTItem(hand);
-		String cID = nbtItem.getString("CustomItemID");
-		if (type.equalsIgnoreCase("emeraldcount")) {
-			if (cID.equals("emerald")) {
+		if (type.equalsIgnoreCase("emerald_count")) {
+			if (nbtItem.getString("CustomItemID").equals("emerald")) {
 				if (length == 3) {
 					nbtItem.setInteger("EmeraldCount", 0);
 					inventory.setItemInMainHand(plugin.armorConstructor.createEmeraldArmor(nbtItem.getItem()));
@@ -127,10 +130,32 @@ public record CommandHandler(MoreArmorsMain plugin) {
 				} else {
 					tooManyArguments(sender);
 				}
+			} else {
+				notHoldingItem(sender);
+			}
+		} else if (type.equals("kill_amount")) {
+			if (length == 3) {
+				nbtItem.setInteger("KillAmount", 0);
+				inventory.setItemInMainHand(plugin.armorConstructor.createDestroyerArmor(nbtItem.getItem()));
+				resetItemMessage(sender, target, hand);
+			} else if (length == 4) {
+				if (plugin.isInteger(specialValue)) {
+					nbtItem.setInteger("KillAmount", Integer.parseInt(specialValue));
+					inventory.setItemInMainHand(plugin.armorConstructor.createDestroyerArmor(nbtItem.getItem()));
+					editItemMessage(sender, target, hand);
+				} else {
+					invalidArgument(sender, specialValue);
+				}
+			} else {
+				tooManyArguments(sender);
 			}
 		} else {
 			invalidArgument(sender, type);
 		}
+	}
+
+	public void notHoldingItem(CommandSender s) {
+		plugin.sendColoredMessage(s, prefix() + " &cYou are not holding a valid item!");
 	}
 
 	public String prefix() {
@@ -160,6 +185,7 @@ public record CommandHandler(MoreArmorsMain plugin) {
 	}
 
 	public void sendMaterialTypes(CommandSender sender, String player, String type) {
+		plugin.sendColoredMessage(sender, "");
 		plugin.sendColoredMessage(sender, prefix() + " &6Give Command Options: &e(/morearmors give " + player + " " + type.toLowerCase() + " ... )");
 		for (String s : plugin.materialTypes) {
 			plugin.sendColoredMessage(sender, "&6> &e" + s);
@@ -167,6 +193,7 @@ public record CommandHandler(MoreArmorsMain plugin) {
 	}
 
 	public void sendArmorTypes(CommandSender sender, String player, String type) {
+		plugin.sendColoredMessage(sender, "");
 		plugin.sendColoredMessage(sender, prefix() + " &6Give Command Options: &e(/morearmors give " + player + " " + type.toLowerCase() + " ... )");
 		for (String s : plugin.armorTypes) {
 			plugin.sendColoredMessage(sender, "&6> &e" + s);
@@ -174,6 +201,7 @@ public record CommandHandler(MoreArmorsMain plugin) {
 	}
 
 	public void sendEquipmentTypes(CommandSender sender, String player, String type, String item) {
+		plugin.sendColoredMessage(sender, "");
 		plugin.sendColoredMessage(sender, prefix() + " &6Give Command Options: &e(/morearmors give " + player + " " + type.toLowerCase() + " " + item.toLowerCase() + " ... )");
 		for (String s : plugin.slotTypes) {
 			plugin.sendColoredMessage(sender, "&6> &e" + s);
@@ -181,15 +209,16 @@ public record CommandHandler(MoreArmorsMain plugin) {
 	}
 
 	public void helpMessage(CommandSender sender) {
-		plugin.sendColoredMessage(sender, prefix() + " &eRunning &6" + plugin.getName() + " " + plugin.getDescription().getVersion() + "&e.");
+		plugin.sendColoredMessage(sender, "");
+		plugin.sendColoredMessage(sender, prefix() + " &6Available Commands:");
 		plugin.sendColoredMessage(sender, "&6> &e/morearmors edit <user>");
 		plugin.sendColoredMessage(sender, "&6> &e/morearmors give <user>");
-		plugin.sendColoredMessage(sender, "&6> &e/morearmors help");
 		plugin.sendColoredMessage(sender, "&6> &e/morearmors info");
 	}
 
 	public void pluginInfoMessage(CommandSender sender) {
+		plugin.sendColoredMessage(sender, "");
 		plugin.sendColoredMessage(sender, prefix() + " &eRunning &6" + plugin.getName() + " " + plugin.getDescription().getVersion() + " &ecreated by &6OffsetPaladin89&e.");
-		plugin.sendColoredMessage(sender, "&6> &eOfficial Site: https://dev.bukkit.org/projects/MoreArmors");
+		plugin.sendColoredMessage(sender, "&6> &eOfficial Site: &6https://dev.bukkit.org/projects/MoreArmors");
 	}
 }

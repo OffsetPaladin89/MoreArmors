@@ -1,7 +1,6 @@
 package me.offsetpaladin89.MoreArmors;
 
 import com.cryptomorin.xseries.SkullUtils;
-import com.github.fracpete.romannumerals4j.RomanNumeralFormat;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import org.bukkit.Color;
@@ -15,7 +14,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -292,48 +290,57 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		return addNBT(item, "titan", rarity, armor, 0, equipmentSlot).getItem();
 	}
 
-	public ItemStack createTrueDiamondArmor(@NotNull ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness, EquipmentSlot equipmentSlot, int armorLevel, int diamondSacrifice) {
+	public ItemStack createDestroyerArmor(@NotNull ItemStack item) {
+		NBTItem nbtItem = new NBTItem(item);
+		return createDestroyerArmor(item, item.getItemMeta().getDisplayName(), Rarity.getRarity(nbtItem.getInteger("Rarity")), nbtItem.getInteger("Armor"), nbtItem.getInteger("ArmorToughness"), nbtItem.getInteger("KillAmount"), EquipmentSlot.valueOf(nbtItem.getString("AttributeSlot")));
+	}
+
+	public ItemStack createDestroyerArmor(@NotNull ItemStack item, String displayName, Rarity rarity, Integer armor, Integer armorToughness, Integer killAmount, EquipmentSlot equipmentSlot) {
 		ItemMeta itemMeta = item.getItemMeta();
 		LeatherArmorMeta leatherItemMeta;
 		ArrayList<String> lore = new ArrayList<>();
-		// Display
+		//Display
 		if (item.getType().equals(Material.PLAYER_HEAD))
-			SkullUtils.applySkin(itemMeta, "77b9dfd281deaef2628ad5840d45bcda436d6626847587f3ac76498a51c861");
+			SkullUtils.applySkin(itemMeta, "ea0076ab9a5c0ed8ebd08bb18137321df0fdc8abc7499465cc32221ca192ad43");
 		else {
 			leatherItemMeta = (LeatherArmorMeta) item.getItemMeta();
-			leatherItemMeta.setColor(Color.fromRGB(150, 210, 220));
+			leatherItemMeta.setColor(Color.fromRGB(228, 232, 235));
 			itemMeta = leatherItemMeta;
 		}
-		itemMeta.setDisplayName(plugin.convertColoredString(Rarity.getColorRarity(getTrueDiamondRarity(armorLevel)) + getTrueDiamondName(displayName, armorLevel)));
-		// Lore
-		DecimalFormat decimalFormat = new DecimalFormat("##.00");
-		float stateMultiplier = diamondSacrifice / 5 > 10 ? 2F : 1 + diamondSacrifice / 5 * 10 / 100F;
-		float damageScale = armorLevel * stateMultiplier * 2.5F;
-		float healthValue = armorLevel * stateMultiplier / 2;
-		float movementSpeedScale = armorLevel * stateMultiplier * 1.75F;
-		float movementSpeedValue = armorLevel * stateMultiplier * 0.00175F;
-		lore.add(plugin.convertColoredString("&6Item Ability: Ultimate Unit"));
-		if (diamondSacrifice / 5 > 10) lore.add(plugin.convertColoredString("&e(+100% from Diamond Sacrifice)"));
-		else lore.add(plugin.convertColoredString("&e(+" + (diamondSacrifice / 5 * 10) + "% from Diamond Sacrifice)"));
-		lore.add(plugin.convertColoredString("&7Increases &cDamage &7by &c" + decimalFormat.format(damageScale) + "%&7."));
-		lore.add(plugin.convertColoredString("&7Increases &aMax Health &7by &a" + decimalFormat.format(healthValue) + "&7."));
-		lore.add(plugin.convertColoredString("&7Increases &aMovement Speed &7by &a" + decimalFormat.format(movementSpeedScale) + "%&7."));
-		lore.add("");
-		lore.add(plugin.convertColoredString("&6Piece Upgrade: Diamond Sacrifice"));
-		lore.add(plugin.convertColoredString("&7Sacrifice &5Diamond Singularities &7into this armor"));
-		lore.add(plugin.convertColoredString("&7piece to improve the stats of it."));
-		if (stateMultiplier == 10)
-			lore.add(plugin.convertColoredString("&7Current Bonus (&a5&8/&a5&7): &e+100% Stats &a&lMAXED"));
-		else {
-			lore.add(plugin.convertColoredString("&7Current Bonus (&a" + (diamondSacrifice / 5) + "&8/&a10&7):" + (diamondSacrifice / 5 * 10) + "% Stats"));
-			lore.add(plugin.convertColoredString("&7Next Bonus: &e+" + (diamondSacrifice / 5 * 10 + 10) + "% Stats &8(&a" + (diamondSacrifice % 5) + "&7/&c5&8)"));
-			lore.add(plugin.convertColoredString("&8Max +100% Stats"));
+		itemMeta.setDisplayName(plugin.convertColoredString(Rarity.getColorRarity(rarity) + displayName));
+		switch (equipmentSlot) {
+			case HEAD -> {
+				lore.add(this.plugin.convertColoredString("&6Item Ability: Night Vision"));
+				lore.add(this.plugin.convertColoredString("&7Grants &5Night Vision&7."));
+				lore.add("");
+			}
+			case CHEST -> {
+				lore.add(this.plugin.convertColoredString("&6Item Ability: True Shielding"));
+				lore.add(this.plugin.convertColoredString("&a20% &7chance to &anegate an attack&7."));
+				lore.add("");
+			}
+			case FEET -> {
+				lore.add(this.plugin.convertColoredString("&6Item Ability: Boost"));
+				lore.add(this.plugin.convertColoredString("&7Launch yourself in your &afacing direction"));
+				lore.add(this.plugin.convertColoredString("&7and &acreate an explosion &7behind you."));
+				lore.add(this.plugin.convertColoredString("&8Cooldown: &a1s"));
+				lore.add("");
+			}
+		}
+		lore.add(this.plugin.convertColoredString("&6Piece Upgrade: Slayer"));
+		lore.add(this.plugin.convertColoredString("&7Kill mobs to increase your damage."));
+		if (killAmount / 100 >= 10) {
+			lore.add(this.plugin.convertColoredString("&7Current Bonus: &e+10 Damage &a&lMAXED OUT"));
+		} else {
+			lore.add(this.plugin.convertColoredString("&7Current Bonus: &e+" + killAmount / 100 + " Damage"));
+			lore.add(this.plugin.convertColoredString("&7Next Bonus: &e+" + (killAmount / 100 + 1) + " Damage &8(&a" + killAmount % 100 + "&7/&c100&8)"));
+			lore.add(this.plugin.convertColoredString("&8Max +10 Damage"));
 		}
 		lore.add("");
-		lore.add(plugin.convertColoredString("&6Full Set Bonus: Army"));
-		lore.add(plugin.convertColoredString("&7Increases &cDamage &7by &c2% &7for each"));
-		lore.add(plugin.convertColoredString("&7player within &a10 blocks&7."));
-		lore.add(plugin.convertColoredString("&8Max of 10 players"));
+		lore.add(this.plugin.convertColoredString("&6Full Set Bonus: Warrior"));
+		lore.add(this.plugin.convertColoredString("&7Grants &aStrength II&7."));
+		lore.add(this.plugin.convertColoredString("&7Grants &aRegeneration II&7."));
+		lore.add(this.plugin.convertColoredString("&7Grants &aResistance II&7."));
 		lore.add("");
 		lore.add(plugin.convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
 		itemMeta.setLore(lore);
@@ -344,23 +351,11 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		itemMeta.removeAttributeModifier(equipmentSlot);
 		itemMeta.addAttributeModifier(Attribute.GENERIC_ARMOR, new AttributeModifier(UUID.randomUUID(), "armor", armor, AttributeModifier.Operation.ADD_NUMBER, equipmentSlot));
 		itemMeta.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS, new AttributeModifier(UUID.randomUUID(), "armorToughness", armorToughness, AttributeModifier.Operation.ADD_NUMBER, equipmentSlot));
-		itemMeta.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, new AttributeModifier(UUID.randomUUID(), "maxHealth", healthValue, AttributeModifier.Operation.ADD_NUMBER, equipmentSlot));
-		itemMeta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, new AttributeModifier(UUID.randomUUID(), "movementSpeed", movementSpeedValue, AttributeModifier.Operation.ADD_NUMBER, equipmentSlot));
 		item.setItemMeta(itemMeta);
 		// NBT Values
-		NBTItem nbtItem = addNBT(item, "truediamond", rarity, armor, armorToughness, equipmentSlot);
-		nbtItem.setInteger("ArmorLevel", armorLevel);
-		nbtItem.setInteger("DiamondSacrifice", diamondSacrifice);
+		NBTItem nbtItem = addNBT(item, "destroyer", rarity, armor, armorToughness, equipmentSlot);
+		nbtItem.setInteger("KillAmount", killAmount);
 		return nbtItem.getItem();
-	}
-
-
-	private String getTrueDiamondName(String displayName, int level) {
-		return "Level " + new RomanNumeralFormat().format(level) + " " + displayName;
-	}
-
-	private Rarity getTrueDiamondRarity(int level) {
-		return Rarity.getRarity((level - 1) / 4 + 3);
 	}
 
 	private NBTItem addNBT(ItemStack item, String customItemID, Rarity rarity, int armor, int armorToughness, EquipmentSlot slot) {

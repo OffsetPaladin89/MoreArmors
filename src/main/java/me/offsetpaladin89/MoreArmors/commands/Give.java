@@ -24,6 +24,13 @@ public record Give(MoreArmorsMain plugin) {
 			case COMPACTED_GOLD -> plugin.materials.CompactedGold(amount);
 			case COMPACTED_GOLD_BLOCK -> plugin.materials.CompactedGoldBlock(amount);
 			case COMPACTED_PRISMARINE -> plugin.materials.CompactedPrismarine(amount);
+			case COMPACTED_REDSTONE -> plugin.materials.CompactedRedstone(amount);
+			case COMPACTED_IRON -> plugin.materials.CompactedIron(amount);
+			case COMPACTED_IRON_BLOCK -> plugin.materials.CompactedIronBlock(amount);
+			case STAR_DUST -> plugin.materials.StarDust(amount);
+			case MACHINE_PART -> plugin.materials.MachinePart(amount);
+			case ENERGY_CELL -> plugin.materials.EnergyCell();
+			case MACHINE_CORE -> plugin.materials.MachineCore();
 		};
 	}
 
@@ -37,7 +44,7 @@ public record Give(MoreArmorsMain plugin) {
 			case SEA_GREED -> plugin.armorSets.SeaGreedArmor(SlotType.matchSlot(slotType));
 			case SPEEDSTER -> plugin.armorSets.SpeedsterArmor(SlotType.matchSlot(slotType));
 			case TITAN -> plugin.armorSets.TitanArmor(SlotType.matchSlot(slotType));
-			default -> null;
+			case DESTROYER -> plugin.armorSets.DestroyerArmor(SlotType.matchSlot(slotType), specialValue);
 		};
 	}
 
@@ -52,7 +59,7 @@ public record Give(MoreArmorsMain plugin) {
 	public void giveCommand(CommandSender sender, Player target, MaterialType type, Integer amount) {
 		ItemStack item = give(type, amount);
 		PlayerInventory inventory = target.getInventory();
-		if (type.equals(MaterialType.NETHER_CROWN)) {
+		if (type.equals(MaterialType.NETHER_CROWN) || type.equals(MaterialType.ENERGY_CELL) || type.equals(MaterialType.MACHINE_CORE)) {
 			for (int x = 0; x < amount; x++) {
 				item = give(type, amount);
 				if (inventory.firstEmpty() == -1)

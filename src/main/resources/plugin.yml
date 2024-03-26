@@ -15,21 +15,9 @@ permissions:
     children:
       morearmors.edit: true
       morearmors.give: true
-      morearmors.help: true
-      morearmors.info: true
-      morearmors.viewstats: true
   morearmors.edit:
     description: Gives access to edit all MoreArmors items.
     default: op
   morearmors.give:
     description: Gives access to give all MoreArmors items.
-    default: op
-  morearmors.help:
-    description: Gives access to view the help menu.
-    default: op
-  morearmors.info:
-    description: Gives access to view info for MoreArmors.
-    default: op
-  morearmors.viewstats:
-    description: Gives access to view stats for players.
     default: op
