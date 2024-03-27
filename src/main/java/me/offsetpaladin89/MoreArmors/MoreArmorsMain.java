@@ -1,201 +1,150 @@
 package me.offsetpaladin89.MoreArmors;
 
-import me.offsetpaladin89.MoreArmors.armors.ArmorSets;
-import me.offsetpaladin89.MoreArmors.armors.emeraldarmor.EmeraldArmor;
-import me.offsetpaladin89.MoreArmors.armors.emeraldarmor.EmeraldArmorData;
-import me.offsetpaladin89.MoreArmors.armors.endarmor.EndArmor;
-import me.offsetpaladin89.MoreArmors.armors.endarmor.EndArmorData;
-import me.offsetpaladin89.MoreArmors.armors.experiencearmor.ExperienceArmor;
-import me.offsetpaladin89.MoreArmors.armors.experiencearmor.ExperienceArmorData;
-import me.offsetpaladin89.MoreArmors.armors.minerarmor.MinerArmor;
-import me.offsetpaladin89.MoreArmors.armors.minerarmor.MinerArmorData;
-import me.offsetpaladin89.MoreArmors.armors.netherarmor.NetherArmor;
-import me.offsetpaladin89.MoreArmors.armors.netherarmor.NetherArmorData;
-import me.offsetpaladin89.MoreArmors.armors.seagreedarmor.SeaGreedArmor;
-import me.offsetpaladin89.MoreArmors.armors.seagreedarmor.SeaGreedArmorData;
-import me.offsetpaladin89.MoreArmors.armors.speedsterarmor.SpeedsterArmor;
-import me.offsetpaladin89.MoreArmors.armors.speedsterarmor.SpeedsterArmorData;
-import me.offsetpaladin89.MoreArmors.armors.titanarmor.TitanArmor;
-import me.offsetpaladin89.MoreArmors.armors.titanarmor.TitanArmorData;
-import me.offsetpaladin89.MoreArmors.armors.truediamondarmor.TrueDiamondArmor;
-import me.offsetpaladin89.MoreArmors.armors.truediamondarmor.TrueDiamondArmorData;
-import me.offsetpaladin89.MoreArmors.commands.GiveArmor;
-import me.offsetpaladin89.MoreArmors.commands.GiveMaterial;
+import de.tr7zw.changeme.nbtapi.NBTItem;
+import me.offsetpaladin89.MoreArmors.armors.Armors;
+import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
+import me.offsetpaladin89.MoreArmors.commands.Commands;
+import me.offsetpaladin89.MoreArmors.commands.Give;
+import me.offsetpaladin89.MoreArmors.handlers.ArmorSetAbilityHandler;
+import me.offsetpaladin89.MoreArmors.handlers.CraftHandler;
+import me.offsetpaladin89.MoreArmors.handlers.DamageHandler;
+import me.offsetpaladin89.MoreArmors.handlers.HologramHandler;
+import me.offsetpaladin89.MoreArmors.listeners.MainListener;
+import me.offsetpaladin89.MoreArmors.listeners.MoreArmorsListener;
 import me.offsetpaladin89.MoreArmors.materials.Materials;
-import me.offsetpaladin89.MoreArmors.materials.MaterialsData;
-import me.offsetpaladin89.MorePluginsCore.MorePluginsCoreMain;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.World;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.ArrayList;
 
 public class MoreArmorsMain extends JavaPlugin {
-  
-  public EmeraldArmor emerald;
-  
-  public EmeraldArmorData emeralddata;
-  
-  public EndArmor end;
-  
-  public EndArmorData enddata;
-  
-  public ExperienceArmor experience;
-  
-  public ExperienceArmorData experiencedata;
-  
-  public MinerArmor miner;
-  
-  public MinerArmorData minerdata;
-  
-  public NetherArmor nether;
-  
-  public NetherArmorData netherdata;
-  
-  public SpeedsterArmor speedster;
-  
-  public SpeedsterArmorData speedsterdata;
-  
-  public TitanArmor titan;
-  
-  public TitanArmorData titandata;
-  
-  public TrueDiamondArmor truediamond;
-  
-  public TrueDiamondArmorData truediamonddata;
 
-  public SeaGreedArmor seagreed;
+	public final String[] armorTypes = {"emerald", "end", "experience", "miner", "nether", "seagreed", "speedster", "titan", "destroyer"};
+	public final String[] materialTypes = {"compacted_blaze_rod", "compacted_cobblestone", "compacted_end_stone", "compacted_eye_of_ender", "compacted_soul_sand", "compacted_sugar_cane", "nether_crown", "compacted_diamond", "compacted_diamond_block", "compacted_gold", "compacted_gold_block", "compacted_prismarine", "compacted_iron", "compacted_iron_block", "compacted_redstone", "machine_part", "machine_core", "energy_cell", "star_dust"};
+	public final String[] slotTypes = {"helmet", "chestplate", "leggings", "boots"};
+	public ArrayList<Player> destroyerarmor = new ArrayList<>();
+	public ArrayList<Player> destroyerhelmet = new ArrayList<>();
+	public Materials materials;
 
-  public SeaGreedArmorData seagreeddata;
+	public HologramHandler hologramHandler;
+	public Give give;
+	public Armors armorSets;
+	public ArmorConstructor armorConstructor;
+	public ArmorSetAbilityHandler armorSetAbilities;
 
-  public Materials materials;
-  
-  public MaterialsData materialsdata;
-  
-  public GiveMaterial givematerial;
-  
-  public GiveArmor givearmor;
+	public void onEnable() {
 
-  public ArmorConstructor armorConstructor;
 
-  public ArmorSets armorSets;
+		new MainListener(this);
+		new MoreArmorsListener(this);
+		new CraftHandler(this);
+		new DamageHandler(this);
+		new Commands(this);
+		new CommandCompleter(this);
 
-  public void onEnable() { RegistryHandler(); }
-  
-  public String convertColoredString(String msg) { return ChatColor.translateAlternateColorCodes('&', msg); }
-  
-  public void RegistryHandler() {
-    armorConstructor = new ArmorConstructor(this);
-    armorSets = new ArmorSets(this);
-    emerald = new EmeraldArmor(this);
-    emeralddata = new EmeraldArmorData(this);
-    end = new EndArmor(this);
-    enddata = new EndArmorData(this);
-    experience = new ExperienceArmor(this);
-    experiencedata = new ExperienceArmorData(this);
-    miner = new MinerArmor(this);
-    minerdata = new MinerArmorData(this);
-    nether = new NetherArmor(this);
-    netherdata = new NetherArmorData(this);
-    speedster = new SpeedsterArmor(this);
-    speedsterdata = new SpeedsterArmorData(this);
-    titan = new TitanArmor(this);
-    titandata = new TitanArmorData(this);
-    truediamond = new TrueDiamondArmor(this);
-    truediamonddata = new TrueDiamondArmorData(this);
-    seagreed = new SeaGreedArmor(this);
-    seagreeddata = new SeaGreedArmorData(this);
-    materials = new Materials(this);
-    materialsdata = new MaterialsData(this);
-    givematerial = new GiveMaterial(this);
-    givearmor = new GiveArmor(this);
-    armorSets.EmeraldArmorRecipes();
-    armorSets.EndArmorRecipes();
-    armorSets.ExperienceArmorRecipes();
-    armorSets.MinerArmorRecipes();
-    RegisterRecipes();
-  }
-  
-  public void RegisterRecipes() {
-//    RegisterExperienceArmor();
-//    RegisterMinerArmor();
-//    RegisterNetherArmor();
-//    RegisterSpeedsterArmor();
-//    RegisterTitanArmor();
-//    RegisterTrueDiamondArmor();
-//    RegisterSeaGreedArmor();
-//    RegisterMaterials();
-  }
-  
-  public void RegisterExperienceArmor() {
-    experience.ExperienceHelmetRecipe();
-    experience.ExperienceChestplateRecipe();
-    experience.ExperienceLeggingsRecipe();
-    experience.ExperienceBootsRecipe();
-  }
-  
-  public void RegisterMinerArmor() {
-    miner.MinerHelmetRecipe();
-    miner.MinerChestplateRecipe();
-    miner.MinerLeggingsRecipe();
-    miner.MinerBootsRecipe();
-  }
-  
-  public void RegisterNetherArmor() {
-    nether.NetherHelmetRecipe();
-    nether.NetherChestplateRecipe();
-    nether.NetherLeggingsRecipe();
-    nether.NetherBootsRecipe();
-  }
-  
-  public void RegisterSpeedsterArmor() {
-    speedster.SpeedsterHelmetRecipe();
-    speedster.SpeedsterChestplateRecipe();
-    speedster.SpeedsterLeggingsRecipe();
-    speedster.SpeedsterBootsRecipe();
-  }
-  
-  public void RegisterTitanArmor() {
-    titan.TitanHelmetRecipe();
-    titan.TitanChestplateRecipe();
-    titan.TitanLeggingsRecipe();
-    titan.TitanBootsRecipe();
-  }
-  
-  public void RegisterTrueDiamondArmor() {
-    truediamond.TrueDiamondHelmetRecipe();
-    truediamond.TrueDiamondHelmetUpgradeRecipe();
-    truediamond.TrueDiamondHelmetSingularityUpgradeRecipe();
-    truediamond.TrueDiamondChestplateRecipe();
-    truediamond.TrueDiamondChestplateUpgradeRecipe();
-    truediamond.TrueDiamondChestplateSingularityUpgradeRecipe();
-    truediamond.TrueDiamondLeggingsRecipe();
-    truediamond.TrueDiamondLeggingsUpgradeRecipe();
-    truediamond.TrueDiamondLeggingsSingularityUpgradeRecipe();
-    truediamond.TrueDiamondBootsRecipe();
-    truediamond.TrueDiamondBootsUpgradeRecipe();
-    truediamond.TrueDiamondBootsSingularityUpgradeRecipe();
-  }
+		hologramHandler = new HologramHandler(this);
+		armorSets = new Armors(this);
+		armorConstructor = new ArmorConstructor(this);
+		armorSetAbilities = new ArmorSetAbilityHandler(this);
+		materials = new Materials(this);
+		give = new Give(this);
 
-  public void RegisterSeaGreedArmor() {
-    seagreed.SeaGreedHelmet();
-    seagreed.SeaGreedHelmetRecipe();
-    seagreed.SeaGreedChestplate();
-    seagreed.SeaGreedChestplateRecipe();
-    seagreed.SeaGreedLeggings();
-    seagreed.SeaGreedLeggingsRecipe();
-    seagreed.SeaGreedBoots();
-    seagreed.SeaGreedBootsRecipe();
+		ArmorChecker();
+		removeHolograms();
+		armorSets.RegisterArmorRecipes();
+		materials.RegisterMaterialsRecipes();
+	}
 
-  }
+	public String convertColoredString(String msg) {
+		return ChatColor.translateAlternateColorCodes('&', msg);
+	}
 
-  public void RegisterMaterials() {
-    materials.CompactedBlazeRodRecipe();
-    materials.CompactedCobblestoneRecipe();
-    materials.CompactedDiamondRecipe();
-    materials.CompactedDiamondBlockRecipe();
-    materials.CompactedEndStoneRecipe();
-    materials.CompactedEyeOfEnderRecipe();
-    materials.CompactedSoulSandRecipe();
-    materials.CompactedSugarCaneRecipe();
-    materials.DiamondSingularityRecipe();
-    materials.NetherCrownRecipe();
-  }
+	public void sendConsoleMessage(String s) {
+		getServer().getConsoleSender().sendMessage(convertColoredString(s));
+	}
+
+	public void sendPlayerMessage(Player p, String s) {
+		p.sendMessage(convertColoredString(s));
+	}
+
+	public void sendColoredMessage(CommandSender s, String m) {
+		s.sendMessage(convertColoredString(m));
+	}
+
+	public ShapedRecipe shapedRecipe(String key, ItemStack i) {
+		return new ShapedRecipe(new NamespacedKey(this, key), i);
+	}
+
+	public boolean IsFullCustomSet(String tag, PlayerInventory inventory) {
+		if (WearingFullSet(inventory)) return false;
+		return new NBTItem(inventory.getHelmet()).getString("CustomItemID").equals(tag) &&
+				new NBTItem(inventory.getChestplate()).getString("CustomItemID").equals(tag) &&
+				new NBTItem(inventory.getLeggings()).getString("CustomItemID").equals(tag) &&
+				new NBTItem(inventory.getBoots()).getString("CustomItemID").equals(tag);
+	}
+
+	public boolean WearingFullSet(PlayerInventory inventory) {
+		return isAirOrNull(new ItemStack[]{inventory.getHelmet(), inventory.getChestplate(), inventory.getLeggings(), inventory.getBoots()});
+	}
+
+	public Boolean matchingCustomItem(ItemStack item, String itemID) {
+		return !isAirOrNull(item) && new NBTItem(item).getString("CustomItemID").equals(itemID);
+	}
+
+	public void removeHolograms() {
+		for (World world : getServer().getWorlds()) {
+			for (Entity entity : world.getEntities()) {
+				if (entity.getType().equals(EntityType.ARMOR_STAND) || entity.getType().equals(EntityType.BAT)) {
+					PersistentDataContainer pdc = entity.getPersistentDataContainer();
+					NamespacedKey key = new NamespacedKey(this, "HologramEntity");
+					if (Boolean.TRUE.equals(pdc.get(key, PersistentDataType.BOOLEAN))) {
+						entity.remove();
+					}
+				}
+			}
+		}
+	}
+
+	public boolean isAirOrNull(ItemStack item) {
+		return item == null || item.getType().equals(Material.AIR);
+	}
+
+	public boolean isAirOrNull(ItemStack[] items) {
+		for (ItemStack i : items) {
+			if (i == null || i.getType().equals(Material.AIR)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean isInteger(String string) {
+		try {
+			Integer.parseInt(string);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
+	public void ArmorChecker() {
+		new BukkitRunnable() {
+			public void run() {
+				armorSetAbilities.scanPlayers(getServer().getOnlinePlayers().toArray());
+			}
+		}.runTaskTimer(this, 0, 5);
+	}
 }

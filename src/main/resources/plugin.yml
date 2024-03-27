@@ -2,3 +2,22 @@ name: MoreArmors
 version: '${version}'
 main: me.offsetpaladin89.MoreArmors.MoreArmorsMain
 api-version: 1.13
+
+commands:
+  morearmors:
+    description: MoreArmors Main Command
+    aliases: [ma]
+    usage: /command
+
+permissions:
+  morearmors.*:
+    description: Gives access to all MoreArmors commands.
+    children:
+      morearmors.edit: true
+      morearmors.give: true
+  morearmors.edit:
+    description: Gives access to edit all MoreArmors items.
+    default: op
+  morearmors.give:
+    description: Gives access to give all MoreArmors items.
+    default: op
