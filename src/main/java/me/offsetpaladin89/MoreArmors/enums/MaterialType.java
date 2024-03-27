@@ -7,7 +7,7 @@ public enum MaterialType {
 		return switch (s.toLowerCase()) {
 			case "compacted_blaze_rod" -> COMPACTED_BLAZE_ROD;
 			case "compacted_cobblestone" -> COMPACTED_COBBLESTONE;
-			case "compacted_endstone" -> COMPACTED_END_STONE;
+			case "compacted_end_stone" -> COMPACTED_END_STONE;
 			case "compacted_eye_of_ender" -> COMPACTED_EYE_OF_ENDER;
 			case "compacted_soul_sand" -> COMPACTED_SOUL_SAND;
 			case "compacted_sugar_cane" -> COMPACTED_SUGAR_CANE;

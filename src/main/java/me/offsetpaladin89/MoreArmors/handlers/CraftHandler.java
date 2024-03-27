@@ -57,7 +57,7 @@ public class CraftHandler implements Listener {
 					if (rCustomID.equals("nether")) {
 						if (iCustomID.equals("compacted_soul_sand") && i.getAmount() < 16) inv.setResult(null);
 						if (i.getType().equals(Material.PLAYER_HEAD) && !iCustomID.equals("nether_crown")) inv.setResult(null);
-						if (iCustomID.isEmpty()) inv.setResult(null);
+						if (!i.getType().equals(Material.NETHER_STAR) && iCustomID.isEmpty()) inv.setResult(null);
 					}
 					// End Armor
 					if (rCustomID.equals("end")) {
@@ -80,7 +80,7 @@ public class CraftHandler implements Listener {
 							// Machine Core must be in the top middle crafting slot
 							// if it is a chestplate but in the middle crafting slot
 							// if it is any other piece.
-							if (SlotType.matchType(result).equals(SlotType.CHESTPLATE)) {
+							if (SlotType.matchType(result).equals(SlotType.CHESTPLATE) || SlotType.matchType(result).equals(SlotType.BOOTS)) {
 								if (x != 1) inv.setResult(null);
 							} else if (x != 4) inv.setResult(null);
 						}
@@ -129,7 +129,7 @@ public class CraftHandler implements Listener {
 					// Star Dust
 					if (rCustomID.equals("star_dust")) {
 						if (iCustomID.equals("compacted_iron") && i.getAmount() < 4) inv.setResult(null);
-						if (iCustomID.isEmpty()) inv.setResult(null);
+						if (i.getType().equals(Material.IRON_INGOT) && iCustomID.isEmpty()) inv.setResult(null);
 					}
 					//  Machine Part
 					if (rCustomID.equals("machine_part")) {
@@ -201,6 +201,7 @@ public class CraftHandler implements Listener {
 							if (iCustomID.equals("compacted_prismarine")) slotValues.add(i.getAmount() / 16);
 							if (iCustomID.equals("compacted_diamond_block")) slotValues.add(i.getAmount() / 4);
 							if (iCustomID.equals("compacted_gold_block")) slotValues.add(i.getAmount() / 4);
+							if(i.getType().equals(Material.HEART_OF_THE_SEA)) slotValues.add(i.getAmount());
 						}
 						// Destroyer Armor
 						if (rCustomID.equals("destroyer")) {
@@ -356,19 +357,21 @@ public class CraftHandler implements Listener {
 					if (rCustomID.equals("compacted_redstone")) craftItem(p, plugin.materials.CompactedRedstone(leastValue));
 					if (rCustomID.equals("compacted_iron")) craftItem(p, plugin.materials.CompactedIron(leastValue));
 					if (rCustomID.equals("compacted_iron_block")) craftItem(p, plugin.materials.CompactedIronBlock(leastValue));
-					if (rCustomID.equals("star_dust")) craftItem(p, plugin.materials.StarDust(leastValue));
+					if (rCustomID.equals("star_dust")) craftItem(p, plugin.materials.StarDust(leastValue * 8));
 					if (rCustomID.equals("machine_part")) craftItem(p, plugin.materials.MachinePart(leastValue));
-					if (nbtResult.getString("CustomItemType").equals("armor")) {
-						EquipmentSlot slotType = SlotType.matchSlot(SlotType.matchType(result));
-						if (rCustomID.equals("miner")) craftItem(p, leastValue, plugin.armorSets.MinerArmor(slotType));
-						if (rCustomID.equals("nether")) craftItem(p, leastValue, plugin.armorSets.MinerArmor(slotType));
-						if (rCustomID.equals("end")) craftItem(p, leastValue, plugin.armorSets.MinerArmor(slotType));
-						if (rCustomID.equals("seagreed")) craftItem(p, leastValue, plugin.armorSets.MinerArmor(slotType));
-						if (rCustomID.equals("destroyer")) craftItem(p, leastValue, plugin.armorSets.MinerArmor(slotType));
+					for (int x = 0; x < leastValue; x++) {
+						if (nbtResult.getString("CustomItemType").equals("armor")) {
+							EquipmentSlot slotType = SlotType.matchSlot(SlotType.matchType(result));
+							if (rCustomID.equals("miner")) craftItem(p, plugin.armorSets.MinerArmor(slotType));
+							if (rCustomID.equals("nether")) craftItem(p, plugin.armorSets.NetherArmor(slotType));
+							if (rCustomID.equals("end")) craftItem(p, plugin.armorSets.EndArmor(slotType));
+							if (rCustomID.equals("seagreed")) craftItem(p, plugin.armorSets.SeaGreedArmor(slotType));
+							if (rCustomID.equals("destroyer")) craftItem(p, plugin.armorSets.DestroyerArmor(slotType, 0));
+						}
+						if (rCustomID.equals("nether_crown")) craftItem(p, plugin.materials.NetherCrown());
+						if (rCustomID.equals("energy_cell")) craftItem(p, plugin.materials.EnergyCell());
+						if (rCustomID.equals("machine_core")) craftItem(p, plugin.materials.MachineCore());
 					}
-					if (rCustomID.equals("nether_crown")) craftItem(p, leastValue, plugin.materials.NetherCrown());
-					if (rCustomID.equals("energy_cell")) craftItem(p, leastValue, plugin.materials.EnergyCell());
-					if (rCustomID.equals("machine_core")) craftItem(p, leastValue, plugin.materials.MachineCore());
 				}
 			} else {
 				for (ItemStack i : ci.getMatrix()) {
@@ -454,13 +457,5 @@ public class CraftHandler implements Listener {
 		PlayerInventory inv = p.getInventory();
 		if (inv.firstEmpty() == -1) p.getWorld().dropItem(p.getLocation().add(0.0D, 0.5D, 0.0D), i);
 		else inv.addItem(i);
-	}
-
-	private void craftItem(Player p, Integer n, ItemStack i) {
-		PlayerInventory inv = p.getInventory();
-		for (int x = 0; x < n; x++) {
-			if (inv.firstEmpty() == -1) p.getWorld().dropItem(p.getLocation().add(0.0D, 0.5D, 0.0D), i);
-			else inv.addItem(i);
-		}
 	}
 }

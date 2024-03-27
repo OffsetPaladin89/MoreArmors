@@ -21,6 +21,7 @@ public record Armors(MoreArmorsMain plugin) {
 		return switch (slot) {
 			case HEAD -> plugin.armorConstructor.createEndArmor(new ItemStack(Material.PLAYER_HEAD, 1), "End Helmet", Rarity.LEGENDARY, 3, 2, slot);
 			case CHEST -> plugin.armorConstructor.createEndArmor(new ItemStack(Material.LEATHER_CHESTPLATE, 1), "End Chestplate", Rarity.LEGENDARY, 8, 2, slot);
+			case LEGS -> plugin.armorConstructor.createEndArmor(new ItemStack(Material.LEATHER_LEGGINGS, 1), "End Leggings", Rarity.LEGENDARY, 6, 2, slot);
 			case FEET -> plugin.armorConstructor.createEndArmor(new ItemStack(Material.LEATHER_BOOTS, 1), "End Boots", Rarity.LEGENDARY, 3, 2, slot);
 			default -> null;
 		};

@@ -34,8 +34,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		// Lore
 		lore.add(plugin.convertColoredString("&6Piece Upgrade: Emerald Blood"));
 		lore.add(plugin.convertColoredString("&7Mine emeralds to increase your max health."));
-		if (emeraldAmount >= 250)
-			lore.add(plugin.convertColoredString("&7Current Bonus (&a5&8/&a5&7): &e+10 Health &a&lMAXED OUT"));
+		if (emeraldAmount >= 250) lore.add(plugin.convertColoredString("&7Current Bonus (&a5&8/&a5&7): &e+10 Health &a&lMAXED OUT"));
 		else {
 			lore.add(plugin.convertColoredString("&7Current Bonus (&a" + emeraldAmount / 50 + "&8/&a5&7): &e+" + emeraldAmount / 50 + " Health"));
 			lore.add(plugin.convertColoredString("&7Next Upgrade: &e+" + (emeraldAmount / 50 + 2) + " Health &8(&a" + emeraldAmount % 50 + "&7/&c50&8)"));
@@ -64,8 +63,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		LeatherArmorMeta leatherItemMeta;
 		ArrayList<String> lore = new ArrayList<>();
 		// Display
-		if (item.getType().equals(Material.PLAYER_HEAD))
-			SkullUtils.applySkin(itemMeta, "fee4eabeb72f19088ade78266191c8f77398cc0d80cdd27563a5d66b71912b28");
+		if (item.getType().equals(Material.PLAYER_HEAD)) SkullUtils.applySkin(itemMeta, "fee4eabeb72f19088ade78266191c8f77398cc0d80cdd27563a5d66b71912b28");
 		else {
 			leatherItemMeta = (LeatherArmorMeta) item.getItemMeta();
 			leatherItemMeta.setColor(Color.PURPLE);
@@ -155,8 +153,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		LeatherArmorMeta leatherItemMeta;
 		ArrayList<String> lore = new ArrayList<>();
 		// Display
-		if (item.getType().equals(Material.PLAYER_HEAD))
-			SkullUtils.applySkin(itemMeta, "cdf74e323ed41436965f5c57ddf2815d5332fe999e68fbb9d6cf5c8bd4139f");
+		if (item.getType().equals(Material.PLAYER_HEAD)) SkullUtils.applySkin(itemMeta, "cdf74e323ed41436965f5c57ddf2815d5332fe999e68fbb9d6cf5c8bd4139f");
 		else {
 			leatherItemMeta = (LeatherArmorMeta) item.getItemMeta();
 			leatherItemMeta.setColor(Color.GRAY);
@@ -196,8 +193,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		LeatherArmorMeta leatherItemMeta;
 		ArrayList<String> lore = new ArrayList<>();
 		// Display
-		if (item.getType().equals(Material.PLAYER_HEAD))
-			SkullUtils.applySkin(itemMeta, "935541523f14c78d8de98cc296c798f0b867ba85344ed77f6dae12455a174");
+		if (item.getType().equals(Material.PLAYER_HEAD)) SkullUtils.applySkin(itemMeta, "935541523f14c78d8de98cc296c798f0b867ba85344ed77f6dae12455a174");
 		else {
 			leatherItemMeta = (LeatherArmorMeta) item.getItemMeta();
 			leatherItemMeta.setColor(Color.fromRGB(130, 140, 100));
@@ -300,8 +296,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		LeatherArmorMeta leatherItemMeta;
 		ArrayList<String> lore = new ArrayList<>();
 		//Display
-		if (item.getType().equals(Material.PLAYER_HEAD))
-			SkullUtils.applySkin(itemMeta, "ea0076ab9a5c0ed8ebd08bb18137321df0fdc8abc7499465cc32221ca192ad43");
+		if (item.getType().equals(Material.PLAYER_HEAD)) SkullUtils.applySkin(itemMeta, "ea0076ab9a5c0ed8ebd08bb18137321df0fdc8abc7499465cc32221ca192ad43");
 		else {
 			leatherItemMeta = (LeatherArmorMeta) item.getItemMeta();
 			leatherItemMeta.setColor(Color.fromRGB(228, 232, 235));

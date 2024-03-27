@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'me.offsetpaladin89'
-version = '3.6'
+version = '3.7-RELEASE'
 
 repositories {
     mavenCentral()
