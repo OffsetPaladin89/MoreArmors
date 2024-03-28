@@ -98,9 +98,9 @@ public class CraftHandler implements Listener {
 					}
 					// Compacted Diamond Block
 					if (rCustomID.equals("compacted_diamond_block")) {
-						if (!nbtItem.getBoolean("IsCustomItem")) inv.setResult(new ItemStack(Material.DIAMOND_BLOCK, 1));
 						if (iCustomID.equals("compacted_diamond") && i.getAmount() < 4) inv.setResult(null);
 						if (iCustomID.isEmpty()) inv.setResult(null);
+						if (isBlockRecipe(cm)) inv.setResult(new ItemStack(Material.DIAMOND_BLOCK, 1));
 					}
 					// Compacted Gold
 					if (rCustomID.equals("compacted_gold")) {
@@ -108,9 +108,9 @@ public class CraftHandler implements Listener {
 					}
 					// Compacted Gold Block
 					if (rCustomID.equals("compacted_gold_block")) {
-						if (!nbtItem.getBoolean("IsCustomItem")) inv.setResult(new ItemStack(Material.GOLD_BLOCK, 1));
 						if (iCustomID.equals("compacted_gold") && i.getAmount() < 4) inv.setResult(null);
-						if (iCustomID.isEmpty()) inv.setResult(null);
+						else if (iCustomID.isEmpty()) inv.setResult(null);
+						if (isBlockRecipe(cm)) inv.setResult(new ItemStack(Material.GOLD_BLOCK, 1));
 					}
 					// Compacted Redstone
 					if (rCustomID.equals("compacted_redstone")) {
@@ -122,9 +122,10 @@ public class CraftHandler implements Listener {
 					}
 					// Compacted Iron Block
 					if (rCustomID.equals("compacted_iron_block")) {
-						if (!nbtItem.getBoolean("IsCustomItem")) inv.setResult(new ItemStack(Material.IRON_BLOCK, 1));
 						if (iCustomID.equals("compacted_iron") && i.getAmount() < 4) inv.setResult(null);
-						if (iCustomID.isEmpty()) inv.setResult(null);
+						else if (iCustomID.isEmpty()) inv.setResult(null);
+						if (isBlockRecipe(cm)) inv.setResult(new ItemStack(Material.IRON_BLOCK, 1));
+
 					}
 					// Star Dust
 					if (rCustomID.equals("star_dust")) {
@@ -160,6 +161,17 @@ public class CraftHandler implements Listener {
 				}
 			}
 		}
+	}
+
+	private boolean isBlockRecipe(ItemStack[] cm) {
+		int y = 0;
+		for(int x = 0; x < cm.length; x++) {
+			ItemStack i = cm[x];
+			NBTItem nbtItem = new NBTItem(i);
+			String iCustomID = nbtItem.getString("CustomItemID");
+			if(!nbtItem.getBoolean("IsCustomItem")) y++;
+		}
+		return y == 9;
 	}
 
 	@EventHandler
