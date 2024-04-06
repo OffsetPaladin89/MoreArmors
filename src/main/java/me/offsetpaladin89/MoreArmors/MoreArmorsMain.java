@@ -5,10 +5,7 @@ import me.offsetpaladin89.MoreArmors.armors.Armors;
 import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
 import me.offsetpaladin89.MoreArmors.commands.Commands;
 import me.offsetpaladin89.MoreArmors.commands.Give;
-import me.offsetpaladin89.MoreArmors.handlers.ArmorSetAbilityHandler;
-import me.offsetpaladin89.MoreArmors.handlers.CraftHandler;
-import me.offsetpaladin89.MoreArmors.handlers.DamageHandler;
-import me.offsetpaladin89.MoreArmors.handlers.HologramHandler;
+import me.offsetpaladin89.MoreArmors.handlers.*;
 import me.offsetpaladin89.MoreArmors.listeners.MainListener;
 import me.offsetpaladin89.MoreArmors.listeners.MoreArmorsListener;
 import me.offsetpaladin89.MoreArmors.materials.Materials;
@@ -29,6 +26,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MoreArmorsMain extends JavaPlugin {
 
@@ -44,7 +42,7 @@ public class MoreArmorsMain extends JavaPlugin {
 	public Armors armorSets;
 	public ArmorConstructor armorConstructor;
 	public ArmorSetAbilityHandler armorSetAbilities;
-
+	public SignHandler signHandler;
 	public void onEnable() {
 
 
@@ -55,6 +53,7 @@ public class MoreArmorsMain extends JavaPlugin {
 		new Commands(this);
 		new CommandCompleter(this);
 
+		signHandler = new SignHandler(this);
 		hologramHandler = new HologramHandler(this);
 		armorSets = new Armors(this);
 		armorConstructor = new ArmorConstructor(this);
@@ -90,10 +89,7 @@ public class MoreArmorsMain extends JavaPlugin {
 
 	public boolean IsFullCustomSet(String tag, PlayerInventory inventory) {
 		if (WearingFullSet(inventory)) return false;
-		return new NBTItem(inventory.getHelmet()).getString("CustomItemID").equals(tag) &&
-				new NBTItem(inventory.getChestplate()).getString("CustomItemID").equals(tag) &&
-				new NBTItem(inventory.getLeggings()).getString("CustomItemID").equals(tag) &&
-				new NBTItem(inventory.getBoots()).getString("CustomItemID").equals(tag);
+		return new NBTItem(inventory.getHelmet()).getString("CustomItemID").equals(tag) && new NBTItem(inventory.getChestplate()).getString("CustomItemID").equals(tag) && new NBTItem(inventory.getLeggings()).getString("CustomItemID").equals(tag) && new NBTItem(inventory.getBoots()).getString("CustomItemID").equals(tag);
 	}
 
 	public boolean WearingFullSet(PlayerInventory inventory) {

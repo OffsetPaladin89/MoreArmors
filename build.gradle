@@ -1,58 +1,29 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '7.1.1'
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.1'
 }
 
 group = 'me.offsetpaladin89'
-version = '3.7.1'
+version = '3.8'
 
 repositories {
     mavenCentral()
-    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-    maven { url = 'https://oss.sonatype.org/content/groups/public/' }
+    mavenLocal()
     maven { url = 'https://repo.codemc.org/repository/maven-public/' }
     maven { url = 'https://github.com/deanveloper/SkullCreator/raw/mvn-repo/' }
-    maven { url "https://repo.dmulloy2.net/repository/public/" }
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT'
-    shadow 'de.tr7zw:item-nbt-api:+'
-    shadow 'dev.dbassett:skullcreator:+'
-    shadow 'com.github.fracpete:romannumerals4j:+'
-    implementation 'org.jetbrains:annotations:+'
-    implementation 'org.apache.commons:commons-lang3:+'
-    implementation 'de.tr7zw:item-nbt-api:+'
+    compileOnly 'org.spigotmc:spigot:1.20.4-R0.1-SNAPSHOT'
+    implementation 'de.tr7zw:item-nbt-api:2.12.3'
     implementation 'dev.dbassett:skullcreator:+'
-    implementation 'com.github.fracpete:romannumerals4j:+'
-    implementation 'com.github.cryptomorin:XSeries:+'
-}
-
-def targetJavaVersion = 17
-java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        options.release = targetJavaVersion
-    }
-}
-
-processResources {
-    def props = [version: version]
-    inputs.properties props
-    filteringCharset 'UTF-8'
-    filesMatching('plugin.yml') {
-        expand props
-    }
+    implementation 'com.github.fracpete:romannumerals4j:0.0.1'
+    implementation 'com.github.cryptomorin:XSeries:9.9.0'
 }
 
 shadowJar {
-    relocate 'de.tr7zw.changeme.nbtapi', 'libs'
+    relocate 'dev.dbassett.skullcreator', 'libs/skull-creator'
+    relocate 'de.tr7zw.changeme.nbtapi', 'libs/nbt-api'
+    relocate 'com.cryptomorin.xseries', 'libs/x-series'
+    relocate 'com.github.fracpete.romannumerals4j', 'libs/romannumerals4j'
 }

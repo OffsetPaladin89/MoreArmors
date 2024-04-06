@@ -5,6 +5,7 @@ import me.offsetpaladin89.MoreArmors.handlers.CommandHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class Commands implements CommandExecutor {
 
@@ -15,6 +16,7 @@ public class Commands implements CommandExecutor {
 		this.plugin = plugin;
 		messages = new CommandHandler(plugin);
 		plugin.getServer().getPluginCommand("morearmors").setExecutor(this);
+		plugin.getServer().getPluginCommand("opensign").setExecutor(this);
 	}
 
 	@Override
@@ -56,6 +58,12 @@ public class Commands implements CommandExecutor {
 						}
 					}
 				}
+			}
+		}
+		if(cmd.getName().equalsIgnoreCase("opensign")) {
+			if(sender instanceof Player) {
+				Player p = (Player) sender;
+				plugin.signHandler.open(p);
 			}
 		}
 		return true;

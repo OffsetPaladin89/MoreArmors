@@ -20,10 +20,10 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 public class DamageHandler implements Listener {
 
-	public static MoreArmorsMain plugin;
+	private final MoreArmorsMain plugin;
 
 	public DamageHandler(MoreArmorsMain plugin) {
-		DamageHandler.plugin = plugin;
+		this.plugin = plugin;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
@@ -31,10 +31,9 @@ public class DamageHandler implements Listener {
 	public void DamageEntity(EntityDamageByEntityEvent event) {
 		if(event.getDamager() instanceof Player) {
 			Player player = (Player) event.getDamager();
-			plugin.sendPlayerMessage(player, "&5Destroyer Damage Bonus : " + destroyerDamage(player));
             event.setDamage(event.getDamage() + destroyerDamage(player));
             event.setDamage(event.getDamage() * netherDamage(player, player.getWorld().getEnvironment()) * seaGreedDamage(player) * endDamage(player, player.getWorld().getEnvironment()));
-            plugin.hologramHandler.createDamageHologram(player.getLocation(), event.getEntity().getLocation(), 20L, event.getDamage());
+            plugin.hologramHandler.createDamageHologram(player, player.getLocation(), event.getEntity().getLocation(), 20L, event.getDamage());
 		}
 		if(event.getDamager() instanceof Arrow) {
 			Arrow damager = (Arrow) event.getDamager();
@@ -42,7 +41,7 @@ public class DamageHandler implements Listener {
 				Player player = (Player) damager.getShooter();
                 event.setDamage(event.getDamage() + destroyerDamage(player));
                 event.setDamage(event.getDamage() * netherDamage(player, player.getWorld().getEnvironment()) * seaGreedDamage(player) * endDamage(player, player.getWorld().getEnvironment()));
-				plugin.hologramHandler.createDamageHologram(damager.getLocation(), event.getEntity().getLocation(), 20L, event.getDamage());
+				plugin.hologramHandler.createDamageHologram(player, damager.getLocation(), event.getEntity().getLocation(), 20L, event.getDamage());
 			}
 		}
 	}

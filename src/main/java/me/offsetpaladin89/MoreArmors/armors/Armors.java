@@ -6,6 +6,9 @@ import org.bukkit.Material;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public record Armors(MoreArmorsMain plugin) {
 	public ItemStack EmeraldArmor(EquipmentSlot slot, Integer emeraldAmount) {
 		return switch (slot) {
