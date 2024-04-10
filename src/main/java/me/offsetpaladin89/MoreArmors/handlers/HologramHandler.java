@@ -1,32 +1,31 @@
 package me.offsetpaladin89.MoreArmors.handlers;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
 import com.cryptomorin.xseries.ReflectionUtils;
-import joptsimple.internal.Reflection;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
+import net.minecraft.network.chat.ChatModifier;
+import net.minecraft.network.chat.ComponentContents;
+import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.server.level.WorldServer;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.util.FormattedString;
+import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityTypes;
 import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
-import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_20_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftLivingEntity;
-import org.bukkit.entity.*;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import org.w3c.dom.Text;
 
 import java.awt.*;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.List;
 import java.util.UUID;
 
 import static com.cryptomorin.xseries.ReflectionUtils.getCraftClass;
@@ -47,18 +46,15 @@ public class HologramHandler {
 		Random random = new Random();
 		Vector hDir = new Vector(dir.getZ(), 0, -dir.getX()).normalize();
 		spawnLoc.add(hDir.multiply(random.nextDouble() * 1.5 - 0.75)).add(0, random.nextDouble() * 1.5 - 0.5, 0);
-		MethodHandles.Lookup lookup = MethodHandles.lookup();
-		Object worldHandle = lookup.findVirtual(ReflectionUtils.getCraftClass("CraftWorld"), "getHandle", MethodType.methodType(getNMSClass("server.level", "WorldServer"))).invoke(loc.getWorld());
-		Object textEntity = lookup.findConstructor(getNMSClass("world.entity","Display$TextDisplay"), MethodType.methodType(void.class, getNMSClass("world.entity", "EntityTypes"), getNMSClass("world.level", "World"))).invoke(EntityTypes.aY, worldHandle);
-		Object convertedEntity = lookup.findVirtual(getNMSClass("world.entity","Display"), "getBukkitEntity", MethodType.methodType(getCraftClass("entity.CraftEntity"))).invoke(textEntity);
-		Object entityHandle = lookup.findVirtual(ReflectionUtils.getCraftClass("entity.CraftEntity"), "getHandle", MethodType.methodType(getNMSClass("world.entity", "Entity"))).invoke(convertedEntity);
-		Object dataWatcher = lookup.findVirtual(getNMSClass("world.entity", "Entity"), "an", MethodType.methodType(getNMSClass("network.syncher", "DataWatcher"))).invoke(entityHandle);
 
-		Object spawnPacket = lookup.findConstructor(getNMSClass("network.protocol.game", "PacketPlayOutSpawnEntity"), MethodType.methodType(void.class, getNMSClass("world.entity", "Entity"))).invoke(textEntity);
-		ReflectionUtils.sendPacket(p, spawnPacket);
-
-//		Object metaDataPacket = lookup.findConstructor(getNMSClass("network.protocol.game", "PacketPlayOutEntityMetadata"), MethodType.methodType(void.class, int.class, List.class)).invoke(100);
-//		ReflectionUtils.sendPacket(p, metaDataPacket);
+		PacketContainer textDisplay = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY);
+		textDisplay.getIntegers().write(0, random.nextInt());
+		textDisplay.getUUIDs().write(0, UUID.randomUUID());
+		textDisplay.getIntegers().write(1, 103);
+		textDisplay.getDoubles().write(0, spawnLoc.getX());
+		textDisplay.getDoubles().write(1, spawnLoc.getY());
+		textDisplay.getDoubles().write(2, spawnLoc.getZ());
+		ProtocolLibrary.getProtocolManager().sendServerPacket(p, textDisplay);
 
 //		Entity init = loc.getWorld().spawnEntity(spawnLoc, EntityType.TEXT_DISPLAY);
 //		TextDisplay textDisplay = (TextDisplay) init;
@@ -66,6 +62,14 @@ public class HologramHandler {
 //		pdc.set(new NamespacedKey(plugin, "HologramEntity"), PersistentDataType.BOOLEAN, true);
 //		textDisplay.setText(plugin.convertColoredString(s));
 //		textDisplay.setBillboard(Display.Billboard.CENTER);
+
+		new BukkitRunnable() {
+			public void run() {
+				PacketContainer destroyDisplay = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
+				destroyDisplay.getIntegers().write(0, textDisplay.getIntegers().getValues().get(0));
+				ProtocolLibrary.getProtocolManager().sendServerPacket(p, textDisplay);
+			}
+		}.runTaskLater(plugin, delay);
 
 //		new BukkitRunnable() {
 //			public void run() {

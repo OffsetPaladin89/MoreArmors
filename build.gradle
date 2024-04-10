@@ -11,10 +11,12 @@ repositories {
     mavenLocal()
     maven { url = 'https://repo.codemc.org/repository/maven-public/' }
     maven { url = 'https://github.com/deanveloper/SkullCreator/raw/mvn-repo/' }
+    maven { url = "https://repo.dmulloy2.net/repository/public/" }
 }
 
 dependencies {
     compileOnly 'org.spigotmc:spigot:1.20.4-R0.1-SNAPSHOT'
+    compileOnly 'com.comphenix.protocol:ProtocolLib:5.1.0'
     implementation 'de.tr7zw:item-nbt-api:2.12.3'
     implementation 'dev.dbassett:skullcreator:+'
     implementation 'com.github.fracpete:romannumerals4j:0.0.1'
