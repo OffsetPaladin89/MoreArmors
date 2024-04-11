@@ -19,9 +19,7 @@ import net.minecraft.util.FormattedString;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityTypes;
 import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.TextDisplay;
+import org.bukkit.entity.*;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.yaml.snakeyaml.serializer.Serializer;
@@ -44,13 +42,13 @@ public class HologramHandler {
 		HologramHandler.plugin = plugin;
 	}
 
-	public void createDamageHologram(Player p, Location playerLoc, Location loc, String s, Long delay) throws Throwable {
+	public void createDamageHologram(Player p, Location playerLoc, LivingEntity e, String s, Long delay) throws Throwable {
 
 		Vector dir = playerLoc.getDirection().normalize();
-		Location spawnLoc = playerLoc.add(loc.toVector().subtract(playerLoc.toVector()).multiply(0.65));
+		Location spawnLoc = playerLoc.add(e.getLocation().toVector().subtract(playerLoc.toVector()).multiply(0.65));
 		Random random = new Random();
 		Vector hDir = new Vector(dir.getZ(), 0, -dir.getX()).normalize();
-		spawnLoc.add(hDir.multiply(random.nextDouble() * 1.5 - 0.75)).add(0, random.nextDouble() * 1.5 - 0.5, 0);
+		spawnLoc.add(hDir.multiply(random.nextDouble() * 1.5 - 0.75)).add(0, (p.getEyeHeight() + e.getEyeHeight()) / 2 + random.nextDouble() - 0.5, 0);
 
 		// create a unique entity ID.
 		int entityID = random.nextInt();
@@ -99,9 +97,9 @@ public class HologramHandler {
 		}.runTaskLater(plugin, delay);
 	}
 
-	public void createDamageHologram(Player p, Location pLoc, Location loc, Long duration, Double damage) {
+	public void createDamageHologram(Player p, Location pLoc, LivingEntity e, Long duration, Double damage) {
 		try {
-			createDamageHologram(p, pLoc, loc, "&7" + new DecimalFormat("#.#").format(damage), duration);
+			createDamageHologram(p, pLoc, e, "&7" + new DecimalFormat("#.#").format(damage), duration);
 		}
 		catch(Throwable t) {
 			t.printStackTrace();

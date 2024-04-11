@@ -16,7 +16,6 @@ public class Commands implements CommandExecutor {
 		this.plugin = plugin;
 		messages = new CommandHandler(plugin);
 		plugin.getServer().getPluginCommand("morearmors").setExecutor(this);
-		plugin.getServer().getPluginCommand("opensign").setExecutor(this);
 	}
 
 	@Override
@@ -57,13 +56,10 @@ public class Commands implements CommandExecutor {
 							} else messages.tooManyArguments(sender);
 						}
 					}
+					case "reload" -> {
+						if(sender.hasPermission("morearmors.reload")) plugin.reloadConfig(sender);
+					}
 				}
-			}
-		}
-		if(cmd.getName().equalsIgnoreCase("opensign")) {
-			if(sender instanceof Player) {
-				Player p = (Player) sender;
-				plugin.signHandler.open(p);
 			}
 		}
 		return true;

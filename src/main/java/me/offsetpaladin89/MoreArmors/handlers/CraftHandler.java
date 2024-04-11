@@ -78,14 +78,7 @@ public class CraftHandler implements Listener {
 					if (rCustomID.equals("destroyer")) {
 						if (iCustomID.equals("compacted_iron_block") && i.getAmount() < 8) inv.setResult(null);
 						if (iCustomID.equals("machine_part") && i.getAmount() < 4) inv.setResult(null);
-						if (iCustomID.equals("machine_core")) {
-							// Machine Core must be in the top middle crafting slot
-							// if it is a chestplate but in the middle crafting slot
-							// if it is any other piece.
-							if (SlotType.matchType(result).equals(SlotType.CHESTPLATE) || SlotType.matchType(result).equals(SlotType.BOOTS)) {
-								if (x != 1) inv.setResult(null);
-							} else if (x != 4) inv.setResult(null);
-						}
+						if (iCustomID.equals("machine_core") && x % 3 != 1) inv.setResult(null);
 						if (iCustomID.isEmpty()) inv.setResult(null);
 					}
 					// Materials

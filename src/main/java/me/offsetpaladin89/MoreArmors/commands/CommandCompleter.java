@@ -27,6 +27,9 @@ public class CommandCompleter implements TabCompleter {
 			if (sender.hasPermission("morearmors.give")) {
 				arguments.add("give");
 			}
+			if(sender.hasPermission("morearmors.reload")) {
+				arguments.add("reload");
+			}
 			arguments.add("info");
 		} else if (args.length > 2) {
 			if (args[0].equalsIgnoreCase("give") && sender.hasPermission("morearmors.give")) {
