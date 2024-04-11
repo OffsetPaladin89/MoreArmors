@@ -3,8 +3,12 @@ package me.offsetpaladin89.MoreArmors.armors;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public record Armors(MoreArmorsMain plugin) {
 	public ItemStack EmeraldArmor(EquipmentSlot slot, Integer emeraldAmount) {
@@ -98,41 +102,60 @@ public record Armors(MoreArmorsMain plugin) {
 	}
 
 	public void RegisterArmorRecipes() {
-		plugin.getServer().addRecipe(plugin.shapedRecipe("emerald_helmet", EmeraldArmor(EquipmentSlot.HEAD, 0)).shape("XXX", "X X").setIngredient('X', Material.EMERALD_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("emerald_chestplate", EmeraldArmor(EquipmentSlot.CHEST, 0)).shape("X X", "XXX", "XXX").setIngredient('X', Material.EMERALD_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("emerald_leggings", EmeraldArmor(EquipmentSlot.LEGS, 0)).shape("XXX", "X X", "X X").setIngredient('X', Material.EMERALD_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("emerald_boots", EmeraldArmor(EquipmentSlot.FEET, 0)).shape("X X", "X X").setIngredient('X', Material.EMERALD_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("end_helmet", EndArmor(EquipmentSlot.HEAD)).shape("XXX", "XZX").setIngredient('X', Material.END_STONE).setIngredient('Z', Material.DRAGON_HEAD));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("end_chestplate", EndArmor(EquipmentSlot.CHEST)).shape("XZX", "XXX", "XXX").setIngredient('X', Material.END_STONE).setIngredient('Z', Material.ENDER_EYE));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("end_leggings", EndArmor(EquipmentSlot.LEGS)).shape("XXX", "XZX", "X X").setIngredient('X', Material.END_STONE).setIngredient('Z', Material.ENDER_EYE));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("end_boots", EndArmor(EquipmentSlot.FEET)).shape("XZX", "X X").setIngredient('X', Material.END_STONE).setIngredient('Z', Material.ENDER_EYE));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("experience_helmet", ExperienceArmor(EquipmentSlot.HEAD)).shape("XXX", "X X").setIngredient('X', Material.LAPIS_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("experience_chestplate", ExperienceArmor(EquipmentSlot.CHEST)).shape("X X", "XXX", "XXX").setIngredient('X', Material.LAPIS_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("experience_leggings", ExperienceArmor(EquipmentSlot.LEGS)).shape("XXX", "X X", "X X").setIngredient('X', Material.LAPIS_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("experience_boots", ExperienceArmor(EquipmentSlot.FEET)).shape("X X", "X X").setIngredient('X', Material.LAPIS_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("miner_helmet", MinerArmor(EquipmentSlot.HEAD)).shape("XXX", "X X").setIngredient('X', Material.COBBLESTONE));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("miner_chestplate", MinerArmor(EquipmentSlot.CHEST)).shape("X X", "XXX", "XXX").setIngredient('X', Material.COBBLESTONE));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("miner_leggings", MinerArmor(EquipmentSlot.LEGS)).shape("XXX", "X X", "X X").setIngredient('X', Material.COBBLESTONE));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("miner_boots", MinerArmor(EquipmentSlot.FEET)).shape("X X", "X X").setIngredient('X', Material.COBBLESTONE));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("nether_helmet", NetherArmor(EquipmentSlot.HEAD)).shape("XXX", "XZX").setIngredient('X', Material.SOUL_SAND).setIngredient('Z', Material.PLAYER_HEAD));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("nether_chestplate", NetherArmor(EquipmentSlot.CHEST)).shape("XZX", "XXX", "XXX").setIngredient('X', Material.SOUL_SAND).setIngredient('Z', Material.NETHER_STAR));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("nether_leggings", NetherArmor(EquipmentSlot.LEGS)).shape("XXX", "XZX", "X X").setIngredient('X', Material.SOUL_SAND).setIngredient('Z', Material.NETHER_STAR));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("nether_boots", NetherArmor(EquipmentSlot.FEET)).shape("XZX", "X X").setIngredient('X', Material.SOUL_SAND).setIngredient('Z', Material.NETHER_STAR));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("seagreed_helmet", SeaGreedArmor(EquipmentSlot.HEAD)).shape("XZX", "C C").setIngredient('X', Material.PRISMARINE).setIngredient('C', Material.GOLD_BLOCK).setIngredient('Z', Material.HEART_OF_THE_SEA));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("seagreed_chestplate", SeaGreedArmor(EquipmentSlot.CHEST)).shape("V V", "XZX", "CCC").setIngredient('X', Material.PRISMARINE).setIngredient('C', Material.GOLD_BLOCK).setIngredient('Z', Material.HEART_OF_THE_SEA).setIngredient('V', Material.DIAMOND_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("seagreed_leggings", SeaGreedArmor(EquipmentSlot.LEGS)).shape("XZX", "C C", "V V").setIngredient('X', Material.PRISMARINE).setIngredient('C', Material.GOLD_BLOCK).setIngredient('Z', Material.HEART_OF_THE_SEA).setIngredient('V', Material.DIAMOND_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("seagreed_boots", SeaGreedArmor(EquipmentSlot.FEET)).shape("X X", "C C").setIngredient('X', Material.PRISMARINE).setIngredient('C', Material.GOLD_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("speedster_helmet", SpeedsterArmor(EquipmentSlot.HEAD)).shape("XXX", "X X").setIngredient('X', Material.SUGAR_CANE));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("speedster_chestplate", SpeedsterArmor(EquipmentSlot.CHEST)).shape("X X", "XXX", "XXX").setIngredient('X', Material.SUGAR_CANE));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("speedster_leggings", SpeedsterArmor(EquipmentSlot.LEGS)).shape("XXX", "X X", "X X").setIngredient('X', Material.SUGAR_CANE));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("speedster_boots", SpeedsterArmor(EquipmentSlot.FEET)).shape("X X", "X X").setIngredient('X', Material.SUGAR_CANE));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("titan_helmet", TitanArmor(EquipmentSlot.HEAD)).shape("XXX", "X X").setIngredient('X', Material.IRON_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("titan_chestplate", TitanArmor(EquipmentSlot.CHEST)).shape("X X", "XXX", "XXX").setIngredient('X', Material.IRON_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("titan_leggings", TitanArmor(EquipmentSlot.LEGS)).shape("XXX", "X X", "X X").setIngredient('X', Material.IRON_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("titan_boots", TitanArmor(EquipmentSlot.FEET)).shape("X X", "X X").setIngredient('X', Material.IRON_BLOCK));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("destroyer_helmet", DestroyerArmor(EquipmentSlot.HEAD, 0)).shape("XXX", "VZV").setIngredient('X', Material.IRON_BLOCK).setIngredient('V', Material.PLAYER_HEAD).setIngredient('Z', Material.PLAYER_HEAD));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("destroyer_chestplate", DestroyerArmor(EquipmentSlot.CHEST, 0)).shape("VZV", "VXV", "XXX").setIngredient('X', Material.IRON_BLOCK).setIngredient('V', Material.PLAYER_HEAD).setIngredient('Z', Material.PLAYER_HEAD));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("destroyer_leggings", DestroyerArmor(EquipmentSlot.LEGS, 0)).shape("XXX", "VZV", "V V").setIngredient('X', Material.IRON_BLOCK).setIngredient('V', Material.PLAYER_HEAD).setIngredient('Z', Material.PLAYER_HEAD));
-		plugin.getServer().addRecipe(plugin.shapedRecipe("destroyer_boots", DestroyerArmor(EquipmentSlot.FEET, 0)).shape("VZV", "X X").setIngredient('X', Material.IRON_BLOCK).setIngredient('V', Material.PLAYER_HEAD).setIngredient('Z', Material.PLAYER_HEAD));
+		FileConfiguration config = plugin.configHandler.getConfig("config");
+		if(config.getBoolean("emeraldarmor.crafting")) {
+			plugin.getServer().addRecipe(plugin.shapedRecipe("emerald_helmet", EmeraldArmor(EquipmentSlot.HEAD, 0)).shape("XXX", "X X").setIngredient('X', Material.EMERALD_BLOCK));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("emerald_chestplate", EmeraldArmor(EquipmentSlot.CHEST, 0)).shape("X X", "XXX", "XXX").setIngredient('X', Material.EMERALD_BLOCK));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("emerald_leggings", EmeraldArmor(EquipmentSlot.LEGS, 0)).shape("XXX", "X X", "X X").setIngredient('X', Material.EMERALD_BLOCK));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("emerald_boots", EmeraldArmor(EquipmentSlot.FEET, 0)).shape("X X", "X X").setIngredient('X', Material.EMERALD_BLOCK));
+		}
+		if(config.getBoolean("endarmor.crafting")) {
+			plugin.getServer().addRecipe(plugin.shapedRecipe("end_helmet", EndArmor(EquipmentSlot.HEAD)).shape("XXX", "XZX").setIngredient('X', Material.END_STONE).setIngredient('Z', Material.DRAGON_HEAD));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("end_chestplate", EndArmor(EquipmentSlot.CHEST)).shape("XZX", "XXX", "XXX").setIngredient('X', Material.END_STONE).setIngredient('Z', Material.ENDER_EYE));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("end_leggings", EndArmor(EquipmentSlot.LEGS)).shape("XXX", "XZX", "X X").setIngredient('X', Material.END_STONE).setIngredient('Z', Material.ENDER_EYE));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("end_boots", EndArmor(EquipmentSlot.FEET)).shape("XZX", "X X").setIngredient('X', Material.END_STONE).setIngredient('Z', Material.ENDER_EYE));
+		}
+		if(config.getBoolean("experiencearmor.crafting")) {
+			plugin.getServer().addRecipe(plugin.shapedRecipe("experience_helmet", ExperienceArmor(EquipmentSlot.HEAD)).shape("XXX", "X X").setIngredient('X', Material.LAPIS_BLOCK));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("experience_chestplate", ExperienceArmor(EquipmentSlot.CHEST)).shape("X X", "XXX", "XXX").setIngredient('X', Material.LAPIS_BLOCK));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("experience_leggings", ExperienceArmor(EquipmentSlot.LEGS)).shape("XXX", "X X", "X X").setIngredient('X', Material.LAPIS_BLOCK));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("experience_boots", ExperienceArmor(EquipmentSlot.FEET)).shape("X X", "X X").setIngredient('X', Material.LAPIS_BLOCK));
+		}
+		if(config.getBoolean("minerarmor.crafting")) {
+			plugin.getServer().addRecipe(plugin.shapedRecipe("miner_helmet", MinerArmor(EquipmentSlot.HEAD)).shape("XXX", "X X").setIngredient('X', Material.COBBLESTONE));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("miner_chestplate", MinerArmor(EquipmentSlot.CHEST)).shape("X X", "XXX", "XXX").setIngredient('X', Material.COBBLESTONE));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("miner_leggings", MinerArmor(EquipmentSlot.LEGS)).shape("XXX", "X X", "X X").setIngredient('X', Material.COBBLESTONE));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("miner_boots", MinerArmor(EquipmentSlot.FEET)).shape("X X", "X X").setIngredient('X', Material.COBBLESTONE));
+		}
+		if(config.getBoolean("minerarmor.crafting")) {
+			plugin.getServer().addRecipe(plugin.shapedRecipe("nether_helmet", NetherArmor(EquipmentSlot.HEAD)).shape("XXX", "XZX").setIngredient('X', Material.SOUL_SAND).setIngredient('Z', Material.PLAYER_HEAD));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("nether_chestplate", NetherArmor(EquipmentSlot.CHEST)).shape("XZX", "XXX", "XXX").setIngredient('X', Material.SOUL_SAND).setIngredient('Z', Material.NETHER_STAR));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("nether_leggings", NetherArmor(EquipmentSlot.LEGS)).shape("XXX", "XZX", "X X").setIngredient('X', Material.SOUL_SAND).setIngredient('Z', Material.NETHER_STAR));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("nether_boots", NetherArmor(EquipmentSlot.FEET)).shape("XZX", "X X").setIngredient('X', Material.SOUL_SAND).setIngredient('Z', Material.NETHER_STAR));
+		}
+		if(config.getBoolean("seagreedarmor.crafting")) {
+			plugin.getServer().addRecipe(plugin.shapedRecipe("seagreed_helmet", SeaGreedArmor(EquipmentSlot.HEAD)).shape("XZX", "C C").setIngredient('X', Material.PRISMARINE).setIngredient('C', Material.GOLD_BLOCK).setIngredient('Z', Material.HEART_OF_THE_SEA));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("seagreed_chestplate", SeaGreedArmor(EquipmentSlot.CHEST)).shape("V V", "XZX", "CCC").setIngredient('X', Material.PRISMARINE).setIngredient('C', Material.GOLD_BLOCK).setIngredient('Z', Material.HEART_OF_THE_SEA).setIngredient('V', Material.DIAMOND_BLOCK));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("seagreed_leggings", SeaGreedArmor(EquipmentSlot.LEGS)).shape("XZX", "C C", "V V").setIngredient('X', Material.PRISMARINE).setIngredient('C', Material.GOLD_BLOCK).setIngredient('Z', Material.HEART_OF_THE_SEA).setIngredient('V', Material.DIAMOND_BLOCK));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("seagreed_boots", SeaGreedArmor(EquipmentSlot.FEET)).shape("X X", "C C").setIngredient('X', Material.PRISMARINE).setIngredient('C', Material.GOLD_BLOCK));
+		}
+		if(config.getBoolean("speedsterarmor.crafting")) {
+			plugin.getServer().addRecipe(plugin.shapedRecipe("speedster_helmet", SpeedsterArmor(EquipmentSlot.HEAD)).shape("XXX", "X X").setIngredient('X', Material.SUGAR_CANE));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("speedster_chestplate", SpeedsterArmor(EquipmentSlot.CHEST)).shape("X X", "XXX", "XXX").setIngredient('X', Material.SUGAR_CANE));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("speedster_leggings", SpeedsterArmor(EquipmentSlot.LEGS)).shape("XXX", "X X", "X X").setIngredient('X', Material.SUGAR_CANE));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("speedster_boots", SpeedsterArmor(EquipmentSlot.FEET)).shape("X X", "X X").setIngredient('X', Material.SUGAR_CANE));
+		}
+		if(config.getBoolean("titanarmor.crafting")) {
+			plugin.getServer().addRecipe(plugin.shapedRecipe("titan_helmet", TitanArmor(EquipmentSlot.HEAD)).shape("XXX", "X X").setIngredient('X', Material.IRON_BLOCK));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("titan_chestplate", TitanArmor(EquipmentSlot.CHEST)).shape("X X", "XXX", "XXX").setIngredient('X', Material.IRON_BLOCK));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("titan_leggings", TitanArmor(EquipmentSlot.LEGS)).shape("XXX", "X X", "X X").setIngredient('X', Material.IRON_BLOCK));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("titan_boots", TitanArmor(EquipmentSlot.FEET)).shape("X X", "X X").setIngredient('X', Material.IRON_BLOCK));
+		}
+		if(config.getBoolean("destroyerarmor.crafting")) {
+			plugin.getServer().addRecipe(plugin.shapedRecipe("destroyer_helmet", DestroyerArmor(EquipmentSlot.HEAD, 0)).shape("XXX", "VZV").setIngredient('X', Material.IRON_BLOCK).setIngredient('V', Material.PLAYER_HEAD).setIngredient('Z', Material.PLAYER_HEAD));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("destroyer_chestplate", DestroyerArmor(EquipmentSlot.CHEST, 0)).shape("VZV", "VXV", "XXX").setIngredient('X', Material.IRON_BLOCK).setIngredient('V', Material.PLAYER_HEAD).setIngredient('Z', Material.PLAYER_HEAD));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("destroyer_leggings", DestroyerArmor(EquipmentSlot.LEGS, 0)).shape("XXX", "VZV", "V V").setIngredient('X', Material.IRON_BLOCK).setIngredient('V', Material.PLAYER_HEAD).setIngredient('Z', Material.PLAYER_HEAD));
+			plugin.getServer().addRecipe(plugin.shapedRecipe("destroyer_boots", DestroyerArmor(EquipmentSlot.FEET, 0)).shape("VZV", "X X").setIngredient('X', Material.IRON_BLOCK).setIngredient('V', Material.PLAYER_HEAD).setIngredient('Z', Material.PLAYER_HEAD));
+		}
 	}
 }

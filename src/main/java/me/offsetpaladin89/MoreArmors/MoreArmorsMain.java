@@ -5,38 +5,30 @@ import me.offsetpaladin89.MoreArmors.armors.Armors;
 import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
 import me.offsetpaladin89.MoreArmors.commands.Commands;
 import me.offsetpaladin89.MoreArmors.commands.Give;
-import me.offsetpaladin89.MoreArmors.handlers.ArmorSetAbilityHandler;
-import me.offsetpaladin89.MoreArmors.handlers.CraftHandler;
-import me.offsetpaladin89.MoreArmors.handlers.DamageHandler;
-import me.offsetpaladin89.MoreArmors.handlers.HologramHandler;
+import me.offsetpaladin89.MoreArmors.handlers.*;
 import me.offsetpaladin89.MoreArmors.listeners.MainListener;
 import me.offsetpaladin89.MoreArmors.listeners.MoreArmorsListener;
 import me.offsetpaladin89.MoreArmors.materials.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MoreArmorsMain extends JavaPlugin {
 
 	public final String[] armorTypes = {"emerald", "end", "experience", "miner", "nether", "seagreed", "speedster", "titan", "destroyer"};
 	public final String[] materialTypes = {"compacted_blaze_rod", "compacted_cobblestone", "compacted_end_stone", "compacted_eye_of_ender", "compacted_soul_sand", "compacted_sugar_cane", "nether_crown", "compacted_diamond", "compacted_diamond_block", "compacted_gold", "compacted_gold_block", "compacted_prismarine", "compacted_iron", "compacted_iron_block", "compacted_redstone", "machine_part", "machine_core", "energy_cell", "star_dust"};
 	public final String[] slotTypes = {"helmet", "chestplate", "leggings", "boots"};
-	public ArrayList<Player> destroyerarmor = new ArrayList<>();
-	public ArrayList<Player> destroyerhelmet = new ArrayList<>();
 	public Materials materials;
 
 	public HologramHandler hologramHandler;
@@ -44,17 +36,18 @@ public class MoreArmorsMain extends JavaPlugin {
 	public Armors armorSets;
 	public ArmorConstructor armorConstructor;
 	public ArmorSetAbilityHandler armorSetAbilities;
+	public ConfigHandler configHandler;
+	public Commands commands;
 
 	public void onEnable() {
-
-
 		new MainListener(this);
 		new MoreArmorsListener(this);
 		new CraftHandler(this);
 		new DamageHandler(this);
-		new Commands(this);
 		new CommandCompleter(this);
 
+		commands = new Commands(this);
+		configHandler = new ConfigHandler(this);
 		hologramHandler = new HologramHandler(this);
 		armorSets = new Armors(this);
 		armorConstructor = new ArmorConstructor(this);
@@ -63,9 +56,29 @@ public class MoreArmorsMain extends JavaPlugin {
 		give = new Give(this);
 
 		ArmorChecker();
-		removeHolograms();
+		registerConfig();
 		armorSets.RegisterArmorRecipes();
 		materials.RegisterMaterialsRecipes();
+	}
+
+	public void reloadConfig(CommandSender s) {
+		registerConfig();
+		getServer().resetRecipes();
+		armorSets.RegisterArmorRecipes();
+		materials.RegisterMaterialsRecipes();
+		sendColoredMessage(s, commands.messages.prefix() + " &aSuccessfully reloaded config!");
+	}
+
+	public void registerConfig() {
+		Map<String, Object> defaultValues = new HashMap<>();
+		defaultValues.put("damageindicators", true);
+		defaultValues.put("materials.crafting", true);
+		for (String s : armorTypes) {
+			s += "armor";
+			defaultValues.put(s + ".enabled", true);
+			defaultValues.put(s + ".crafting", true);
+		}
+		configHandler.saveConfigDefaults("config", defaultValues);
 	}
 
 	public String convertColoredString(String msg) {
@@ -90,10 +103,7 @@ public class MoreArmorsMain extends JavaPlugin {
 
 	public boolean IsFullCustomSet(String tag, PlayerInventory inventory) {
 		if (WearingFullSet(inventory)) return false;
-		return new NBTItem(inventory.getHelmet()).getString("CustomItemID").equals(tag) &&
-				new NBTItem(inventory.getChestplate()).getString("CustomItemID").equals(tag) &&
-				new NBTItem(inventory.getLeggings()).getString("CustomItemID").equals(tag) &&
-				new NBTItem(inventory.getBoots()).getString("CustomItemID").equals(tag);
+		return new NBTItem(inventory.getHelmet()).getString("CustomItemID").equals(tag) && new NBTItem(inventory.getChestplate()).getString("CustomItemID").equals(tag) && new NBTItem(inventory.getLeggings()).getString("CustomItemID").equals(tag) && new NBTItem(inventory.getBoots()).getString("CustomItemID").equals(tag);
 	}
 
 	public boolean WearingFullSet(PlayerInventory inventory) {
@@ -102,20 +112,6 @@ public class MoreArmorsMain extends JavaPlugin {
 
 	public Boolean matchingCustomItem(ItemStack item, String itemID) {
 		return !isAirOrNull(item) && new NBTItem(item).getString("CustomItemID").equals(itemID);
-	}
-
-	public void removeHolograms() {
-		for (World world : getServer().getWorlds()) {
-			for (Entity entity : world.getEntities()) {
-				if (entity.getType().equals(EntityType.ARMOR_STAND) || entity.getType().equals(EntityType.BAT)) {
-					PersistentDataContainer pdc = entity.getPersistentDataContainer();
-					NamespacedKey key = new NamespacedKey(this, "HologramEntity");
-					if (Boolean.TRUE.equals(pdc.get(key, PersistentDataType.BOOLEAN))) {
-						entity.remove();
-					}
-				}
-			}
-		}
 	}
 
 	public boolean isAirOrNull(ItemStack item) {

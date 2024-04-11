@@ -5,6 +5,7 @@ import me.offsetpaladin89.MoreArmors.handlers.CommandHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class Commands implements CommandExecutor {
 
@@ -54,6 +55,9 @@ public class Commands implements CommandExecutor {
 										args.length > 3 ? args[3] : null);
 							} else messages.tooManyArguments(sender);
 						}
+					}
+					case "reload" -> {
+						if(sender.hasPermission("morearmors.reload")) plugin.reloadConfig(sender);
 					}
 				}
 			}

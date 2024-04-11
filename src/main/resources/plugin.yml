@@ -2,6 +2,7 @@ name: MoreArmors
 version: '${version}'
 main: me.offsetpaladin89.MoreArmors.MoreArmorsMain
 api-version: 1.13
+depend: [ProtocolLib]
 
 commands:
   morearmors:
@@ -15,9 +16,13 @@ permissions:
     children:
       morearmors.edit: true
       morearmors.give: true
+      morearmors.reload: true
   morearmors.edit:
     description: Gives access to edit all MoreArmors items.
     default: op
   morearmors.give:
     description: Gives access to give all MoreArmors items.
+    default: op
+  morearmors.reload:
+    description: Gives access to reloading MoreArmors.
     default: op

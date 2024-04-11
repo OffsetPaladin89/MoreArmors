@@ -37,25 +37,27 @@ public record Materials(MoreArmorsMain plugin) {
 	public ItemStack EnergyCell() { return createMaterialSkull("9ac52419b99025828c89fa825945e6948e45bb5a22e4425a59e9096e4c1ac38", Rarity.EPIC, "Energy Cell", "energy_cell"); }
 	public ItemStack MachineCore() { return createMaterialSkull("76856a8f37b6c3146854f2caa7101b9dd592f4669a3c75f941e2859552bd1ae8", Rarity.LEGENDARY, "Machine Core", "machine_core"); }
 	public void RegisterMaterialsRecipes() {
-		plugin.getServer().addRecipe(registerRecipe("compacted_sugar_cane", CompactedSugarCane(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.SUGAR_CANE));
-		plugin.getServer().addRecipe(registerRecipe("compacted_cobblestone", CompactedCobblestone(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.COBBLESTONE));
-		plugin.getServer().addRecipe(registerRecipe("compacted_soul_sand", CompactedSoulSand(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.SOUL_SAND));
-		plugin.getServer().addRecipe(registerRecipe("compacted_blaze_rod", CompactedBlazeRod(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.BLAZE_ROD));
-		plugin.getServer().addRecipe(registerRecipe("nether_crown", NetherCrown()).shape("XXX", "XSX", "XXX").setIngredient('X', Material.BLAZE_ROD).setIngredient('S', Material.NETHER_STAR));
-		plugin.getServer().addRecipe(registerRecipe("compacted_end_stone", CompactedEndStone(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.END_STONE));
-		plugin.getServer().addRecipe(registerRecipe("compacted_eye_of_ender", CompactedEyeOfEnder(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.ENDER_EYE));
-		plugin.getServer().addRecipe(registerRecipe("compacted_diamond", CompactedDiamond(1)).shape(" X ", "XXX", " X ").setIngredient('X', Material.DIAMOND));
-		plugin.getServer().addRecipe(registerRecipe("compacted_diamond_block", CompactedDiamondBlock(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.DIAMOND));
-		plugin.getServer().addRecipe(registerRecipe("compacted_gold", CompactedGold(1)).shape(" X ", "XXX", " X ").setIngredient('X', Material.GOLD_INGOT));
-		plugin.getServer().addRecipe(registerRecipe("compacted_gold_block", CompactedGoldBlock(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.GOLD_INGOT));
-		plugin.getServer().addRecipe(registerRecipe("compacted_prismarine", CompactedPrismarine(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.PRISMARINE));
-		plugin.getServer().addRecipe(registerRecipe("compacted_redstone", CompactedRedstone(1)).shape(" X ", "XXX", " X ").setIngredient('X', Material.REDSTONE));
-		plugin.getServer().addRecipe(registerRecipe("compacted_iron", CompactedIron(1)).shape(" X ", "XXX", " X ").setIngredient('X', Material.IRON_INGOT));
-		plugin.getServer().addRecipe(registerRecipe("compacted_iron_block", CompactedIronBlock(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.IRON_INGOT));
-		plugin.getServer().addRecipe(registerRecipe("star_dust", StarDust(8)).shape("XXX", "XSX", "XXX").setIngredient('X', Material.IRON_INGOT).setIngredient('S', Material.NETHER_STAR));
-		plugin.getServer().addRecipe(registerRecipe("machine_part", MachinePart(1)).shape("XXX", "XSX", "XXX").setIngredient('X', Material.IRON_INGOT).setIngredient('S', Material.REDSTONE));
-		plugin.getServer().addRecipe(registerRecipe("energy_cell", EnergyCell()).shape("XXX", "XSX", "XXX").setIngredient('X', Material.IRON_INGOT).setIngredient('S', Material.GHAST_TEAR));
-		plugin.getServer().addRecipe(registerRecipe("machine_core", MachineCore()).shape("XZX", "XSX", "XZX").setIngredient('X', Material.IRON_BLOCK).setIngredient('S', Material.PLAYER_HEAD).setIngredient('Z', Material.PLAYER_HEAD));
+		if(plugin.configHandler.getConfig("config").getBoolean("materials.crafting")) {
+			plugin.getServer().addRecipe(registerRecipe("compacted_sugar_cane", CompactedSugarCane(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.SUGAR_CANE));
+			plugin.getServer().addRecipe(registerRecipe("compacted_cobblestone", CompactedCobblestone(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.COBBLESTONE));
+			plugin.getServer().addRecipe(registerRecipe("compacted_soul_sand", CompactedSoulSand(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.SOUL_SAND));
+			plugin.getServer().addRecipe(registerRecipe("compacted_blaze_rod", CompactedBlazeRod(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.BLAZE_ROD));
+			plugin.getServer().addRecipe(registerRecipe("nether_crown", NetherCrown()).shape("XXX", "XSX", "XXX").setIngredient('X', Material.BLAZE_ROD).setIngredient('S', Material.NETHER_STAR));
+			plugin.getServer().addRecipe(registerRecipe("compacted_end_stone", CompactedEndStone(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.END_STONE));
+			plugin.getServer().addRecipe(registerRecipe("compacted_eye_of_ender", CompactedEyeOfEnder(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.ENDER_EYE));
+			plugin.getServer().addRecipe(registerRecipe("compacted_diamond", CompactedDiamond(1)).shape(" X ", "XXX", " X ").setIngredient('X', Material.DIAMOND));
+			plugin.getServer().addRecipe(registerRecipe("compacted_diamond_block", CompactedDiamondBlock(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.DIAMOND));
+			plugin.getServer().addRecipe(registerRecipe("compacted_gold", CompactedGold(1)).shape(" X ", "XXX", " X ").setIngredient('X', Material.GOLD_INGOT));
+			plugin.getServer().addRecipe(registerRecipe("compacted_gold_block", CompactedGoldBlock(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.GOLD_INGOT));
+			plugin.getServer().addRecipe(registerRecipe("compacted_prismarine", CompactedPrismarine(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.PRISMARINE));
+			plugin.getServer().addRecipe(registerRecipe("compacted_redstone", CompactedRedstone(1)).shape(" X ", "XXX", " X ").setIngredient('X', Material.REDSTONE));
+			plugin.getServer().addRecipe(registerRecipe("compacted_iron", CompactedIron(1)).shape(" X ", "XXX", " X ").setIngredient('X', Material.IRON_INGOT));
+			plugin.getServer().addRecipe(registerRecipe("compacted_iron_block", CompactedIronBlock(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.IRON_INGOT));
+			plugin.getServer().addRecipe(registerRecipe("star_dust", StarDust(8)).shape("XXX", "XSX", "XXX").setIngredient('X', Material.IRON_INGOT).setIngredient('S', Material.NETHER_STAR));
+			plugin.getServer().addRecipe(registerRecipe("machine_part", MachinePart(1)).shape("XXX", "XSX", "XXX").setIngredient('X', Material.IRON_INGOT).setIngredient('S', Material.REDSTONE));
+			plugin.getServer().addRecipe(registerRecipe("energy_cell", EnergyCell()).shape("XXX", "XSX", "XXX").setIngredient('X', Material.IRON_INGOT).setIngredient('S', Material.GHAST_TEAR));
+			plugin.getServer().addRecipe(registerRecipe("machine_core", MachineCore()).shape("XZX", "XSX", "XZX").setIngredient('X', Material.IRON_BLOCK).setIngredient('S', Material.PLAYER_HEAD).setIngredient('Z', Material.PLAYER_HEAD));
+		}
 	}
 	private ItemStack addData(ItemStack item, Rarity rarity, String name, String itemID) {
 		ItemMeta itemmeta = item.getItemMeta();

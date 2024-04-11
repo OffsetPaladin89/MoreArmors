@@ -12,19 +12,18 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
 public record ArmorConstructor(MoreArmorsMain plugin) {
 
-	public ItemStack createEmeraldArmor(@NotNull ItemStack item) {
+	public ItemStack createEmeraldArmor(ItemStack item) {
 		NBTItem nbtItem = new NBTItem(item);
 		return createEmeraldArmor(item, item.getItemMeta().getDisplayName(), Rarity.getRarity(nbtItem.getInteger("Rarity")), nbtItem.getInteger("Armor"), nbtItem.getInteger("ArmorToughness"), nbtItem.getInteger("EmeraldCount"), EquipmentSlot.valueOf(nbtItem.getString("AttributeSlot")));
 	}
 
-	public ItemStack createEmeraldArmor(@NotNull ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness, int emeraldAmount, EquipmentSlot equipmentSlot) {
+	public ItemStack createEmeraldArmor(ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness, int emeraldAmount, EquipmentSlot equipmentSlot) {
 		LeatherArmorMeta itemMeta = (LeatherArmorMeta) item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		int healthBoost = emeraldAmount / 50 > 5 ? 10 : emeraldAmount / 50 * 2;
@@ -58,7 +57,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		return nbtItem.getItem();
 	}
 
-	public ItemStack createEndArmor(@NotNull ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness, EquipmentSlot equipmentSlot) {
+	public ItemStack createEndArmor(ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness, EquipmentSlot equipmentSlot) {
 		ItemMeta itemMeta = item.getItemMeta();
 		LeatherArmorMeta leatherItemMeta;
 		ArrayList<String> lore = new ArrayList<>();
@@ -100,7 +99,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		return addNBT(item, "end", rarity, armor, armorToughness, equipmentSlot).getItem();
 	}
 
-	public ItemStack createExperienceArmor(@NotNull ItemStack item, String displayName, Rarity rarity, int armor, EquipmentSlot equipmentSlot) {
+	public ItemStack createExperienceArmor(ItemStack item, String displayName, Rarity rarity, int armor, EquipmentSlot equipmentSlot) {
 		LeatherArmorMeta itemMeta = (LeatherArmorMeta) item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		// Display
@@ -124,7 +123,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		return addNBT(item, "experience", rarity, armor, 0, equipmentSlot).getItem();
 	}
 
-	public ItemStack createMinerArmor(@NotNull ItemStack item, String displayName, Rarity rarity, int armor, EquipmentSlot equipmentSlot) {
+	public ItemStack createMinerArmor(ItemStack item, String displayName, Rarity rarity, int armor, EquipmentSlot equipmentSlot) {
 		LeatherArmorMeta itemMeta = (LeatherArmorMeta) item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		// Display
@@ -148,7 +147,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		return addNBT(item, "miner", rarity, armor, 0, equipmentSlot).getItem();
 	}
 
-	public ItemStack createNetherArmor(@NotNull ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness, EquipmentSlot equipmentSlot) {
+	public ItemStack createNetherArmor(ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness, EquipmentSlot equipmentSlot) {
 		ItemMeta itemMeta = item.getItemMeta();
 		LeatherArmorMeta leatherItemMeta;
 		ArrayList<String> lore = new ArrayList<>();
@@ -188,7 +187,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		return addNBT(item, "nether", rarity, armor, armorToughness, equipmentSlot).getItem();
 	}
 
-	public ItemStack createSeaGreedArmor(@NotNull ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness, EquipmentSlot equipmentSlot) {
+	public ItemStack createSeaGreedArmor(ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness, EquipmentSlot equipmentSlot) {
 		ItemMeta itemMeta = item.getItemMeta();
 		LeatherArmorMeta leatherItemMeta;
 		ArrayList<String> lore = new ArrayList<>();
@@ -232,7 +231,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		return addNBT(item, "seagreed", rarity, armor, armorToughness, equipmentSlot).getItem();
 	}
 
-	public ItemStack createSpeedsterArmor(@NotNull ItemStack item, String displayName, Rarity rarity, int armor, EquipmentSlot equipmentSlot) {
+	public ItemStack createSpeedsterArmor(ItemStack item, String displayName, Rarity rarity, int armor, EquipmentSlot equipmentSlot) {
 		LeatherArmorMeta itemMeta = (LeatherArmorMeta) item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		// Display
@@ -259,7 +258,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		return addNBT(item, "speedster", rarity, armor, 0, equipmentSlot).getItem();
 	}
 
-	public ItemStack createTitanArmor(@NotNull ItemStack item, String displayName, Rarity rarity, int armor, EquipmentSlot equipmentSlot) {
+	public ItemStack createTitanArmor(ItemStack item, String displayName, Rarity rarity, int armor, EquipmentSlot equipmentSlot) {
 		ItemMeta itemMeta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		// Display
@@ -286,12 +285,12 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		return addNBT(item, "titan", rarity, armor, 0, equipmentSlot).getItem();
 	}
 
-	public ItemStack createDestroyerArmor(@NotNull ItemStack item) {
+	public ItemStack createDestroyerArmor(ItemStack item) {
 		NBTItem nbtItem = new NBTItem(item);
 		return createDestroyerArmor(item, item.getItemMeta().getDisplayName(), Rarity.getRarity(nbtItem.getInteger("Rarity")), nbtItem.getInteger("Armor"), nbtItem.getInteger("ArmorToughness"), nbtItem.getInteger("KillAmount"), EquipmentSlot.valueOf(nbtItem.getString("AttributeSlot")));
 	}
 
-	public ItemStack createDestroyerArmor(@NotNull ItemStack item, String displayName, Rarity rarity, Integer armor, Integer armorToughness, Integer killAmount, EquipmentSlot equipmentSlot) {
+	public ItemStack createDestroyerArmor(ItemStack item, String displayName, Rarity rarity, Integer armor, Integer armorToughness, Integer killAmount, EquipmentSlot equipmentSlot) {
 		ItemMeta itemMeta = item.getItemMeta();
 		LeatherArmorMeta leatherItemMeta;
 		ArrayList<String> lore = new ArrayList<>();

@@ -2,8 +2,10 @@ package me.offsetpaladin89.MoreArmors.handlers;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
+import me.offsetpaladin89.MoreArmors.armors.Armors;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -76,14 +78,7 @@ public class CraftHandler implements Listener {
 					if (rCustomID.equals("destroyer")) {
 						if (iCustomID.equals("compacted_iron_block") && i.getAmount() < 8) inv.setResult(null);
 						if (iCustomID.equals("machine_part") && i.getAmount() < 4) inv.setResult(null);
-						if (iCustomID.equals("machine_core")) {
-							// Machine Core must be in the top middle crafting slot
-							// if it is a chestplate but in the middle crafting slot
-							// if it is any other piece.
-							if (SlotType.matchType(result).equals(SlotType.CHESTPLATE) || SlotType.matchType(result).equals(SlotType.BOOTS)) {
-								if (x != 1) inv.setResult(null);
-							} else if (x != 4) inv.setResult(null);
-						}
+						if (iCustomID.equals("machine_core") && x % 3 != 1) inv.setResult(null);
 						if (iCustomID.isEmpty()) inv.setResult(null);
 					}
 					// Materials
@@ -168,7 +163,6 @@ public class CraftHandler implements Listener {
 		for(int x = 0; x < cm.length; x++) {
 			ItemStack i = cm[x];
 			NBTItem nbtItem = new NBTItem(i);
-			String iCustomID = nbtItem.getString("CustomItemID");
 			if(!nbtItem.getBoolean("IsCustomItem")) y++;
 		}
 		return y == 9;
