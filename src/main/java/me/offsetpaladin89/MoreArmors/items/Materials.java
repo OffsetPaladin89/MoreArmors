@@ -1,9 +1,9 @@
-package me.offsetpaladin89.MoreArmors.materials;
+package me.offsetpaladin89.MoreArmors.items;
 
 import com.cryptomorin.xseries.SkullUtils;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import dev.dbassett.skullcreator.SkullCreator;
-import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
+import me.offsetpaladin89.MoreArmors.Main;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public record Materials(MoreArmorsMain plugin) {
+public record Materials(Main plugin) {
 	public ItemStack CompactedSugarCane(Integer amount) { return addData(new ItemStack(Material.SUGAR_CANE, amount), Rarity.UNCOMMON, "Compacted Sugar Cane", "compacted_sugar_cane"); }
 	public ItemStack CompactedCobblestone(Integer amount) { return addData(new ItemStack(Material.COBBLESTONE, amount), Rarity.COMMON, "Compacted Cobblestone", "compacted_cobblestone"); }
 	public ItemStack CompactedSoulSand(Integer amount) { return addData(new ItemStack(Material.SOUL_SAND, amount), Rarity.UNCOMMON, "Compacted Soul Sand", "compacted_soul_sand"); }
@@ -37,7 +37,7 @@ public record Materials(MoreArmorsMain plugin) {
 	public ItemStack EnergyCell() { return createMaterialSkull("9ac52419b99025828c89fa825945e6948e45bb5a22e4425a59e9096e4c1ac38", Rarity.EPIC, "Energy Cell", "energy_cell"); }
 	public ItemStack MachineCore() { return createMaterialSkull("76856a8f37b6c3146854f2caa7101b9dd592f4669a3c75f941e2859552bd1ae8", Rarity.LEGENDARY, "Machine Core", "machine_core"); }
 	public void RegisterMaterialsRecipes() {
-		if(plugin.configHandler.getConfig("config").getBoolean("materials.crafting")) {
+		if(plugin.config.getConfig("config").getBoolean("materials.crafting")) {
 			plugin.getServer().addRecipe(registerRecipe("compacted_sugar_cane", CompactedSugarCane(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.SUGAR_CANE));
 			plugin.getServer().addRecipe(registerRecipe("compacted_cobblestone", CompactedCobblestone(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.COBBLESTONE));
 			plugin.getServer().addRecipe(registerRecipe("compacted_soul_sand", CompactedSoulSand(1)).shape("XXX", "XXX", "XXX").setIngredient('X', Material.SOUL_SAND));

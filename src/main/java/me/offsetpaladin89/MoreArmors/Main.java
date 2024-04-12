@@ -1,19 +1,18 @@
 package me.offsetpaladin89.MoreArmors;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
-import me.offsetpaladin89.MoreArmors.armors.Armors;
 import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
 import me.offsetpaladin89.MoreArmors.commands.Commands;
 import me.offsetpaladin89.MoreArmors.commands.Give;
 import me.offsetpaladin89.MoreArmors.handlers.*;
-import me.offsetpaladin89.MoreArmors.listeners.MainListener;
-import me.offsetpaladin89.MoreArmors.listeners.MoreArmorsListener;
-import me.offsetpaladin89.MoreArmors.materials.Materials;
+import me.offsetpaladin89.MoreArmors.inventories.Inventories;
+import me.offsetpaladin89.MoreArmors.items.ArmorConstructor;
+import me.offsetpaladin89.MoreArmors.items.Armors;
+import me.offsetpaladin89.MoreArmors.items.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -24,7 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MoreArmorsMain extends JavaPlugin {
+public class Main extends JavaPlugin {
 
 	public final String[] armorTypes = {"emerald", "end", "experience", "miner", "nether", "seagreed", "speedster", "titan", "destroyer"};
 	public final String[] materialTypes = {"compacted_blaze_rod", "compacted_cobblestone", "compacted_end_stone", "compacted_eye_of_ender", "compacted_soul_sand", "compacted_sugar_cane", "nether_crown", "compacted_diamond", "compacted_diamond_block", "compacted_gold", "compacted_gold_block", "compacted_prismarine", "compacted_iron", "compacted_iron_block", "compacted_redstone", "machine_part", "machine_core", "energy_cell", "star_dust"};
@@ -35,23 +34,23 @@ public class MoreArmorsMain extends JavaPlugin {
 	public Give give;
 	public Armors armorSets;
 	public ArmorConstructor armorConstructor;
-	public ArmorSetAbilityHandler armorSetAbilities;
-	public ConfigHandler configHandler;
+	public Config config;
 	public Commands commands;
+	public Listener listener;
+	public Inventories inv;
 
 	public void onEnable() {
-		new MainListener(this);
-		new MoreArmorsListener(this);
 		new CraftHandler(this);
 		new DamageHandler(this);
 		new CommandCompleter(this);
 
+		inv = new Inventories(this);
+		listener = new Listener(this);
 		commands = new Commands(this);
-		configHandler = new ConfigHandler(this);
+		config = new Config(this);
 		hologramHandler = new HologramHandler(this);
 		armorSets = new Armors(this);
 		armorConstructor = new ArmorConstructor(this);
-		armorSetAbilities = new ArmorSetAbilityHandler(this);
 		materials = new Materials(this);
 		give = new Give(this);
 
@@ -66,7 +65,7 @@ public class MoreArmorsMain extends JavaPlugin {
 		getServer().resetRecipes();
 		armorSets.RegisterArmorRecipes();
 		materials.RegisterMaterialsRecipes();
-		sendColoredMessage(s, commands.messages.prefix() + " &aSuccessfully reloaded config!");
+		sendColoredMessage(s, commands.prefix() + " &aSuccessfully reloaded config!");
 	}
 
 	public void registerConfig() {
@@ -78,7 +77,7 @@ public class MoreArmorsMain extends JavaPlugin {
 			defaultValues.put(s + ".enabled", true);
 			defaultValues.put(s + ".crafting", true);
 		}
-		configHandler.saveConfigDefaults("config", defaultValues);
+		config.saveConfigDefaults("config", defaultValues);
 	}
 
 	public String convertColoredString(String msg) {
@@ -139,7 +138,7 @@ public class MoreArmorsMain extends JavaPlugin {
 	public void ArmorChecker() {
 		new BukkitRunnable() {
 			public void run() {
-				armorSetAbilities.scanPlayers(getServer().getOnlinePlayers().toArray());
+				listener.scanPlayers(getServer().getOnlinePlayers().toArray());
 			}
 		}.runTaskTimer(this, 0, 5);
 	}

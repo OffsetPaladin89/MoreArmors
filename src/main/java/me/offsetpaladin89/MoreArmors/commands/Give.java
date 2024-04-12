@@ -1,6 +1,6 @@
 package me.offsetpaladin89.MoreArmors.commands;
 
-import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
+import me.offsetpaladin89.MoreArmors.Main;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-public record Give(MoreArmorsMain plugin) {
+public record Give(Main plugin) {
 	public ItemStack give(MaterialType type, Integer amount) {
 		return switch (type) {
 			case COMPACTED_BLAZE_ROD -> plugin.materials.CompactedBlazeRod(amount);

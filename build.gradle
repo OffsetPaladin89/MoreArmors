@@ -17,6 +17,7 @@ repositories {
 dependencies {
     compileOnly 'org.spigotmc:spigot:1.20.4-R0.1-SNAPSHOT'
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.1.0'
+    implementation 'com.github.stefvanschie.inventoryframework:IF:0.10.13'
     implementation 'de.tr7zw:item-nbt-api:2.12.3'
     implementation 'dev.dbassett:skullcreator:+'
     implementation 'com.github.fracpete:romannumerals4j:0.0.1'
@@ -24,6 +25,7 @@ dependencies {
 }
 
 shadowJar {
+    relocate 'com.github.stefvanschie.inventoryframework', 'libs/IF'
     relocate 'dev.dbassett.skullcreator', 'libs/skull-creator'
     relocate 'de.tr7zw.changeme.nbtapi', 'libs/nbt-api'
     relocate 'com.cryptomorin.xseries', 'libs/x-series'

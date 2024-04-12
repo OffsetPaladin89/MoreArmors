@@ -1,7 +1,8 @@
-package me.offsetpaladin89.MoreArmors;
+package me.offsetpaladin89.MoreArmors.items;
 
 import com.cryptomorin.xseries.SkullUtils;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import me.offsetpaladin89.MoreArmors.Main;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -16,7 +17,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public record ArmorConstructor(MoreArmorsMain plugin) {
+public record ArmorConstructor(Main plugin) {
 
 	public ItemStack createEmeraldArmor(ItemStack item) {
 		NBTItem nbtItem = new NBTItem(item);

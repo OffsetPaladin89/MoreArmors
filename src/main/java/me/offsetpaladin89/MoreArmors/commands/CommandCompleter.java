@@ -1,6 +1,6 @@
 package me.offsetpaladin89.MoreArmors.commands;
 
-import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
+import me.offsetpaladin89.MoreArmors.Main;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -11,9 +11,9 @@ import java.util.List;
 
 public class CommandCompleter implements TabCompleter {
 
-	private final MoreArmorsMain plugin;
+	private final Main plugin;
 
-	public CommandCompleter(MoreArmorsMain plugin) {
+	public CommandCompleter(Main plugin) {
 		this.plugin = plugin;
 		plugin.getServer().getPluginCommand("morearmors").setTabCompleter(this);
 	}
@@ -31,6 +31,7 @@ public class CommandCompleter implements TabCompleter {
 				arguments.add("reload");
 			}
 			arguments.add("info");
+			arguments.add("gui");
 		} else if (args.length > 2) {
 			if (args[0].equalsIgnoreCase("give") && sender.hasPermission("morearmors.give")) {
 				if (args.length > 3) {

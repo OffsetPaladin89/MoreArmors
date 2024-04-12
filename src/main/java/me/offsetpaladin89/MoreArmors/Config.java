@@ -1,6 +1,5 @@
-package me.offsetpaladin89.MoreArmors.handlers;
+package me.offsetpaladin89.MoreArmors;
 
-import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -8,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-public record ConfigHandler(MoreArmorsMain plugin) {
+public record Config(Main plugin) {
 
 	public void saveConfigDefaults(String name, Map<String, Object> defaults) {
 		FileConfiguration config = getConfig(name);

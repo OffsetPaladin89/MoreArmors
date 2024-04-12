@@ -1,16 +1,13 @@
-package me.offsetpaladin89.MoreArmors.armors;
+package me.offsetpaladin89.MoreArmors.items;
 
-import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
+import me.offsetpaladin89.MoreArmors.Main;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public record Armors(MoreArmorsMain plugin) {
+public record Armors(Main plugin) {
 	public ItemStack EmeraldArmor(EquipmentSlot slot, Integer emeraldAmount) {
 		return switch (slot) {
 			case HEAD -> plugin.armorConstructor.createEmeraldArmor(new ItemStack(Material.LEATHER_HELMET, 1), "Emerald Helmet", Rarity.EPIC, 3, 2, emeraldAmount, slot);
@@ -102,7 +99,7 @@ public record Armors(MoreArmorsMain plugin) {
 	}
 
 	public void RegisterArmorRecipes() {
-		FileConfiguration config = plugin.configHandler.getConfig("config");
+		FileConfiguration config = plugin.config.getConfig("config");
 		if(config.getBoolean("emeraldarmor.crafting")) {
 			plugin.getServer().addRecipe(plugin.shapedRecipe("emerald_helmet", EmeraldArmor(EquipmentSlot.HEAD, 0)).shape("XXX", "X X").setIngredient('X', Material.EMERALD_BLOCK));
 			plugin.getServer().addRecipe(plugin.shapedRecipe("emerald_chestplate", EmeraldArmor(EquipmentSlot.CHEST, 0)).shape("X X", "XXX", "XXX").setIngredient('X', Material.EMERALD_BLOCK));

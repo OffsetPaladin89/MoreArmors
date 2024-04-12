@@ -1,11 +1,9 @@
 package me.offsetpaladin89.MoreArmors.handlers;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
-import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import me.offsetpaladin89.MoreArmors.armors.Armors;
+import me.offsetpaladin89.MoreArmors.Main;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,9 +19,9 @@ import java.util.Collections;
 
 public class CraftHandler implements Listener {
 
-	private final MoreArmorsMain plugin;
+	private final Main plugin;
 
-	public CraftHandler(MoreArmorsMain plugin) {
+	public CraftHandler(Main plugin) {
 		this.plugin = plugin;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
