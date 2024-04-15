@@ -1,9 +1,11 @@
 package me.offsetpaladin89.MoreArmors;
 
+import com.github.stefvanschie.inventoryframework.font.util.Font;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
 import me.offsetpaladin89.MoreArmors.commands.Commands;
 import me.offsetpaladin89.MoreArmors.commands.Give;
+import me.offsetpaladin89.MoreArmors.fonts.GrayFont;
 import me.offsetpaladin89.MoreArmors.handlers.*;
 import me.offsetpaladin89.MoreArmors.inventories.Inventories;
 import me.offsetpaladin89.MoreArmors.items.ArmorConstructor;
@@ -38,12 +40,14 @@ public class Main extends JavaPlugin {
 	public Commands commands;
 	public Listener listener;
 	public Inventories inv;
+	public GrayFont grayFont;
 
 	public void onEnable() {
 		new CraftHandler(this);
 		new DamageHandler(this);
 		new CommandCompleter(this);
 
+		grayFont = new GrayFont(this);
 		inv = new Inventories(this);
 		listener = new Listener(this);
 		commands = new Commands(this);

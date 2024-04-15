@@ -17,4 +17,18 @@ public enum ArmorType {
 	        default -> null;
         };
     }
+
+    public static String getSetName(ArmorType type) {
+        return switch(type) {
+	        case EMERALD -> "Emerald";
+	        case END -> "End";
+	        case EXPERIENCE -> "Experience";
+	        case MINER -> "Miner";
+	        case NETHER -> "Nether";
+	        case SEA_GREED -> "Sea Greed";
+	        case SPEEDSTER -> "Speedster";
+	        case TITAN -> "Titan";
+	        case DESTROYER -> "Destroyer";
+        };
+    }
 }

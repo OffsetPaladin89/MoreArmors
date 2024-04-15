@@ -3,6 +3,8 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.1'
 }
 
+compileJava {options.encoding = "UTF-8"}
+
 group = 'me.offsetpaladin89'
 version = '3.8'
 
@@ -17,6 +19,7 @@ repositories {
 dependencies {
     compileOnly 'org.spigotmc:spigot:1.20.4-R0.1-SNAPSHOT'
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.1.0'
+    implementation 'org.jetbrains:annotations:24.1.0'
     implementation 'com.github.stefvanschie.inventoryframework:IF:0.10.13'
     implementation 'de.tr7zw:item-nbt-api:2.12.3'
     implementation 'dev.dbassett:skullcreator:+'
