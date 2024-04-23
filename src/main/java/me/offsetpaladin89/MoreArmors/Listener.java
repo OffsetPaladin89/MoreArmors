@@ -2,6 +2,8 @@ package me.offsetpaladin89.MoreArmors;
 
 import com.cryptomorin.xseries.XSound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
+import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -201,7 +203,9 @@ public class Listener implements org.bukkit.event.Listener {
 					if (event.getBlock().getType().equals(Material.EMERALD_ORE) || event.getBlock().getType().equals(Material.DEEPSLATE_EMERALD_ORE)) {
 						nbtItem.setInteger("EmeraldCount", nbtItem.getInteger("EmeraldCount") + 1);
 						currentItem = nbtItem.getItem();
-						inventory.setItem(i, plugin.armorConstructor.createEmeraldArmor(currentItem));
+						int emeraldAmount = nbtItem.getInteger("EmeraldCount");
+						EquipmentSlot slot = currentItem.getType().getEquipmentSlot();
+						inventory.setItem(i, new EmeraldArmor(currentItem, SlotType.matchSlot(slot), emeraldAmount).getItem());
 					}
 				}
 			}
@@ -284,7 +288,7 @@ public class Listener implements org.bukkit.event.Listener {
 				if (plugin.IsFullCustomSet("seagreed", inventory) && config.getBoolean("seagreedarmor.enabled")) {
 					Random r = new Random();
 					if (entity.getType().equals(EntityType.ELDER_GUARDIAN) && r.nextDouble() <= 0.25d) {
-						killer.sendTitle(plugin.convertColoredString("&c&l&kzzz &r&4&lBLESSING OF THE SEA GOD &c&l&kzzz"), "", -1, -1, -1);
+						killer.sendTitle(Main.convertColoredString("&c&l&kzzz &r&4&lBLESSING OF THE SEA GOD &c&l&kzzz"), "", -1, -1, -1);
 						killer.playSound(killer, Sound.BLOCK_END_PORTAL_SPAWN, SoundCategory.MASTER, 1, 1.4f);
 						for (int i = 0; i < 3; i++) {killer.getWorld().strikeLightningEffect(killer.getLocation().subtract((r.nextInt(0, 280) - 140f) / 100f, 1, (r.nextInt(0, 280) - 140f) / 100f));}
 						seaGreedEffects(killer);

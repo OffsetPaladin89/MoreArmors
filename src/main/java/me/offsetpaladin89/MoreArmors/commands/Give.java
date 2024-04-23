@@ -1,9 +1,12 @@
 package me.offsetpaladin89.MoreArmors.commands;
 
+import me.offsetpaladin89.MoreArmors.Armors;
 import me.offsetpaladin89.MoreArmors.Main;
+import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -36,7 +39,7 @@ public record Give(Main plugin) {
 
 	public ItemStack give(ArmorType type, SlotType slotType, Integer specialValue) {
 		return switch (type) {
-			case EMERALD -> plugin.armorSets.EmeraldArmor(SlotType.matchSlot(slotType), specialValue);
+			case EMERALD -> new EmeraldArmor(slotType, specialValue).getItem();
 			case END -> plugin.armorSets.EndArmor(SlotType.matchSlot(slotType));
 			case EXPERIENCE -> plugin.armorSets.ExperienceArmor(SlotType.matchSlot(slotType));
 			case MINER -> plugin.armorSets.MinerArmor(SlotType.matchSlot(slotType));

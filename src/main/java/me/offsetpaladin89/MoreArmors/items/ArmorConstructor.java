@@ -3,7 +3,9 @@ package me.offsetpaladin89.MoreArmors.items;
 import com.cryptomorin.xseries.SkullUtils;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.Main;
+import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
+import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -17,11 +19,15 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static me.offsetpaladin89.MoreArmors.Main.convertColoredString;
+
 public record ArmorConstructor(Main plugin) {
 
 	public ItemStack createEmeraldArmor(ItemStack item) {
 		NBTItem nbtItem = new NBTItem(item);
-		return createEmeraldArmor(item, item.getItemMeta().getDisplayName(), Rarity.getRarity(nbtItem.getInteger("Rarity")), nbtItem.getInteger("Armor"), nbtItem.getInteger("ArmorToughness"), nbtItem.getInteger("EmeraldCount"), EquipmentSlot.valueOf(nbtItem.getString("AttributeSlot")));
+		int emeraldAmount = nbtItem.getInteger("EmeraldCount");
+		EquipmentSlot slot = item.getType().getEquipmentSlot();
+		return new EmeraldArmor(item, SlotType.matchSlot(slot), emeraldAmount).getItem();
 	}
 
 	public ItemStack createEmeraldArmor(ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness, int emeraldAmount, EquipmentSlot equipmentSlot) {
@@ -29,19 +35,19 @@ public record ArmorConstructor(Main plugin) {
 		ArrayList<String> lore = new ArrayList<>();
 		int healthBoost = emeraldAmount / 50 > 5 ? 10 : emeraldAmount / 50 * 2;
 		// Display
-		itemMeta.setDisplayName(plugin.convertColoredString(Rarity.getColorRarity(rarity) + displayName));
+		itemMeta.setDisplayName(convertColoredString(Rarity.getColorRarity(rarity) + displayName));
 		itemMeta.setColor(Color.LIME);
 		// Lore
-		lore.add(plugin.convertColoredString("&6Piece Upgrade: Emerald Blood"));
-		lore.add(plugin.convertColoredString("&7Mine emeralds to increase your max health."));
-		if (emeraldAmount >= 250) lore.add(plugin.convertColoredString("&7Current Bonus (&a5&8/&a5&7): &e+10 Health &a&lMAXED OUT"));
+		lore.add(convertColoredString("&6Piece Upgrade: Emerald Blood"));
+		lore.add(convertColoredString("&7Mine emeralds to increase your max health."));
+		if (emeraldAmount >= 250) lore.add(convertColoredString("&7Current Bonus (&a5&8/&a5&7): &e+10 Health &a&lMAXED OUT"));
 		else {
-			lore.add(plugin.convertColoredString("&7Current Bonus (&a" + emeraldAmount / 50 + "&8/&a5&7): &e+" + emeraldAmount / 50 + " Health"));
-			lore.add(plugin.convertColoredString("&7Next Upgrade: &e+" + (emeraldAmount / 50 + 2) + " Health &8(&a" + emeraldAmount % 50 + "&7/&c50&8)"));
-			lore.add(plugin.convertColoredString("&8Max +10 Health"));
+			lore.add(convertColoredString("&7Current Bonus (&a" + emeraldAmount / 50 + "&8/&a5&7): &e+" + emeraldAmount / 50 + " Health"));
+			lore.add(convertColoredString("&7Next Upgrade: &e+" + (emeraldAmount / 50 + 2) + " Health &8(&a" + emeraldAmount % 50 + "&7/&c50&8)"));
+			lore.add(convertColoredString("&8Max +10 Health"));
 		}
 		lore.add("");
-		lore.add(plugin.convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
+		lore.add(convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
 		itemMeta.setLore(lore);
 		// Flags
 		itemMeta.setUnbreakable(true);
@@ -69,24 +75,24 @@ public record ArmorConstructor(Main plugin) {
 			leatherItemMeta.setColor(Color.PURPLE);
 			itemMeta = leatherItemMeta;
 		}
-		itemMeta.setDisplayName(plugin.convertColoredString(Rarity.getColorRarity(rarity) + displayName));
+		itemMeta.setDisplayName(convertColoredString(Rarity.getColorRarity(rarity) + displayName));
 		// Lore
-		lore.add(plugin.convertColoredString("&6Item Ability: Bane of the End"));
-		lore.add(plugin.convertColoredString("&7Deal &c+10% &7damage while in the End."));
+		lore.add(convertColoredString("&6Item Ability: Bane of the End"));
+		lore.add(convertColoredString("&7Deal &c+10% &7damage while in the End."));
 		lore.add("");
-		lore.add(plugin.convertColoredString("&6Full Set Bonus: End King"));
-		lore.add(plugin.convertColoredString("&7Increases max health by &a20"));
-		lore.add(plugin.convertColoredString("&7while in the End."));
+		lore.add(convertColoredString("&6Full Set Bonus: End King"));
+		lore.add(convertColoredString("&7Increases max health by &a20"));
+		lore.add(convertColoredString("&7while in the End."));
 		lore.add("");
-		lore.add(plugin.convertColoredString("&7Deal &c+100% &7damage while in"));
-		lore.add(plugin.convertColoredString("&7the End."));
+		lore.add(convertColoredString("&7Deal &c+100% &7damage while in"));
+		lore.add(convertColoredString("&7the End."));
 		lore.add("");
-		lore.add(plugin.convertColoredString("&6Full Set Ability: Ender Warp &e&lSHIFT LEFT CLICK"));
-		lore.add(plugin.convertColoredString("&7Teleport &a10 blocks &7forwards"));
-		lore.add(plugin.convertColoredString("&7while in the End."));
-		lore.add(plugin.convertColoredString("&8Cooldown: &a1s"));
+		lore.add(convertColoredString("&6Full Set Ability: Ender Warp &e&lSHIFT LEFT CLICK"));
+		lore.add(convertColoredString("&7Teleport &a10 blocks &7forwards"));
+		lore.add(convertColoredString("&7while in the End."));
+		lore.add(convertColoredString("&8Cooldown: &a1s"));
 		lore.add("");
-		lore.add(plugin.convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
+		lore.add(convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
 		itemMeta.setLore(lore);
 		// Flags
 		itemMeta.setUnbreakable(true);
@@ -104,14 +110,14 @@ public record ArmorConstructor(Main plugin) {
 		LeatherArmorMeta itemMeta = (LeatherArmorMeta) item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		// Display
-		itemMeta.setDisplayName(plugin.convertColoredString(Rarity.getColorRarity(rarity) + displayName));
+		itemMeta.setDisplayName(convertColoredString(Rarity.getColorRarity(rarity) + displayName));
 		itemMeta.setColor(Color.BLUE);
 		// Lore
-		lore.add(plugin.convertColoredString("&6Full Set Bonus: Experience"));
-		lore.add(plugin.convertColoredString("&7Recieve &adouble experience &7from killing"));
-		lore.add(plugin.convertColoredString("&7mobs and mining ores."));
+		lore.add(convertColoredString("&6Full Set Bonus: Experience"));
+		lore.add(convertColoredString("&7Recieve &adouble experience &7from killing"));
+		lore.add(convertColoredString("&7mobs and mining ores."));
 		lore.add("");
-		lore.add(plugin.convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
+		lore.add(convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
 		itemMeta.setLore(lore);
 		// Flags
 		itemMeta.setUnbreakable(true);
@@ -128,14 +134,14 @@ public record ArmorConstructor(Main plugin) {
 		LeatherArmorMeta itemMeta = (LeatherArmorMeta) item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		// Display
-		itemMeta.setDisplayName(plugin.convertColoredString(Rarity.getColorRarity(rarity) + displayName));
+		itemMeta.setDisplayName(convertColoredString(Rarity.getColorRarity(rarity) + displayName));
 		itemMeta.setColor(Color.GRAY);
 		// Lore
-		lore.add(plugin.convertColoredString("&6Full Set Bonus: Haste"));
-		lore.add(plugin.convertColoredString("&7Gives &aHaste II &7for &a5 seconds"));
-		lore.add(plugin.convertColoredString("&7after mining a block."));
+		lore.add(convertColoredString("&6Full Set Bonus: Haste"));
+		lore.add(convertColoredString("&7Gives &aHaste II &7for &a5 seconds"));
+		lore.add(convertColoredString("&7after mining a block."));
 		lore.add("");
-		lore.add(plugin.convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
+		lore.add(convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
 		itemMeta.setLore(lore);
 		// Flags
 		itemMeta.setUnbreakable(true);
@@ -159,22 +165,22 @@ public record ArmorConstructor(Main plugin) {
 			leatherItemMeta.setColor(Color.GRAY);
 			itemMeta = leatherItemMeta;
 		}
-		itemMeta.setDisplayName(plugin.convertColoredString(Rarity.getColorRarity(rarity) + displayName));
+		itemMeta.setDisplayName(convertColoredString(Rarity.getColorRarity(rarity) + displayName));
 		// Lore
-		lore.add(plugin.convertColoredString("&6Item Ability: Bane of the Nether"));
-		lore.add(plugin.convertColoredString("&7Deal &c+10% &7damage while in the Nether."));
+		lore.add(convertColoredString("&6Item Ability: Bane of the Nether"));
+		lore.add(convertColoredString("&7Deal &c+10% &7damage while in the Nether."));
 		lore.add("");
-		lore.add(plugin.convertColoredString("&6Full Set Bonus: Nether King"));
-		lore.add(plugin.convertColoredString("&7Grants &aFire Resistance &7while"));
-		lore.add(plugin.convertColoredString("&7in the Nether."));
+		lore.add(convertColoredString("&6Full Set Bonus: Nether King"));
+		lore.add(convertColoredString("&7Grants &aFire Resistance &7while"));
+		lore.add(convertColoredString("&7in the Nether."));
 		lore.add("");
-		lore.add(plugin.convertColoredString("&7Increases max health by &a20"));
-		lore.add(plugin.convertColoredString("&7while in the Nether."));
+		lore.add(convertColoredString("&7Increases max health by &a20"));
+		lore.add(convertColoredString("&7while in the Nether."));
 		lore.add("");
-		lore.add(plugin.convertColoredString("&7Deal &c+100% &7damage while in"));
-		lore.add(plugin.convertColoredString("&7the Nether."));
+		lore.add(convertColoredString("&7Deal &c+100% &7damage while in"));
+		lore.add(convertColoredString("&7the Nether."));
 		lore.add("");
-		lore.add(plugin.convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
+		lore.add(convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
 		itemMeta.setLore(lore);
 		// Flags
 		itemMeta.setUnbreakable(true);
@@ -199,26 +205,26 @@ public record ArmorConstructor(Main plugin) {
 			leatherItemMeta.setColor(Color.fromRGB(130, 140, 100));
 			itemMeta = leatherItemMeta;
 		}
-		itemMeta.setDisplayName(plugin.convertColoredString(Rarity.getColorRarity(rarity) + displayName));
+		itemMeta.setDisplayName(convertColoredString(Rarity.getColorRarity(rarity) + displayName));
 		// Lore
-		lore.add(plugin.convertColoredString("&6Item Ability: Ore Greed"));
-		lore.add(plugin.convertColoredString("&7Gain &a+50% &7additional ore drops while in water."));
+		lore.add(convertColoredString("&6Item Ability: Ore Greed"));
+		lore.add(convertColoredString("&7Gain &a+50% &7additional ore drops while in water."));
 		lore.add("");
-		lore.add(plugin.convertColoredString("&6Full Set Bonus: Sea's Greed"));
-		lore.add(plugin.convertColoredString("&7While in water, gain &a+200% &7increased swim speed,"));
-		lore.add(plugin.convertColoredString("&5Conduit Power&7, and &c+100% &7damage."));
+		lore.add(convertColoredString("&6Full Set Bonus: Sea's Greed"));
+		lore.add(convertColoredString("&7While in water, gain &a+200% &7increased swim speed,"));
+		lore.add(convertColoredString("&5Conduit Power&7, and &c+100% &7damage."));
 		lore.add("");
-		lore.add(plugin.convertColoredString("&4Special Item Ability: &cBlessing of the Sea God"));
-		lore.add(plugin.convertColoredString("&7There is a &a25% &7chance when killing an &5Elder Guardian"));
-		lore.add(plugin.convertColoredString("&7to trigger &4&lBlessing of the Sea God &7granting:"));
-		lore.add(plugin.convertColoredString("&7- &a25 &7Diamond Blocks"));
-		lore.add(plugin.convertColoredString("&7- &a100 &7Gold Blocks"));
-		lore.add(plugin.convertColoredString("&7- &aHaste III &7for &a1 hour"));
-		lore.add(plugin.convertColoredString("&7- &aStrength II &7for &a1 hour"));
-		lore.add(plugin.convertColoredString("&7- &aSpeed II &7for &a1 hour"));
-		lore.add(plugin.convertColoredString("&7- &aResistance II &7for &a1 hour"));
+		lore.add(convertColoredString("&4Special Item Ability: &cBlessing of the Sea God"));
+		lore.add(convertColoredString("&7There is a &a25% &7chance when killing an &5Elder Guardian"));
+		lore.add(convertColoredString("&7to trigger &4&lBlessing of the Sea God &7granting:"));
+		lore.add(convertColoredString("&7- &a25 &7Diamond Blocks"));
+		lore.add(convertColoredString("&7- &a100 &7Gold Blocks"));
+		lore.add(convertColoredString("&7- &aHaste III &7for &a1 hour"));
+		lore.add(convertColoredString("&7- &aStrength II &7for &a1 hour"));
+		lore.add(convertColoredString("&7- &aSpeed II &7for &a1 hour"));
+		lore.add(convertColoredString("&7- &aResistance II &7for &a1 hour"));
 		lore.add("");
-		lore.add(plugin.convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
+		lore.add(convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
 		itemMeta.setLore(lore);
 		// Flags
 		itemMeta.setUnbreakable(true);
@@ -236,16 +242,16 @@ public record ArmorConstructor(Main plugin) {
 		LeatherArmorMeta itemMeta = (LeatherArmorMeta) item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		// Display
-		itemMeta.setDisplayName(plugin.convertColoredString(Rarity.getColorRarity(rarity) + displayName));
+		itemMeta.setDisplayName(convertColoredString(Rarity.getColorRarity(rarity) + displayName));
 		itemMeta.setColor(Color.WHITE);
 		// Lore
-		lore.add(plugin.convertColoredString("&6Item Ability: Speed"));
-		lore.add(plugin.convertColoredString("&7Increases movement speed by &a20%&7."));
+		lore.add(convertColoredString("&6Item Ability: Speed"));
+		lore.add(convertColoredString("&7Increases movement speed by &a20%&7."));
 		lore.add("");
-		lore.add(plugin.convertColoredString("&6Full Set Bonus: Retreat"));
-		lore.add(plugin.convertColoredString("&7Grants &aSpeed II &7for &a5 seconds &7when damaged."));
+		lore.add(convertColoredString("&6Full Set Bonus: Retreat"));
+		lore.add(convertColoredString("&7Grants &aSpeed II &7for &a5 seconds &7when damaged."));
 		lore.add("");
-		lore.add(plugin.convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
+		lore.add(convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
 		itemMeta.setLore(lore);
 		// Flags
 		itemMeta.setUnbreakable(true);
@@ -263,16 +269,16 @@ public record ArmorConstructor(Main plugin) {
 		ItemMeta itemMeta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		// Display
-		itemMeta.setDisplayName(plugin.convertColoredString(Rarity.getColorRarity(rarity) + displayName));
+		itemMeta.setDisplayName(convertColoredString(Rarity.getColorRarity(rarity) + displayName));
 		// Lore
-		lore.add(plugin.convertColoredString("&6Item Ability: Health"));
-		lore.add(plugin.convertColoredString("&7Increases max health by &a2&7."));
+		lore.add(convertColoredString("&6Item Ability: Health"));
+		lore.add(convertColoredString("&7Increases max health by &a2&7."));
 		lore.add("");
-		lore.add(plugin.convertColoredString("&6Full Set Bonus: Resistance"));
-		lore.add(plugin.convertColoredString("&7Grants &aResistance I &7for &a10 seconds"));
-		lore.add(plugin.convertColoredString("&7after defeating an enemy."));
+		lore.add(convertColoredString("&6Full Set Bonus: Resistance"));
+		lore.add(convertColoredString("&7Grants &aResistance I &7for &a10 seconds"));
+		lore.add(convertColoredString("&7after defeating an enemy."));
 		lore.add("");
-		lore.add(plugin.convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
+		lore.add(convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
 		itemMeta.setLore(lore);
 		// Flags
 		itemMeta.setUnbreakable(true);
@@ -302,42 +308,42 @@ public record ArmorConstructor(Main plugin) {
 			leatherItemMeta.setColor(Color.fromRGB(228, 232, 235));
 			itemMeta = leatherItemMeta;
 		}
-		itemMeta.setDisplayName(plugin.convertColoredString(Rarity.getColorRarity(rarity) + displayName));
+		itemMeta.setDisplayName(convertColoredString(Rarity.getColorRarity(rarity) + displayName));
 		switch (equipmentSlot) {
 			case HEAD -> {
-				lore.add(this.plugin.convertColoredString("&6Item Ability: Night Vision"));
-				lore.add(this.plugin.convertColoredString("&7Grants &5Night Vision&7."));
+				lore.add(convertColoredString("&6Item Ability: Night Vision"));
+				lore.add(convertColoredString("&7Grants &5Night Vision&7."));
 				lore.add("");
 			}
 			case CHEST -> {
-				lore.add(this.plugin.convertColoredString("&6Item Ability: True Shielding"));
-				lore.add(this.plugin.convertColoredString("&a20% &7chance to &anegate an attack&7."));
+				lore.add(convertColoredString("&6Item Ability: True Shielding"));
+				lore.add(convertColoredString("&a20% &7chance to &anegate an attack&7."));
 				lore.add("");
 			}
 			case FEET -> {
-				lore.add(this.plugin.convertColoredString("&6Item Ability: Boost"));
-				lore.add(this.plugin.convertColoredString("&7Launch yourself in your &afacing direction"));
-				lore.add(this.plugin.convertColoredString("&7and &acreate an explosion &7behind you."));
-				lore.add(this.plugin.convertColoredString("&8Cooldown: &a1s"));
+				lore.add(convertColoredString("&6Item Ability: Boost"));
+				lore.add(convertColoredString("&7Launch yourself in your &afacing direction"));
+				lore.add(convertColoredString("&7and &acreate an explosion &7behind you."));
+				lore.add(convertColoredString("&8Cooldown: &a1s"));
 				lore.add("");
 			}
 		}
-		lore.add(this.plugin.convertColoredString("&6Piece Upgrade: Slayer"));
-		lore.add(this.plugin.convertColoredString("&7Kill mobs to increase your damage."));
+		lore.add(convertColoredString("&6Piece Upgrade: Slayer"));
+		lore.add(convertColoredString("&7Kill mobs to increase your damage."));
 		if (killAmount / 100 >= 10) {
-			lore.add(this.plugin.convertColoredString("&7Current Bonus: &e+10 Damage &a&lMAXED OUT"));
+			lore.add(convertColoredString("&7Current Bonus: &e+10 Damage &a&lMAXED OUT"));
 		} else {
-			lore.add(this.plugin.convertColoredString("&7Current Bonus: &e+" + killAmount / 100 + " Damage"));
-			lore.add(this.plugin.convertColoredString("&7Next Bonus: &e+" + (killAmount / 100 + 1) + " Damage &8(&a" + killAmount % 100 + "&7/&c100&8)"));
-			lore.add(this.plugin.convertColoredString("&8Max +10 Damage"));
+			lore.add(convertColoredString("&7Current Bonus: &e+" + killAmount / 100 + " Damage"));
+			lore.add(convertColoredString("&7Next Bonus: &e+" + (killAmount / 100 + 1) + " Damage &8(&a" + killAmount % 100 + "&7/&c100&8)"));
+			lore.add(convertColoredString("&8Max +10 Damage"));
 		}
 		lore.add("");
-		lore.add(this.plugin.convertColoredString("&6Full Set Bonus: Warrior"));
-		lore.add(this.plugin.convertColoredString("&7Grants &aStrength II&7."));
-		lore.add(this.plugin.convertColoredString("&7Grants &aRegeneration II&7."));
-		lore.add(this.plugin.convertColoredString("&7Grants &aResistance II&7."));
+		lore.add(convertColoredString("&6Full Set Bonus: Warrior"));
+		lore.add(convertColoredString("&7Grants &aStrength II&7."));
+		lore.add(convertColoredString("&7Grants &aRegeneration II&7."));
+		lore.add(convertColoredString("&7Grants &aResistance II&7."));
 		lore.add("");
-		lore.add(plugin.convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
+		lore.add(convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity));
 		itemMeta.setLore(lore);
 		// Flags
 		itemMeta.setUnbreakable(true);

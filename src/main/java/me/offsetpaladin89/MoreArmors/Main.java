@@ -14,6 +14,7 @@ import me.offsetpaladin89.MoreArmors.items.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,6 +23,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,15 +34,19 @@ public class Main extends JavaPlugin {
 	public final String[] slotTypes = {"helmet", "chestplate", "leggings", "boots"};
 	public Materials materials;
 
+	public ArrayList<CustomRecipe> recipeList;
+
 	public HologramHandler hologramHandler;
 	public Give give;
 	public Armors armorSets;
+	public me.offsetpaladin89.MoreArmors.Armors armors;
 	public ArmorConstructor armorConstructor;
 	public Config config;
 	public Commands commands;
 	public Listener listener;
 	public Inventories inv;
 	public GrayFont grayFont;
+	public RegisterRecipes recipeRegistry;
 
 	public void onEnable() {
 		new CraftHandler(this);
@@ -57,7 +63,10 @@ public class Main extends JavaPlugin {
 		armorConstructor = new ArmorConstructor(this);
 		materials = new Materials(this);
 		give = new Give(this);
+		recipeRegistry = new RegisterRecipes(this);
+		armors = new me.offsetpaladin89.MoreArmors.Armors(this);
 
+		recipeRegistry.registerRecipes();
 		ArmorChecker();
 		registerConfig();
 		armorSets.RegisterArmorRecipes();
@@ -84,7 +93,7 @@ public class Main extends JavaPlugin {
 		config.saveConfigDefaults("config", defaultValues);
 	}
 
-	public String convertColoredString(String msg) {
+	public static String convertColoredString(String msg) {
 		return ChatColor.translateAlternateColorCodes('&', msg);
 	}
 

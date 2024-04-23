@@ -5,18 +5,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 public enum SlotType {
-    HELMET, CHESTPLATE, LEGGINGS, BOOTS, NONE;
-
-    public static SlotType matchType(final ItemStack item){
-        if(isAirOrNull(item)) return null;
-        String type = item.getType().toString();
-        if(item.getType().equals(Material.PLAYER_HEAD)) return HELMET;
-        if(type.endsWith("_HELMET")) return HELMET;
-        else if (type.endsWith("_CHESTPLATE") || type.endsWith("ELYTRA")) return CHESTPLATE;
-        else if (type.endsWith("_LEGGINGS")) return LEGGINGS;
-        else if (type.endsWith("_BOOTS")) return BOOTS;
-        else return null;
-    }
+    HELMET, CHESTPLATE, LEGGINGS, BOOTS;
 
     public static SlotType typeFromString(String s) {
         return switch (s.toLowerCase()) {
@@ -28,11 +17,23 @@ public enum SlotType {
         };
     }
 
-    public static Boolean validSlot(String s) {
-        switch(s.toLowerCase()) {
-            case "helmet", "chestplate", "leggings", "boots" -> { return true; }
+    public static String slotName(SlotType type) {
+        return switch(type) {
+            case HELMET: yield "helmet";
+            case CHESTPLATE: yield "chestplate";
+            case LEGGINGS: yield "leggings";
+            case BOOTS: yield "boots";
         };
-        return false;
+    }
+
+    public static SlotType matchSlot(EquipmentSlot type) {
+        return switch(type) {
+            case HEAD: yield HELMET;
+            case CHEST: yield CHESTPLATE;
+            case LEGS: yield LEGGINGS;
+            case FEET: yield BOOTS;
+            default: yield null;
+        };
     }
 
     public static EquipmentSlot matchSlot(SlotType type) {
@@ -41,9 +42,6 @@ public enum SlotType {
             case CHESTPLATE -> EquipmentSlot.CHEST;
             case LEGGINGS -> EquipmentSlot.LEGS;
             case BOOTS -> EquipmentSlot.FEET;
-            case NONE -> null;
         };
     }
-
-    private static boolean isAirOrNull(ItemStack item) { return item == null || item.getType().equals(Material.AIR); }
 }

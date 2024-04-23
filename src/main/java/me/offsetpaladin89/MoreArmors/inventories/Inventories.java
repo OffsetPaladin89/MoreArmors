@@ -11,7 +11,6 @@ import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
-import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
@@ -163,6 +162,8 @@ public record Inventories(Main plugin) {
 	public ChestGui craft(Player p, ArmorType type, EquipmentSlot slot) {
 		ChestGui g = new ChestGui(4, plugin.convertColoredString("&0Crafting: " + getArmor(type, slot).getItemMeta().getDisplayName()));
 
+		g.addPane(background(3));
+		return g;
 	}
 
 	public ChestGui armorCraftingInventory(Player p, ArmorType type) {
