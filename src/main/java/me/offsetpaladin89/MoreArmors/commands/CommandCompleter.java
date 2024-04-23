@@ -1,50 +1,18 @@
 package me.offsetpaladin89.MoreArmors.commands;
 
 import me.offsetpaladin89.MoreArmors.Main;
+import me.offsetpaladin89.MoreArmors.enums.PermissionType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class CommandCompleter implements TabCompleter {
 
-	/**
-	 * Command types that can be used
-	 */
-	private enum CommandTypes {
-		/**
-		 * Give options
-		 */
-		GIVE,
-
-		/**
-		 * Edit options
-		 */
-		EDIT,
-
-		/**
-		 * Armor options
-		 */
-		ARMOR,
-
-		/**
-		 * Material options
-		 */
-		MATERIAL,
-
-		/**
-		 * Slot options
-		 */
-		SLOT
-	}
-
-	/**
-	 * Main object for local use.
-	 */
+	/** Main object for local use. */
 	private final Main plugin;
 
 	/**
@@ -57,14 +25,42 @@ public class CommandCompleter implements TabCompleter {
 	}
 
 	/**
+	 * Returns a tab completer with a specified sender, command, label, and arguments.
+	 * @param sender the object preparing to send a command
+	 * @param cmd the command being used
+	 * @param label alias of the command being used
+	 * @param args array of arguments.
+	 * @return a tab completer with a specified sender, command, label, and arguments.
+	 */
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+		List<String> arguments = new ArrayList<>();
+		if(args.length < 1) return null;
+		if(args.length == 1) addBaseCommands(sender, arguments);
+		if(isValid(sender, args[0], PermissionType.GIVE)) {
+			switch(args.length) {
+				case 3 -> addTypes(arguments, ArgumentTypes.GIVE);
+				case 4 -> addItems(arguments, args[2]);
+				case 5 -> addTypes(arguments, ArgumentTypes.SLOT);
+			}
+		}
+		if(isValid(sender, args[0], PermissionType.EDIT) && args.length == 3) addTypes(arguments, ArgumentTypes.EDIT);
+
+		List<String> options = new ArrayList<>();
+		for (String s : arguments) {
+			if (s.toLowerCase().contains(args[args.length - 1])) options.add(s);
+		}
+		return options;
+	}
+
+	/**
 	 * Adds all the base commands to the command completer for a specified sender.
-	 * @param sender who is preparing to send a command
+	 * @param sender the object preparing to send a command
 	 * @param list the list for the command completer
 	 */
 	private void addBaseCommands(CommandSender sender, List<String> list) {
-		if (sender.hasPermission("morearmors.edit")) list.add("edit");
-		if (sender.hasPermission("morearmors.give")) list.add("give");
-		if(sender.hasPermission("morearmors.reload")) list.add("reload");
+		if (hasPermission(sender, PermissionType.EDIT)) list.add("edit");
+		if (hasPermission(sender, PermissionType.GIVE)) list.add("give");
+		if(hasPermission(sender, PermissionType.RELOAD)) list.add("reload");
 		list.add("info");
 		list.add("gui");
 	}
@@ -74,7 +70,7 @@ public class CommandCompleter implements TabCompleter {
 	 * @param list the list for the command completer
 	 * @param type the type of command being handled
 	 */
-	private void addTypes(List<String> list, CommandTypes type) {
+	private void addTypes(List<String> list, ArgumentTypes type) {
 		switch (type) {
 			case GIVE:
 				list.add("armor");
@@ -94,51 +90,56 @@ public class CommandCompleter implements TabCompleter {
 	 * @param arg the 3rd argument which handles whether to add materials or armors
 	 */
 	private void addItems(List<String> list, String arg) {
-		if(arg.equalsIgnoreCase("material")) addTypes(list, CommandTypes.MATERIAL);
-		if(arg.equalsIgnoreCase("armor")) addTypes(list, CommandTypes.ARMOR);
+		if(arg.equalsIgnoreCase("material")) addTypes(list, ArgumentTypes.MATERIAL);
+		if(arg.equalsIgnoreCase("armor")) addTypes(list, ArgumentTypes.ARMOR);
 	}
 
 	/**
-	 * Returns whether the argument being handled from the sender is allowed.
-	 * @param arg0 the 1st argument which handles whether to give or edit
-	 * @param sender who is preparing to send a command
-	 * @return whether the argument being handled from the sender is allowed
+	 * Returns whether the argument handled by the sender of the specified type is allowed.
+	 * @param sender the object preparing to send a command
+	 * @param arg the 1st argument which handles whether to give or edit
+	 * @param type the type of command being handled
+	 * @return whether the argument handled by the sender of the specified type is allowed
 	 */
-	private boolean isGive(String arg0, CommandSender sender) {
-		return arg0.equalsIgnoreCase("give") && sender.hasPermission("morearmors.give");
-	}
-
-	private boolean isValid(CommandSender sender, String arg, CommandTypes type) {
-		return arg.equalsIgnoreCase(type.toString()) && sender.hasPermission(MessageFormat.format("morearmors.{0}", type.toString().toLowerCase()));
+	private boolean isValid(CommandSender sender, String arg, PermissionType type) {
+		return correctArgument(arg, type.name()) && hasPermission(sender, type);
 	}
 
 	/**
-	 * Returns whether
-	 * @param arg0
-	 * @param sender
-	 * @return
+	 * Returns whether a specified argument is the same as a specified expected argument.
+	 * @param arg the specified argument
+	 * @param expected the expected argument
+	 * @return whether a specified argument is the same as a specified expected argument
 	 */
-	private boolean isEdit(String arg0, CommandSender sender) {
-		return arg0.equalsIgnoreCase("edit") && sender.hasPermission("morearmors.edit");
+	private boolean correctArgument(String arg, String expected) {
+		return arg.equalsIgnoreCase(expected);
 	}
 
-	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-		List<String> arguments = new ArrayList<>();
-		if(args.length < 1) return null;
-		if(args.length == 1) addBaseCommands(sender, arguments);
-		if(isGive(args[0], sender)) {
-			switch(args.length) {
-				case 3 -> addTypes(arguments, CommandTypes.GIVE);
-				case 4 -> addItems(arguments, args[2]);
-				case 5 -> addTypes(arguments, CommandTypes.SLOT);
-			}
-		}
-		if(isEdit(args[0], sender) && args.length == 3) addTypes(arguments, CommandTypes.EDIT);
+	/**
+	 * Returns whether the specified sender has the specified permission.
+	 * @param sender the object preparing to send a command
+	 * @param permission the permission to look for
+	 * @return whether the specified sender has the specified permission
+	 */
+	private boolean hasPermission(CommandSender sender, PermissionType permission) {
+		return sender.hasPermission(PermissionType.getPermission(permission));
+	}
 
-		List<String> options = new ArrayList<>();
-		for (String s : arguments) {
-			if (s.toLowerCase().contains(args[args.length - 1])) options.add(s);
-		}
-		return options;
+	/** Command types that can be used */
+	private enum ArgumentTypes {
+		/** Give options */
+		GIVE,
+
+		/** Edit options */
+		EDIT,
+
+		/** Armor options */
+		ARMOR,
+
+		/** Material options */
+		MATERIAL,
+
+		/** Slot options */
+		SLOT
 	}
 }

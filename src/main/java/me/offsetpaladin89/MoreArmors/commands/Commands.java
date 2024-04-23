@@ -4,6 +4,7 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.Main;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
+import me.offsetpaladin89.MoreArmors.enums.PermissionType;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,7 +13,136 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import java.text.MessageFormat;
+
+import static me.offsetpaladin89.MoreArmors.Main.convertColoredString;
+
 public class Commands implements CommandExecutor {
+
+	private final Main plugin;
+
+	public Commands(Main plugin) {
+		this.plugin = plugin;
+		plugin.getServer().getPluginCommand("morearmors").setExecutor(this);
+	}
+
+	private boolean isCommand(Command cmd, String name) {
+		return cmd.getName().equalsIgnoreCase(name);
+	}
+
+	private enum CommandTypes {
+		INFO,
+		GIVE,
+		EDIT,
+		RELOAD,
+		GUI,
+		INVALID;
+
+		public static CommandTypes getCommand(String type) {
+			return switch(type.toLowerCase()) {
+				case "info" -> INFO;
+				case "give" -> GIVE;
+				case "edit" -> EDIT;
+				case "reload" -> RELOAD;
+				case "gui" -> GUI;
+				default -> INVALID;
+			};
+		}
+	}
+
+	private void sendColoredMessage(CommandSender sender, String message) {
+		sender.sendMessage(convertColoredString(message));
+	}
+
+	private boolean hasPermission(CommandSender sender, PermissionType permission) {
+		return sender.hasPermission(PermissionType.getPermission(permission));
+	}
+
+	private void sendInfoMessage(CommandSender sender, int length) {
+		if(length == 1) pluginInfoMessage(sender);
+		else tooManyArguments(sender);
+	}
+
+	private void sendHeader(CommandSender sender) {
+		sendColoredMessage(sender, "");
+		sendColoredMessage(sender, MessageFormat.format("{0} &6Command Help", prefix()));
+	}
+
+	private void sendNeedName(CommandSender sender) {
+		sendColoredMessage(sender, MessageFormat.format("{0} &cInput an online player's name.", prefix()));
+	}
+
+	private void sendNeedItemType(CommandSender sender) {
+
+	}
+
+	private void sendGiveMessage(CommandSender sender, String[] arguments) {
+		if(!hasPermission(sender, PermissionType.GIVE)) return;
+		switch(arguments.length) {
+			case 1 -> sendNeedName(sender);
+		}
+	}
+
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if(isCommand(cmd, "morearmors")) {
+			if(args.length == 0) return helpMessage(sender);
+
+			if(args.length > 1) {
+
+			}
+
+//			switch(CommandTypes.getCommand(args[0])) {
+//				case INFO -> sendInfoMessage(sender, args.length);
+//				case GIVE ->
+//				case EDIT ->
+//				case RELOAD ->
+//				case GUI ->
+//				case INVALID ->
+//			}
+		}
+		if (cmd.getName().equalsIgnoreCase("morearmors")) {
+			if (args.length == 0) {
+				helpMessage(sender);
+			} else {
+				switch (args[0].toLowerCase()) {
+					case "give" -> {
+						if (sender.hasPermission("morearmors.give")) {
+							if (args.length < 7) {
+								giveMessage(args.length, sender,
+										args.length == 1 ? "<user>" : args[1],
+										args.length > 2 ? args[2] : null,
+										args.length > 3 ? args[3] : null,
+										args.length > 4 ? args[4] : null,
+										args.length > 5 ? args[5] : null);
+							} else tooManyArguments(sender);
+						} else {
+							noPermission(sender);
+						}
+					}
+					case "edit" -> {
+						if (sender.hasPermission("morearmors.edit")) {
+							if (args.length < 5) {
+								editMessage(args.length, sender,
+										args.length == 1 ? "user" : args[1],
+										args.length > 2 ? args[2] : null,
+										args.length > 3 ? args[3] : null);
+							} else tooManyArguments(sender);
+						}
+					}
+					case "reload" -> {
+						if(sender.hasPermission("morearmors.reload")) plugin.reloadConfig(sender);
+					}
+					case "gui" -> {
+						if(sender instanceof Player p) {
+							plugin.inv.mainInventory(p).show(p);
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
 
 	public void giveMessage(Integer length, CommandSender sender, String player, String type, String item, String slot, String specialValue) {
 		if (length > 1) {
@@ -29,45 +159,6 @@ public class Commands implements CommandExecutor {
 				plugin.sendColoredMessage(sender, "&6> &ematerial");
 			}
 			return;
-		}
-		Player target = plugin.getServer().getPlayer(player);
-
-		switch (type.toLowerCase()) {
-			case "armor" -> {
-				if (length == 3) sendArmorTypes(sender, player, type);
-				else {
-					if (ArmorType.getSetType(item) != null) {
-						ArmorType armorType = ArmorType.getSetType(item);
-						if (length == 4) sendEquipmentTypes(sender, player, type, item);
-						else {
-							if (SlotType.typeFromString(slot) != null) {
-								SlotType slotType = SlotType.typeFromString(slot);
-								if (length == 5) plugin.give.giveCommand(sender, target, item.toLowerCase(), slotType, 0);
-								else {
-									if (plugin.isInteger(specialValue)) {
-										if (armorType.equals(ArmorType.EMERALD) || armorType.equals(ArmorType.DESTROYER)) plugin.give.giveCommand(sender, target, item.toLowerCase(), slotType, Integer.parseInt(specialValue));
-										else tooManyArguments(sender);
-									} else invalidArgument(sender, specialValue);
-								}
-							} else invalidArgument(sender, slot);
-						}
-					} else invalidArgument(sender, item);
-				}
-			}
-			case "material" -> {
-				if (length == 3) sendMaterialTypes(sender, player, type);
-				else {
-					if (MaterialType.getMaterialType(item) != null) {
-						MaterialType materialType = MaterialType.getMaterialType(item);
-						if (length == 4) plugin.give.giveCommand(sender, target, materialType, 1);
-						else if (length == 5) {
-							if (plugin.isInteger(slot) && Integer.parseInt(slot) > 0) plugin.give.giveCommand(sender, target, materialType, Integer.parseInt(slot));
-							else invalidArgument(sender, slot);
-						} else tooManyArguments(sender);
-					}
-				}
-			}
-			default -> invalidArgument(sender, type);
 		}
 	}
 
@@ -130,7 +221,7 @@ public class Commands implements CommandExecutor {
 	}
 
 	public String prefix() {
-		return plugin.convertColoredString("&e(&6MoreArmors&e)");
+		return convertColoredString("&e(&6MoreArmors&e)");
 	}
 
 	public void tooManyArguments(CommandSender sender) {
@@ -173,76 +264,18 @@ public class Commands implements CommandExecutor {
 		for (String s : plugin.slotTypes) plugin.sendColoredMessage(sender, "&6> &e" + s);
 	}
 
-	public void helpMessage(CommandSender sender) {
+	public boolean helpMessage(CommandSender sender) {
 		plugin.sendColoredMessage(sender, "");
 		plugin.sendColoredMessage(sender, prefix() + " &6Available Commands:");
 		plugin.sendColoredMessage(sender, "&6> &e/morearmors edit <user>");
 		plugin.sendColoredMessage(sender, "&6> &e/morearmors give <user>");
 		plugin.sendColoredMessage(sender, "&6> &e/morearmors info");
+		return true;
 	}
 
 	public void pluginInfoMessage(CommandSender sender) {
 		plugin.sendColoredMessage(sender, "");
 		plugin.sendColoredMessage(sender, prefix() + " &eRunning &6" + plugin.getName() + " " + plugin.getDescription().getVersion() + " &ecreated by &6OffsetPaladin89&e.");
 		plugin.sendColoredMessage(sender, "&6> &eOfficial Site: &6https://dev.bukkit.org/projects/MoreArmors");
-	}
-
-	public Main plugin;
-
-	public Commands(Main plugin) {
-		this.plugin = plugin;
-		plugin.getServer().getPluginCommand("morearmors").setExecutor(this);
-	}
-
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("morearmors")) {
-			if (args.length == 0) {
-				helpMessage(sender);
-			} else {
-				switch (args[0].toLowerCase()) {
-					case "info" -> {
-						if (args.length == 1) {
-							pluginInfoMessage(sender);
-						} else {
-							tooManyArguments(sender);
-						}
-					}
-					case "give" -> {
-						if (sender.hasPermission("morearmors.give")) {
-							if (args.length < 7) {
-								giveMessage(args.length, sender,
-										args.length == 1 ? "<user>" : args[1],
-										args.length > 2 ? args[2] : null,
-										args.length > 3 ? args[3] : null,
-										args.length > 4 ? args[4] : null,
-										args.length > 5 ? args[5] : null);
-							} else tooManyArguments(sender);
-						} else {
-							noPermission(sender);
-						}
-					}
-					case "edit" -> {
-						if (sender.hasPermission("morearmors.edit")) {
-							if (args.length < 5) {
-								editMessage(args.length, sender,
-										args.length == 1 ? "user" : args[1],
-										args.length > 2 ? args[2] : null,
-										args.length > 3 ? args[3] : null);
-							} else tooManyArguments(sender);
-						}
-					}
-					case "reload" -> {
-						if(sender.hasPermission("morearmors.reload")) plugin.reloadConfig(sender);
-					}
-					case "gui" -> {
-						if(sender instanceof Player p) {
-							plugin.inv.mainInventory(p).show(p);
-						}
-					}
-				}
-			}
-		}
-		return true;
 	}
 }
