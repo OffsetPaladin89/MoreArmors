@@ -76,11 +76,46 @@ public class Commands implements CommandExecutor {
 
 	}
 
-	private void sendGiveMessage(CommandSender sender, String[] arguments) {
+	private void handleGive(CommandSender sender, String[] arguments) {
 		if(!hasPermission(sender, PermissionType.GIVE)) return;
-		switch(arguments.length) {
-			case 1 -> sendNeedName(sender);
-		}
+		if(arguments.length == 2) {} // TODO send type message
+		if(arguments.length > 2) {} // TODO if type is valid
+		if(true) {} // TODO if armor use handleGiveArmor() if material use handleGiveMaterial()
+	}
+
+	private void handleGiveArmor(CommandSender sender, String[] arguments) {
+		if(arguments.length == 3) {} // TODO send armor type message
+		if(arguments.length > 3) {} // TODO if armor type is valid
+		if(arguments.length == 4) {} // TODO send slot type message if armor
+		if(arguments.length > 4) {} // TODO if slot type is valid
+		if(arguments.length == 5) {} // TODO give the item
+		if(arguments.length > 5) {} // TODO if is an integer
+		if(arguments.length == 6) {} // TODO give the item with the special value modified
+		if(arguments.length > 6) {} // TODO send too many args
+	}
+
+	private void handleGiveMaterial(CommandSender sender, String[] arguments) {
+		if(arguments.length == 3) {} // TODO send material type message
+		if(arguments.length > 3) {} // TODO if material type is valid
+		if(arguments.length == 4) {} // TODO give the item
+		if(arguments.length > 4) {} // TODO if it is an integer
+		if(arguments.length == 5) {} // TODO give the item with that amount
+	}
+
+	private void handleEdit(CommandSender sender, String[] arguments) {
+		if(!hasPermission(sender, PermissionType.EDIT)) return;
+		if(arguments.length == 2) {} // TODO send type message
+		if(arguments.length > 2) {} // TODO check if type is valid
+		if(arguments.length == 3) {} // TODO reset the item
+		if(arguments.length > 4) {} // TODO check if argument is an integer
+		if(arguments.length == 4) {} // TODO edit the item to the specified value
+		if(arguments.length > 5) {} // TODO send too many args
+	}
+
+	private void handleCommand(CommandSender sender, String[] arguments) {
+		if(arguments.length == 1) {} // TODO send input type message
+		if(arguments.length > 1) {} // TODO check if name is valid
+		if(true) {} // TODO if edit use handleEdit(), if armor use handleArmor()
 	}
 
 	@Override
@@ -88,18 +123,17 @@ public class Commands implements CommandExecutor {
 		if(isCommand(cmd, "morearmors")) {
 			if(args.length == 0) return helpMessage(sender);
 
-			if(args.length > 1) {
-
+			switch(CommandTypes.getCommand(args[0])) {
+				case INFO -> sendInfoMessage(sender, args.length);
+				case GIVE, EDIT -> handleCommand(sender, args);
+				case RELOAD -> {
+					if(args.length != 1) {} // TODO send too many args
+					if(!hasPermission(sender, PermissionType.RELOAD)) {} // TODO send no permission
+					plugin.reloadConfig(sender);
+				}
+				case GUI -> {} // TODO open GUI, if more arguments send too many arguments message
+				case INVALID -> {} // TODO Add Invalid args[0]
 			}
-
-//			switch(CommandTypes.getCommand(args[0])) {
-//				case INFO -> sendInfoMessage(sender, args.length);
-//				case GIVE ->
-//				case EDIT ->
-//				case RELOAD ->
-//				case GUI ->
-//				case INVALID ->
-//			}
 		}
 		if (cmd.getName().equalsIgnoreCase("morearmors")) {
 			if (args.length == 0) {
