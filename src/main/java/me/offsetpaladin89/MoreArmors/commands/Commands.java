@@ -66,9 +66,9 @@ public class Commands implements CommandExecutor {
 
 		public static boolean getReply(SendReplies type, CommandSender sender) {
 			switch (type) {
-				case TOO_MANY_ARGUMENTS: sendColoredMessage(sender, MessageFormat.format("{0} &cToo many arguments!", prefix()));
-				case PLAYERS_ONLY: sendColoredMessage(sender, MessageFormat.format("{0} &cOnly players can use this command!", prefix()));
-				case NO_PERMISSION: sendColoredMessage(sender, MessageFormat.format("{0} &cYou do not have permission to use this command!", prefix()));
+				case TOO_MANY_ARGUMENTS:
+				case PLAYERS_ONLY:
+				case NO_PERMISSION:
 			}
 			return true;
 		}
@@ -97,16 +97,40 @@ public class Commands implements CommandExecutor {
 		return sender.hasPermission(PermissionType.getPermission(permission));
 	}
 
-	private boolean sendInfoMessage(CommandSender sender, int length) {
-		if(length == 1) return pluginInfoMessage(sender);
-		else return SendReplies.getReply(SendReplies.TOO_MANY_ARGUMENTS, sender);
+	private void noPermission(CommandSender sender) {
+		sendColoredMessage(sender, MessageFormat.format("{0} &cYou do not have permission to use this command!", prefix()));
 	}
 
-	public boolean pluginInfoMessage(CommandSender sender) {
+	private void playersOnly(CommandSender sender) {
+		sendColoredMessage(sender, MessageFormat.format("{0} &cOnly players can use this command!", prefix()));
+	}
+
+	private void tooManyArguments(CommandSender sender) {
+		sendColoredMessage(sender, MessageFormat.format("{0} &cToo many arguments!", prefix()));
+	}
+
+	private void infoMessage(CommandSender sender) {
 		sendColoredMessage(sender, "");
 		sendColoredMessage(sender, MessageFormat.format("{0} &eRunning &6 {1} {2} &ecreated by &6OffsetPaladin89&e.", prefix(), plugin.getName(), plugin.getDescription().getVersion()));
 		sendColoredMessage(sender, "&6> &eOfficial Site: &6https://dev.bukkit.org/projects/MoreArmors");
-		return true;
+	}
+
+	private void commandHeader(CommandSender sender) {
+		sendColoredMessage(sender, "");
+		sendColoredMessage(sender, MessageFormat.format("{0} &eAvailable Command Options", prefix()));
+	}
+
+	private void addFeedbackOption(CommandSender sender, String option) {
+		sendColoredMessage(sender, MessageFormat.format("&6> &e{0}", option));
+	}
+
+	private void inputTypeMessages(CommandSender sender) {
+		commandHeader(sender);
+		addFeedbackOption(sender, "info");
+		if(hasPermission(sender, PermissionType.GIVE)) addFeedbackOption(sender, "give");
+		if(hasPermission(sender, PermissionType.EDIT)) addFeedbackOption(sender, "edit");
+		if(hasPermission(sender, PermissionType.RELOAD)) addFeedbackOption(sender, "reload");
+		if(hasPermission(sender, PermissionType.GUI)) addFeedbackOption(sender, "gui");
 	}
 
 	private void handleGive(CommandSender sender, String[] arguments) {
@@ -145,34 +169,56 @@ public class Commands implements CommandExecutor {
 		if(arguments.length > 5) {} // TODO send too many args
 	}
 
-	private boolean handleCommand(CommandSender sender, String[] arguments) {
-		if(arguments.length == 1) {} // TODO send input type message
-		if(arguments.length > 1) {} // TODO check if name is valid
-		if(true) {} // TODO if edit use handleEdit(), if armor use handleArmor()
-		return true;
-	}
-
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(isCommand(cmd, "morearmors")) {
-			if(args.length == 0) return helpMessage(sender);
-
-			return switch(CommandTypes.getCommand(args[0])) {
-				case INFO -> sendInfoMessage(sender, args.length);
-				case GIVE, EDIT -> handleCommand(sender, args);
-				case RELOAD -> {
-					if (args.length != 1) SendReplies.getReply(SendReplies.TOO_MANY_ARGUMENTS, sender);
-					if (!hasPermission(sender, PermissionType.RELOAD)) SendReplies.getReply(SendReplies.NO_PERMISSION, sender);
+			if(args.length == 0){
+				helpMessage(sender);
+				return true;
+			}
+			CommandTypes commandType = CommandTypes.getCommand(args[0]);
+			if(args.length == 1 && (commandType.equals(CommandTypes.GIVE) || commandType.equals(CommandTypes.EDIT))) {
+				inputTypeMessages(sender);
+				return true;
+			}
+			switch(commandType) {
+				case INFO:
+					if(args.length != 1) {
+						tooManyArguments(sender);
+						break;
+					}
+					infoMessage(sender);
+				case GIVE:
+					// TODO use handleGive()
+				case EDIT:
+					// TODO use handleEdit()
+				case RELOAD:
+					if (args.length != 1) {
+						tooManyArguments(sender);
+						break;
+					}
+					if (!hasPermission(sender, PermissionType.RELOAD)) {
+						noPermission(sender);
+						break;
+					}
 					plugin.reloadConfig(sender);
-				}
-				case GUI -> {
-					if (args.length != 1) SendReplies.getReply(SendReplies.TOO_MANY_ARGUMENTS, sender);
-					if (!hasPermission(sender, PermissionType.GUI)) SendReplies.getReply(SendReplies.NO_PERMISSION, sender);
+				case GUI:
+					if (args.length != 1) {
+						tooManyArguments(sender);
+						break;
+					}
+					if (!hasPermission(sender, PermissionType.GUI)) {
+						noPermission(sender);
+						break;
+					}
 					if (sender instanceof Player player) plugin.inv.mainInventory(player).show(player);
-					else SendReplies.getReply(SendReplies.PLAYERS_ONLY, sender);
-				}
-				case INVALID -> SendReplies.getReply(SendReplies.INVALID_ARGUMENT, sender, args[0]);
-			};
+					else {
+						playersOnly(sender);
+						break;
+					}
+				case INVALID: invalidArgument(sender, args[0]);
+			}
+			return true;
 		}
 		if (cmd.getName().equalsIgnoreCase("morearmors")) {
 			if (args.length == 0) {
@@ -295,14 +341,6 @@ public class Commands implements CommandExecutor {
 
 	public static String prefix() {
 		return convertColoredString("&e(&6MoreArmors&e)");
-	}
-
-	public void tooManyArguments(CommandSender sender) {
-		plugin.sendColoredMessage(sender, prefix() + " &cToo many arguments! Do /morearmors help for help.");
-	}
-
-	public void noPermission(CommandSender sender) {
-		plugin.sendColoredMessage(sender, prefix() + " &cYou do not have permission to do this!");
 	}
 
 	public void invalidArgument(CommandSender sender, String argument) {
