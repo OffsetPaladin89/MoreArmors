@@ -8,7 +8,10 @@ public enum PermissionType {
 	EDIT,
 
 	/** Reload permission */
-	RELOAD;
+	RELOAD,
+
+	/** GUI permission */
+	GUI;
 
 	/**
 	 * Returns the String interpretation of the permission.
@@ -20,6 +23,7 @@ public enum PermissionType {
 			case GIVE -> "morearmors.give";
 			case EDIT -> "morearmors.edit";
 			case RELOAD -> "morearmors.reload";
+			case GUI -> "morearmors.gui";
 		};
 	}
 }

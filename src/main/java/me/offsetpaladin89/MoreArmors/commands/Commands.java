@@ -6,6 +6,7 @@ import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.PermissionType;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -50,7 +51,45 @@ public class Commands implements CommandExecutor {
 		}
 	}
 
-	private void sendColoredMessage(CommandSender sender, String message) {
+	private enum SendReplies {
+		/** Invalid argument requires an argument */
+		INVALID_ARGUMENT,
+
+		/** Too many arguments */
+		TOO_MANY_ARGUMENTS,
+
+		/** No permission */
+		NO_PERMISSION,
+
+		/** Players only */
+		PLAYERS_ONLY;
+
+		public static boolean getReply(SendReplies type, CommandSender sender) {
+			switch (type) {
+				case TOO_MANY_ARGUMENTS: sendColoredMessage(sender, MessageFormat.format("{0} &cToo many arguments!", prefix()));
+				case PLAYERS_ONLY: sendColoredMessage(sender, MessageFormat.format("{0} &cOnly players can use this command!", prefix()));
+				case NO_PERMISSION: sendColoredMessage(sender, MessageFormat.format("{0} &cYou do not have permission to use this command!", prefix()));
+			}
+			return true;
+		}
+
+		public static boolean getReply(SendReplies type, CommandSender sender, String arg) {
+			switch (type) {
+				case INVALID_ARGUMENT: sendColoredMessage(sender, MessageFormat.format("{0} &cInvalid argument: {1}!", prefix(), arg));
+				default: getReply(type, sender);
+			}
+			return true;
+		}
+
+		public static  boolean getReply(SendReplies type, CommandSender sender, String[] args) {
+			switch (type) {
+				default: getReply(type, sender);
+			}
+			return true;
+		}
+	}
+
+	private static void sendColoredMessage(CommandSender sender, String message) {
 		sender.sendMessage(convertColoredString(message));
 	}
 
@@ -58,22 +97,16 @@ public class Commands implements CommandExecutor {
 		return sender.hasPermission(PermissionType.getPermission(permission));
 	}
 
-	private void sendInfoMessage(CommandSender sender, int length) {
-		if(length == 1) pluginInfoMessage(sender);
-		else tooManyArguments(sender);
+	private boolean sendInfoMessage(CommandSender sender, int length) {
+		if(length == 1) return pluginInfoMessage(sender);
+		else return SendReplies.getReply(SendReplies.TOO_MANY_ARGUMENTS, sender);
 	}
 
-	private void sendHeader(CommandSender sender) {
+	public boolean pluginInfoMessage(CommandSender sender) {
 		sendColoredMessage(sender, "");
-		sendColoredMessage(sender, MessageFormat.format("{0} &6Command Help", prefix()));
-	}
-
-	private void sendNeedName(CommandSender sender) {
-		sendColoredMessage(sender, MessageFormat.format("{0} &cInput an online player's name.", prefix()));
-	}
-
-	private void sendNeedItemType(CommandSender sender) {
-
+		sendColoredMessage(sender, MessageFormat.format("{0} &eRunning &6 {1} {2} &ecreated by &6OffsetPaladin89&e.", prefix(), plugin.getName(), plugin.getDescription().getVersion()));
+		sendColoredMessage(sender, "&6> &eOfficial Site: &6https://dev.bukkit.org/projects/MoreArmors");
+		return true;
 	}
 
 	private void handleGive(CommandSender sender, String[] arguments) {
@@ -112,10 +145,11 @@ public class Commands implements CommandExecutor {
 		if(arguments.length > 5) {} // TODO send too many args
 	}
 
-	private void handleCommand(CommandSender sender, String[] arguments) {
+	private boolean handleCommand(CommandSender sender, String[] arguments) {
 		if(arguments.length == 1) {} // TODO send input type message
 		if(arguments.length > 1) {} // TODO check if name is valid
 		if(true) {} // TODO if edit use handleEdit(), if armor use handleArmor()
+		return true;
 	}
 
 	@Override
@@ -123,17 +157,22 @@ public class Commands implements CommandExecutor {
 		if(isCommand(cmd, "morearmors")) {
 			if(args.length == 0) return helpMessage(sender);
 
-			switch(CommandTypes.getCommand(args[0])) {
+			return switch(CommandTypes.getCommand(args[0])) {
 				case INFO -> sendInfoMessage(sender, args.length);
 				case GIVE, EDIT -> handleCommand(sender, args);
 				case RELOAD -> {
-					if(args.length != 1) {} // TODO send too many args
-					if(!hasPermission(sender, PermissionType.RELOAD)) {} // TODO send no permission
+					if (args.length != 1) SendReplies.getReply(SendReplies.TOO_MANY_ARGUMENTS, sender);
+					if (!hasPermission(sender, PermissionType.RELOAD)) SendReplies.getReply(SendReplies.NO_PERMISSION, sender);
 					plugin.reloadConfig(sender);
 				}
-				case GUI -> {} // TODO open GUI, if more arguments send too many arguments message
-				case INVALID -> {} // TODO Add Invalid args[0]
-			}
+				case GUI -> {
+					if (args.length != 1) SendReplies.getReply(SendReplies.TOO_MANY_ARGUMENTS, sender);
+					if (!hasPermission(sender, PermissionType.GUI)) SendReplies.getReply(SendReplies.NO_PERMISSION, sender);
+					if (sender instanceof Player player) plugin.inv.mainInventory(player).show(player);
+					else SendReplies.getReply(SendReplies.PLAYERS_ONLY, sender);
+				}
+				case INVALID -> SendReplies.getReply(SendReplies.INVALID_ARGUMENT, sender, args[0]);
+			};
 		}
 		if (cmd.getName().equalsIgnoreCase("morearmors")) {
 			if (args.length == 0) {
@@ -254,7 +293,7 @@ public class Commands implements CommandExecutor {
 		plugin.sendColoredMessage(s, prefix() + " &cYou are not holding a valid item!");
 	}
 
-	public String prefix() {
+	public static String prefix() {
 		return convertColoredString("&e(&6MoreArmors&e)");
 	}
 
@@ -305,11 +344,5 @@ public class Commands implements CommandExecutor {
 		plugin.sendColoredMessage(sender, "&6> &e/morearmors give <user>");
 		plugin.sendColoredMessage(sender, "&6> &e/morearmors info");
 		return true;
-	}
-
-	public void pluginInfoMessage(CommandSender sender) {
-		plugin.sendColoredMessage(sender, "");
-		plugin.sendColoredMessage(sender, prefix() + " &eRunning &6" + plugin.getName() + " " + plugin.getDescription().getVersion() + " &ecreated by &6OffsetPaladin89&e.");
-		plugin.sendColoredMessage(sender, "&6> &eOfficial Site: &6https://dev.bukkit.org/projects/MoreArmors");
 	}
 }
