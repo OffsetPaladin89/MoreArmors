@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 import static me.offsetpaladin89.MoreArmors.Main.convertColoredString;
 
@@ -51,42 +52,8 @@ public class Commands implements CommandExecutor {
 		}
 	}
 
-	private enum SendReplies {
-		/** Invalid argument requires an argument */
-		INVALID_ARGUMENT,
-
-		/** Too many arguments */
-		TOO_MANY_ARGUMENTS,
-
-		/** No permission */
-		NO_PERMISSION,
-
-		/** Players only */
-		PLAYERS_ONLY;
-
-		public static boolean getReply(SendReplies type, CommandSender sender) {
-			switch (type) {
-				case TOO_MANY_ARGUMENTS:
-				case PLAYERS_ONLY:
-				case NO_PERMISSION:
-			}
-			return true;
-		}
-
-		public static boolean getReply(SendReplies type, CommandSender sender, String arg) {
-			switch (type) {
-				case INVALID_ARGUMENT: sendColoredMessage(sender, MessageFormat.format("{0} &cInvalid argument: {1}!", prefix(), arg));
-				default: getReply(type, sender);
-			}
-			return true;
-		}
-
-		public static  boolean getReply(SendReplies type, CommandSender sender, String[] args) {
-			switch (type) {
-				default: getReply(type, sender);
-			}
-			return true;
-		}
+	private boolean isSame(String arg, String compare) {
+		return arg.equalsIgnoreCase(compare);
 	}
 
 	private static void sendColoredMessage(CommandSender sender, String message) {
@@ -124,7 +91,7 @@ public class Commands implements CommandExecutor {
 		sendColoredMessage(sender, MessageFormat.format("&6> &e{0}", option));
 	}
 
-	private void inputTypeMessages(CommandSender sender) {
+	private void commandType(CommandSender sender) {
 		commandHeader(sender);
 		addFeedbackOption(sender, "info");
 		if(hasPermission(sender, PermissionType.GIVE)) addFeedbackOption(sender, "give");
@@ -133,11 +100,23 @@ public class Commands implements CommandExecutor {
 		if(hasPermission(sender, PermissionType.GUI)) addFeedbackOption(sender, "gui");
 	}
 
+	private void giveType(CommandSender sender) {
+		commandHeader(sender);
+		addFeedbackOption(sender, "armor");
+		addFeedbackOption(sender, "material");
+	}
+
+	private void armorGiveType(CommandSender sender) {
+		commandHeader(sender);
+		for(String s : plugin.armorTypes) addFeedbackOption(sender, s);
+	}
+
 	private void handleGive(CommandSender sender, String[] arguments) {
 		if(!hasPermission(sender, PermissionType.GIVE)) return;
-		if(arguments.length == 2) {} // TODO send type message
-		if(arguments.length > 2) {} // TODO if type is valid
-		if(true) {} // TODO if armor use handleGiveArmor() if material use handleGiveMaterial()
+		if(arguments.length == 2) giveType(sender);
+		if(arguments.length > 2 && !(isSame(arguments[2], "armor") || isSame(arguments[2], "material"))) return;
+		if(isSame(arguments[2], "armor")) handleGiveArmor(sender, arguments);
+		else handleGiveMaterial(sender, arguments);
 	}
 
 	private void handleGiveArmor(CommandSender sender, String[] arguments) {
@@ -178,7 +157,7 @@ public class Commands implements CommandExecutor {
 			}
 			CommandTypes commandType = CommandTypes.getCommand(args[0]);
 			if(args.length == 1 && (commandType.equals(CommandTypes.GIVE) || commandType.equals(CommandTypes.EDIT))) {
-				inputTypeMessages(sender);
+				commandType(sender);
 				return true;
 			}
 			switch(commandType) {
@@ -188,10 +167,8 @@ public class Commands implements CommandExecutor {
 						break;
 					}
 					infoMessage(sender);
-				case GIVE:
-					// TODO use handleGive()
-				case EDIT:
-					// TODO use handleEdit()
+				case GIVE: handleGive(sender, args);
+				case EDIT: handleEdit(sender, args);
 				case RELOAD:
 					if (args.length != 1) {
 						tooManyArguments(sender);
