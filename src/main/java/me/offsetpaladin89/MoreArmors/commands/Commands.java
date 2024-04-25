@@ -2,10 +2,8 @@ package me.offsetpaladin89.MoreArmors.commands;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.Main;
-import me.offsetpaladin89.MoreArmors.enums.ArmorType;
-import me.offsetpaladin89.MoreArmors.enums.MaterialType;
+import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
 import me.offsetpaladin89.MoreArmors.enums.PermissionType;
-import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,19 +15,17 @@ import org.bukkit.inventory.PlayerInventory;
 import java.text.MessageFormat;
 import java.util.List;
 
-import static me.offsetpaladin89.MoreArmors.Main.convertColoredString;
+import static me.offsetpaladin89.MoreArmors.Main.*;
 
 public class Commands implements CommandExecutor {
+
+	// TODO Documentation
 
 	private final Main plugin;
 
 	public Commands(Main plugin) {
 		this.plugin = plugin;
 		plugin.getServer().getPluginCommand("morearmors").setExecutor(this);
-	}
-
-	private boolean isCommand(Command cmd, String name) {
-		return cmd.getName().equalsIgnoreCase(name);
 	}
 
 	private enum CommandTypes {
@@ -52,12 +48,24 @@ public class Commands implements CommandExecutor {
 		}
 	}
 
-	private boolean isSame(String arg, String compare) {
-		return arg.equalsIgnoreCase(compare);
+	private void notHoldingItem(CommandSender s) {
+		sendColoredMessage(s, prefix() + " &cYou are not holding a valid item!");
 	}
 
-	private static void sendColoredMessage(CommandSender sender, String message) {
-		sender.sendMessage(convertColoredString(message));
+	private void invalidArgument(CommandSender sender, String argument) {
+		sendColoredMessage(sender, prefix() + " &cInvalid argument " + argument + ".");
+	}
+
+	private void resetItemMessage(CommandSender sender, Player target, ItemStack item) {
+		sendColoredMessage(sender, prefix() + " &eReset " + item.getItemMeta().getDisplayName() + " &efor " + target.getName() + "&e.");
+		sendColoredMessage(target, prefix() + " &eReset " + item.getItemMeta().getDisplayName() + "&e.");
+	}
+
+	private void helpMessage(CommandSender sender) {
+		commandHeader(sender);
+		sendColoredMessage(sender, "&6> &e/morearmors edit <user>");
+		sendColoredMessage(sender, "&6> &e/morearmors give <user>");
+		sendColoredMessage(sender, "&6> &e/morearmors info");
 	}
 
 	private boolean hasPermission(CommandSender sender, PermissionType permission) {
@@ -100,57 +108,107 @@ public class Commands implements CommandExecutor {
 		if(hasPermission(sender, PermissionType.GUI)) addFeedbackOption(sender, "gui");
 	}
 
-	private void giveType(CommandSender sender) {
+	private void sendFeedback(CommandSender sender, String[] arr) {
 		commandHeader(sender);
-		addFeedbackOption(sender, "armor");
-		addFeedbackOption(sender, "material");
+		for(String s : arr) addFeedbackOption(sender, s);
 	}
 
-	private void armorGiveType(CommandSender sender) {
-		commandHeader(sender);
-		for(String s : plugin.armorTypes) addFeedbackOption(sender, s);
-	}
-
-	private void handleGive(CommandSender sender, String[] arguments) {
+	private void handleGive(CommandSender sender, String[] args) {
 		if(!hasPermission(sender, PermissionType.GIVE)) return;
-		if(arguments.length == 2) giveType(sender);
-		if(arguments.length > 2 && !(isSame(arguments[2], "armor") || isSame(arguments[2], "material"))) return;
-		if(isSame(arguments[2], "armor")) handleGiveArmor(sender, arguments);
-		else handleGiveMaterial(sender, arguments);
+		if(args.length > 1 && Bukkit.getPlayer(args[1]) == null) return;
+		if(args.length == 2) sendFeedback(sender, plugin.giveTypes);
+		if(args.length > 2 && containsArg(plugin.giveTypes, args[3])) return;
+		switch(args[2]) {
+			case "armor": handleGiveArmor(sender, args, Bukkit.getPlayer(args[1]));
+			case "material": handleGiveMaterial(sender, args, Bukkit.getPlayer(args[1]));
+		}
 	}
 
-	private void handleGiveArmor(CommandSender sender, String[] arguments) {
-		if(arguments.length == 3) {} // TODO send armor type message
-		if(arguments.length > 3) {} // TODO if armor type is valid
-		if(arguments.length == 4) {} // TODO send slot type message if armor
-		if(arguments.length > 4) {} // TODO if slot type is valid
-		if(arguments.length == 5) {} // TODO give the item
-		if(arguments.length > 5) {} // TODO if is an integer
-		if(arguments.length == 6) {} // TODO give the item with the special value modified
-		if(arguments.length > 6) {} // TODO send too many args
+	private boolean containsArg(String[] arr, String arg) {
+		return List.of(arr).contains(arg.toLowerCase());
 	}
 
-	private void handleGiveMaterial(CommandSender sender, String[] arguments) {
-		if(arguments.length == 3) {} // TODO send material type message
-		if(arguments.length > 3) {} // TODO if material type is valid
-		if(arguments.length == 4) {} // TODO give the item
-		if(arguments.length > 4) {} // TODO if it is an integer
-		if(arguments.length == 5) {} // TODO give the item with that amount
+	private void handleGiveArmor(CommandSender sender, String[] args, Player target) {
+		if(args.length == 3) sendFeedback(sender, plugin.armorTypes);
+		if(args.length > 3 && !containsArg(plugin.armorTypes, args[3])) {
+			invalidArgument(sender, args[3]);
+			return;
+		}
+		if(args.length == 4) sendFeedback(sender, plugin.slotTypes);
+		if(args.length > 4 && !containsArg(plugin.slotTypes, args[4])) {
+			invalidArgument(sender, args[4]);
+			return;
+		}
+		if(args.length == 5) plugin.give.giveCommand(sender, target, args[3], args[4], 0);
+		if(args.length > 5 && !plugin.isWholeNumber(args[5])) {
+			invalidArgument(sender, args[5]);
+			return;
+		}
+		if(args.length == 6) plugin.give.giveCommand(sender, target, args[3], args[4], Integer.parseInt(args[5]));
+		if(args.length > 6) tooManyArguments(sender);
 	}
 
-	private void handleEdit(CommandSender sender, String[] arguments) {
-		if(!hasPermission(sender, PermissionType.EDIT)) return;
-		if(arguments.length == 2) {} // TODO send type message
-		if(arguments.length > 2) {} // TODO check if type is valid
-		if(arguments.length == 3) {} // TODO reset the item
-		if(arguments.length > 4) {} // TODO check if argument is an integer
-		if(arguments.length == 4) {} // TODO edit the item to the specified value
-		if(arguments.length > 5) {} // TODO send too many args
+	private void handleGiveMaterial(CommandSender sender, String[] args, Player target) {
+		if(args.length == 3) sendFeedback(sender, plugin.materialTypes);
+		if(args.length > 3 && !containsArg(plugin.materialTypes, args[3])) {
+			invalidArgument(sender, args[3]);
+			return;
+		}
+		if(args.length == 4) plugin.give.giveCommand(sender, target, args[3], 1);
+		if(args.length > 4 && !plugin.isWholeNumber(args[4])) {
+			invalidArgument(sender, args[4]);
+			return;
+		}
+		if(args.length == 5) plugin.give.giveCommand(sender, target, args[3], Integer.parseInt(args[4]));
+	}
+
+	private void handleEdit(CommandSender sender, String[] args) {
+		if(!hasPermission(sender, PermissionType.EDIT)) {
+			noPermission(sender);
+			return;
+		}
+		if(args.length > 1 && Bukkit.getPlayer(args[1]) == null) {
+			invalidArgument(sender, args[1]);
+			return;
+		}
+		if(args.length == 2) sendFeedback(sender, plugin.editTypes);
+		if(args.length > 2 && !containsArg(plugin.editTypes, args[2])) {
+			invalidArgument(sender, args[2]);
+			return;
+		}
+		if(args.length == 3) applyEdit(sender, Bukkit.getPlayer(args[1]), args[2], 0);
+		if(args.length > 3 && !plugin.isWholeNumber(args[3])) {
+			invalidArgument(sender, args[3]);
+			return;
+		}
+		if(args.length == 4) applyEdit(sender, Bukkit.getPlayer(args[1]), args[2], Integer.parseInt(args[3]));
+		if(args.length > 5) tooManyArguments(sender);
+	}
+
+	private void applyEdit(CommandSender sender, Player target, String type, Integer amount) {
+		PlayerInventory inventory = target.getInventory();
+		if (plugin.isAirOrNull(inventory.getItemInMainHand())) {
+			notHoldingItem(sender);
+			return;
+		}
+		ItemStack hand = inventory.getItemInMainHand();
+		NBTItem nbtItem = new NBTItem(hand);
+		if(type.equalsIgnoreCase("emerald_count")) {
+			if(!nbtItem.getString("CustomItemID").equals("emerald")) return;
+			inventory.setItemInMainHand(new EmeraldArmor(hand, amount).getItem());
+			resetItemMessage(sender, target, hand);
+		}
+		else if(type.equalsIgnoreCase("kill_amount")) {
+			if(!nbtItem.getString("CustomItemID").equals("destroyer")) return;
+			nbtItem.setInteger("KillAmount", amount);
+			inventory.setItemInMainHand(plugin.armorConstructor.createDestroyerArmor(nbtItem.getItem()));
+			resetItemMessage(sender, target, hand);
+		}
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(isCommand(cmd, "morearmors")) {
+		if(cmd.getName().equalsIgnoreCase("morearmors")) {
 			if(args.length == 0){
 				helpMessage(sender);
 				return true;
@@ -195,169 +253,7 @@ public class Commands implements CommandExecutor {
 					}
 				case INVALID: invalidArgument(sender, args[0]);
 			}
-			return true;
 		}
-		if (cmd.getName().equalsIgnoreCase("morearmors")) {
-			if (args.length == 0) {
-				helpMessage(sender);
-			} else {
-				switch (args[0].toLowerCase()) {
-					case "give" -> {
-						if (sender.hasPermission("morearmors.give")) {
-							if (args.length < 7) {
-								giveMessage(args.length, sender,
-										args.length == 1 ? "<user>" : args[1],
-										args.length > 2 ? args[2] : null,
-										args.length > 3 ? args[3] : null,
-										args.length > 4 ? args[4] : null,
-										args.length > 5 ? args[5] : null);
-							} else tooManyArguments(sender);
-						} else {
-							noPermission(sender);
-						}
-					}
-					case "edit" -> {
-						if (sender.hasPermission("morearmors.edit")) {
-							if (args.length < 5) {
-								editMessage(args.length, sender,
-										args.length == 1 ? "user" : args[1],
-										args.length > 2 ? args[2] : null,
-										args.length > 3 ? args[3] : null);
-							} else tooManyArguments(sender);
-						}
-					}
-					case "reload" -> {
-						if(sender.hasPermission("morearmors.reload")) plugin.reloadConfig(sender);
-					}
-					case "gui" -> {
-						if(sender instanceof Player p) {
-							plugin.inv.mainInventory(p).show(p);
-						}
-					}
-				}
-			}
-		}
-		return true;
-	}
-
-	public void giveMessage(Integer length, CommandSender sender, String player, String type, String item, String slot, String specialValue) {
-		if (length > 1) {
-			if (plugin.getServer().getPlayer(player) == null) {
-				invalidArgument(sender, player);
-				return;
-			}
-		}
-		if (length < 3) {
-			plugin.sendColoredMessage(sender, "");
-			plugin.sendColoredMessage(sender, prefix() + " &6Give Command Options: &e(/morearmors give " + player + " ... )");
-			if (length == 2) {
-				plugin.sendColoredMessage(sender, "&6> &earmor");
-				plugin.sendColoredMessage(sender, "&6> &ematerial");
-			}
-			return;
-		}
-	}
-
-	public void editMessage(Integer length, CommandSender sender, String player, String type, String specialValue) {
-
-		if (length > 1) {
-			if (plugin.getServer().getPlayer(player) == null) {
-				invalidArgument(sender, player);
-				return;
-			}
-		}
-		if (length < 3) {
-			plugin.sendColoredMessage(sender, "");
-			plugin.sendColoredMessage(sender, prefix() + " &6Edit Command Options: &e(/morearmors edit " + player + " ... )");
-			if (length == 2) {
-				plugin.sendColoredMessage(sender, "&6> &eemerald_count");
-				plugin.sendColoredMessage(sender, "&6> &ekill_amount");
-			}
-			return;
-		}
-		Player target = plugin.getServer().getPlayer(player);
-		PlayerInventory inventory = target.getInventory();
-		if (plugin.isAirOrNull(inventory.getItemInMainHand())) {
-			notHoldingItem(sender);
-			return;
-		}
-		ItemStack hand = inventory.getItemInMainHand();
-		NBTItem nbtItem = new NBTItem(hand);
-		if (type.equalsIgnoreCase("emerald_count")) {
-			if (nbtItem.getString("CustomItemID").equals("emerald")) {
-				if (length == 3) {
-					nbtItem.setInteger("EmeraldCount", 0);
-					inventory.setItemInMainHand(plugin.armorConstructor.createEmeraldArmor(nbtItem.getItem()));
-					resetItemMessage(sender, target, hand);
-				} else if (length == 4) {
-					if (plugin.isInteger(specialValue)) {
-						nbtItem.setInteger("EmeraldCount", Integer.parseInt(specialValue));
-						inventory.setItemInMainHand(plugin.armorConstructor.createEmeraldArmor(nbtItem.getItem()));
-						editItemMessage(sender, target, hand);
-					} else invalidArgument(sender, specialValue);
-				} else tooManyArguments(sender);
-			} else notHoldingItem(sender);
-		} else if (type.equals("kill_amount")) {
-			if (length == 3) {
-				nbtItem.setInteger("KillAmount", 0);
-				inventory.setItemInMainHand(plugin.armorConstructor.createDestroyerArmor(nbtItem.getItem()));
-				resetItemMessage(sender, target, hand);
-			} else if (length == 4) {
-				if (plugin.isInteger(specialValue)) {
-					nbtItem.setInteger("KillAmount", Integer.parseInt(specialValue));
-					inventory.setItemInMainHand(plugin.armorConstructor.createDestroyerArmor(nbtItem.getItem()));
-					editItemMessage(sender, target, hand);
-				} else invalidArgument(sender, specialValue);
-			} else tooManyArguments(sender);
-		} else invalidArgument(sender, type);
-	}
-
-	public void notHoldingItem(CommandSender s) {
-		plugin.sendColoredMessage(s, prefix() + " &cYou are not holding a valid item!");
-	}
-
-	public static String prefix() {
-		return convertColoredString("&e(&6MoreArmors&e)");
-	}
-
-	public void invalidArgument(CommandSender sender, String argument) {
-		plugin.sendColoredMessage(sender, prefix() + " &cInvalid argument " + argument + ".");
-	}
-
-	public void editItemMessage(CommandSender sender, Player target, ItemStack item) {
-		plugin.sendColoredMessage(sender, prefix() + " &eEdited " + item.getItemMeta().getDisplayName() + " &efor " + target.getName() + "&e.");
-		plugin.sendColoredMessage(target, prefix() + " &eEdited " + item.getItemMeta().getDisplayName() + "&e.");
-	}
-
-	public void resetItemMessage(CommandSender sender, Player target, ItemStack item) {
-		plugin.sendColoredMessage(sender, prefix() + " &eReset " + item.getItemMeta().getDisplayName() + " &efor " + target.getName() + "&e.");
-		plugin.sendColoredMessage(target, prefix() + " &eReset " + item.getItemMeta().getDisplayName() + "&e.");
-	}
-
-	public void sendMaterialTypes(CommandSender sender, String player, String type) {
-		plugin.sendColoredMessage(sender, "");
-		plugin.sendColoredMessage(sender, prefix() + " &6Give Command Options: &e(/morearmors give " + player + " " + type.toLowerCase() + " ... )");
-		for (String s : plugin.materialTypes) plugin.sendColoredMessage(sender, "&6> &e" + s);
-	}
-
-	public void sendArmorTypes(CommandSender sender, String player, String type) {
-		plugin.sendColoredMessage(sender, "");
-		plugin.sendColoredMessage(sender, prefix() + " &6Give Command Options: &e(/morearmors give " + player + " " + type.toLowerCase() + " ... )");
-		for (String s : plugin.armorTypes) plugin.sendColoredMessage(sender, "&6> &e" + s);
-	}
-
-	public void sendEquipmentTypes(CommandSender sender, String player, String type, String item) {
-		plugin.sendColoredMessage(sender, "");
-		plugin.sendColoredMessage(sender, prefix() + " &6Give Command Options: &e(/morearmors give " + player + " " + type.toLowerCase() + " " + item.toLowerCase() + " ... )");
-		for (String s : plugin.slotTypes) plugin.sendColoredMessage(sender, "&6> &e" + s);
-	}
-
-	public boolean helpMessage(CommandSender sender) {
-		plugin.sendColoredMessage(sender, "");
-		plugin.sendColoredMessage(sender, prefix() + " &6Available Commands:");
-		plugin.sendColoredMessage(sender, "&6> &e/morearmors edit <user>");
-		plugin.sendColoredMessage(sender, "&6> &e/morearmors give <user>");
-		plugin.sendColoredMessage(sender, "&6> &e/morearmors info");
 		return true;
 	}
 }

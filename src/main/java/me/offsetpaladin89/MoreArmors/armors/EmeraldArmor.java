@@ -43,20 +43,21 @@ public class EmeraldArmor extends Armor {
 		this.emeraldAmount = emeraldAmount;
 	}
 
-	public EmeraldArmor(ItemStack item, SlotType slot, int emeraldAmount) {
+	public EmeraldArmor(ItemStack item, int emeraldAmount) {
 		super(
 				item,
 				Rarity.EPIC,
-				convertColoredString(MessageFormat.format("{0}Emerald {1}", Rarity.getColorRarity(Rarity.EPIC), WordUtils.capitalizeFully(SlotType.slotName(slot)))),
-				switch(slot) {
+				convertColoredString(MessageFormat.format("{0}Emerald {1}", Rarity.getColorRarity(Rarity.EPIC), WordUtils.capitalizeFully(SlotType.slotName(SlotType.matchSlot(item.getType().getEquipmentSlot()))))),
+				switch(SlotType.matchSlot(item.getType().getEquipmentSlot())) {
 					case HELMET, BOOTS -> 3;
 					case CHESTPLATE -> 8;
 					case LEGGINGS -> 6;
 				},
-				slot
+				SlotType.matchSlot(item.getType().getEquipmentSlot())
 		);
 		this.armorToughness = 2;
 		this.emeraldAmount = emeraldAmount;
+
 	}
 
 	private ArrayList<String> getLore() {

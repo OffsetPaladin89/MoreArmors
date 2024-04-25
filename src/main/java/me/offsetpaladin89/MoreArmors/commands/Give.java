@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import java.util.List;
+
 public record Give(Main plugin) {
 	public ItemStack give(MaterialType type, Integer amount) {
 		return switch (type) {
@@ -51,20 +53,21 @@ public record Give(Main plugin) {
 		};
 	}
 
-	public void giveCommand(CommandSender sender, Player target, String type, SlotType slotType, Integer specialValue) {
-		ItemStack item = give(ArmorType.getSetType(type), slotType, specialValue);
+	public void giveCommand(CommandSender sender, Player target, String type, String slotType, Integer specialValue) {
+		ItemStack item = give(ArmorType.getSetType(type), SlotType.typeFromString(slotType), specialValue);
 		PlayerInventory inventory = target.getInventory();
 		if (inventory.firstEmpty() == -1) target.getWorld().dropItem(target.getLocation().add(0.0D, 0.5D, 0.0D), item);
 		else inventory.addItem(item);
 		giveMessage(sender, target, 1, item);
 	}
 
-	public void giveCommand(CommandSender sender, Player target, MaterialType type, Integer amount) {
-		ItemStack item = give(type, amount);
+	public void giveCommand(CommandSender sender, Player target, String type, Integer amount) {
+		MaterialType mType = MaterialType.getMaterialType(type);
+		ItemStack item = give(mType, amount);
 		PlayerInventory inventory = target.getInventory();
-		if (type.equals(MaterialType.NETHER_CROWN) || type.equals(MaterialType.ENERGY_CELL) || type.equals(MaterialType.MACHINE_CORE)) {
+		if (List.of(plugin.noStackMaterials).contains(mType)) {
 			for (int x = 0; x < amount; x++) {
-				item = give(type, amount);
+				item = give(mType, amount);
 				if (inventory.firstEmpty() == -1) target.getWorld().dropItem(target.getLocation().add(0.0D, 0.5D, 0.0D), item);
 				else inventory.addItem(item);
 			}

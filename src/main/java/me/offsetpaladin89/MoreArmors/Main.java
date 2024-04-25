@@ -1,10 +1,10 @@
 package me.offsetpaladin89.MoreArmors;
 
-import com.github.stefvanschie.inventoryframework.font.util.Font;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
 import me.offsetpaladin89.MoreArmors.commands.Commands;
 import me.offsetpaladin89.MoreArmors.commands.Give;
+import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.fonts.GrayFont;
 import me.offsetpaladin89.MoreArmors.handlers.*;
 import me.offsetpaladin89.MoreArmors.inventories.Inventories;
@@ -14,7 +14,6 @@ import me.offsetpaladin89.MoreArmors.items.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -27,10 +26,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static me.offsetpaladin89.MoreArmors.enums.MaterialType.*;
+
 public class Main extends JavaPlugin {
 
+	public final MaterialType[] noStackMaterials = { NETHER_CROWN, ENERGY_CELL, MACHINE_CORE };
 	public final String[] giveTypes = {"armor", "material"};
-	public final String[] editTypes = {"emerald_count", "killamount"};
+	public final String[] editTypes = {"emerald_count", "kill_amount"};
 	public final String[] armorTypes = {"emerald", "end", "experience", "miner", "nether", "seagreed", "speedster", "titan", "destroyer"};
 	public final String[] materialTypes = {"compacted_blaze_rod", "compacted_cobblestone", "compacted_end_stone", "compacted_eye_of_ender", "compacted_soul_sand", "compacted_sugar_cane", "nether_crown", "compacted_diamond", "compacted_diamond_block", "compacted_gold", "compacted_gold_block", "compacted_prismarine", "compacted_iron", "compacted_iron_block", "compacted_redstone", "machine_part", "machine_core", "energy_cell", "star_dust"};
 	public final String[] slotTypes = {"helmet", "chestplate", "leggings", "boots"};
@@ -80,7 +82,7 @@ public class Main extends JavaPlugin {
 		getServer().resetRecipes();
 		armorSets.RegisterArmorRecipes();
 		materials.RegisterMaterialsRecipes();
-		sendColoredMessage(s, commands.prefix() + " &aSuccessfully reloaded config!");
+		sendColoredMessage(s, prefix() + " &aSuccessfully reloaded config!");
 	}
 
 	public void registerConfig() {
@@ -105,10 +107,6 @@ public class Main extends JavaPlugin {
 
 	public void sendPlayerMessage(Player p, String s) {
 		p.sendMessage(convertColoredString(s));
-	}
-
-	public void sendColoredMessage(CommandSender s, String m) {
-		s.sendMessage(convertColoredString(m));
 	}
 
 	public ShapedRecipe shapedRecipe(String key, ItemStack i) {
@@ -141,13 +139,21 @@ public class Main extends JavaPlugin {
 		return false;
 	}
 
-	public boolean isInteger(String string) {
+	public boolean isWholeNumber(String string) {
 		try {
-			Integer.parseInt(string);
+			int x = Integer.parseInt(string);
+			return x > 0;
 		} catch (Exception e) {
 			return false;
 		}
-		return true;
+	}
+
+	public static void sendColoredMessage(CommandSender sender, String message) {
+		sender.sendMessage(convertColoredString(message));
+	}
+
+	public static String prefix() {
+		return convertColoredString("&e(&6MoreArmors&e)");
 	}
 
 	public void ArmorChecker() {
