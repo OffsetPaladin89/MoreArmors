@@ -3,22 +3,19 @@ package me.offsetpaladin89.MoreArmors;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
 import me.offsetpaladin89.MoreArmors.commands.Commands;
-import me.offsetpaladin89.MoreArmors.commands.Give;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.fonts.GrayFont;
-import me.offsetpaladin89.MoreArmors.handlers.*;
+import me.offsetpaladin89.MoreArmors.handlers.CraftHandler;
+import me.offsetpaladin89.MoreArmors.handlers.DamageHandler;
+import me.offsetpaladin89.MoreArmors.handlers.HologramHandler;
 import me.offsetpaladin89.MoreArmors.inventories.Inventories;
-import me.offsetpaladin89.MoreArmors.items.ArmorConstructor;
-import me.offsetpaladin89.MoreArmors.items.Armors;
 import me.offsetpaladin89.MoreArmors.items.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -30,7 +27,7 @@ import static me.offsetpaladin89.MoreArmors.enums.MaterialType.*;
 
 public class Main extends JavaPlugin {
 
-	public final MaterialType[] noStackMaterials = { NETHER_CROWN, ENERGY_CELL, MACHINE_CORE };
+	public final MaterialType[] noStackMaterials = {NETHER_CROWN, ENERGY_CELL, MACHINE_CORE};
 	public final String[] giveTypes = {"armor", "material"};
 	public final String[] editTypes = {"emerald_count", "kill_amount"};
 	public final String[] armorTypes = {"emerald", "end", "experience", "miner", "nether", "seagreed", "speedster", "titan", "destroyer"};
@@ -41,10 +38,6 @@ public class Main extends JavaPlugin {
 	public ArrayList<CustomRecipe> recipeList;
 
 	public HologramHandler hologramHandler;
-	public Give give;
-	public Armors armorSets;
-	public me.offsetpaladin89.MoreArmors.Armors armors;
-	public ArmorConstructor armorConstructor;
 	public Config config;
 	public Commands commands;
 	public Listener listener;
@@ -63,26 +56,19 @@ public class Main extends JavaPlugin {
 		commands = new Commands(this);
 		config = new Config(this);
 		hologramHandler = new HologramHandler(this);
-		armorSets = new Armors(this);
-		armorConstructor = new ArmorConstructor(this);
 		materials = new Materials(this);
-		give = new Give(this);
 		recipeRegistry = new RegisterRecipes(this);
-		armors = new me.offsetpaladin89.MoreArmors.Armors(this);
 
 		recipeRegistry.registerRecipes();
 		ArmorChecker();
 		registerConfig();
-		armorSets.RegisterArmorRecipes();
-		materials.RegisterMaterialsRecipes();
 	}
 
 	public void reloadConfig(CommandSender s) {
 		registerConfig();
 		getServer().resetRecipes();
-		armorSets.RegisterArmorRecipes();
-		materials.RegisterMaterialsRecipes();
 		sendColoredMessage(s, prefix() + " &aSuccessfully reloaded config!");
+		sendConsoleMessage("&aConfig has been successfully reloaded!");
 	}
 
 	public void registerConfig() {
@@ -109,10 +95,6 @@ public class Main extends JavaPlugin {
 		p.sendMessage(convertColoredString(s));
 	}
 
-	public ShapedRecipe shapedRecipe(String key, ItemStack i) {
-		return new ShapedRecipe(new NamespacedKey(this, key), i);
-	}
-
 	public boolean IsFullCustomSet(String tag, PlayerInventory inventory) {
 		if (WearingFullSet(inventory)) return false;
 		return new NBTItem(inventory.getHelmet()).getString("CustomItemID").equals(tag) && new NBTItem(inventory.getChestplate()).getString("CustomItemID").equals(tag) && new NBTItem(inventory.getLeggings()).getString("CustomItemID").equals(tag) && new NBTItem(inventory.getBoots()).getString("CustomItemID").equals(tag);
@@ -132,9 +114,7 @@ public class Main extends JavaPlugin {
 
 	public boolean isAirOrNull(ItemStack[] items) {
 		for (ItemStack i : items) {
-			if (i == null || i.getType().equals(Material.AIR)) {
-				return true;
-			}
+			if (i == null || i.getType().equals(Material.AIR)) return true;
 		}
 		return false;
 	}

@@ -1,4 +1,4 @@
-package me.offsetpaladin89.MoreArmors.armors;
+package me.offsetpaladin89.MoreArmors.items;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
@@ -10,12 +10,14 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import static me.offsetpaladin89.MoreArmors.Main.convertColoredString;
 
 public class Armor {
+
 	protected ItemStack item;
 	protected Rarity rarity;
 	protected String name;
@@ -52,6 +54,15 @@ public class Armor {
 		itemMeta.addAttributeModifier(Attribute.GENERIC_ARMOR, new AttributeModifier(UUID.randomUUID(), "armor", armor, AttributeModifier.Operation.ADD_NUMBER, SlotType.matchSlot(slot)));
 		item.setItemMeta(itemMeta);
 		return getNBTItem("emerald").getItem();
+	}
+
+	protected void addFooter(ArrayList<String> lore) {
+		addLine(lore);
+		addLine(lore, MessageFormat.format("{0}&l{1}", Rarity.getColorRarity(rarity), rarity));
+	}
+
+	protected static SlotType getSlot(ItemStack i) {
+		return SlotType.matchSlot(i.getType().getEquipmentSlot());
 	}
 
 	protected void addLine(ArrayList<String> lore) {

@@ -2,9 +2,11 @@ package me.offsetpaladin89.MoreArmors.commands;
 
 import me.offsetpaladin89.MoreArmors.Main;
 import me.offsetpaladin89.MoreArmors.enums.PermissionType;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,18 +40,37 @@ public class CommandCompleter implements TabCompleter {
 		if(args.length == 1) addBaseCommands(sender, arguments);
 		if(isValid(sender, args[0], PermissionType.GIVE)) {
 			switch(args.length) {
+				case 2 -> addPlayers(arguments);
 				case 3 -> addTypes(arguments, ArgumentTypes.GIVE);
 				case 4 -> addItems(arguments, args[2]);
 				case 5 -> addTypes(arguments, ArgumentTypes.SLOT);
 			}
 		}
-		if(isValid(sender, args[0], PermissionType.EDIT) && args.length == 3) addTypes(arguments, ArgumentTypes.EDIT);
+		if(isValid(sender, args[0], PermissionType.EDIT)) {
+			switch (args.length) {
+				case 2 -> addPlayers(arguments);
+				case 3 -> addTypes(arguments, ArgumentTypes.EDIT);
+			}
+		}
 
 		List<String> options = new ArrayList<>();
 		for (String s : arguments) {
 			if (s.toLowerCase().contains(args[args.length - 1])) options.add(s);
 		}
 		return options;
+	}
+
+	/**
+	 * Adds all the players up to 10 to the command completer.
+	 * @param list the list for the command completer
+	 */
+	private void addPlayers(List<String> list) {
+		int i = 0;
+		for(Player p : Bukkit.getOnlinePlayers()) {
+			if(i == 10) return;
+			list.add(p.getName());
+			i++;
+		}
 	}
 
 	/**
@@ -72,15 +93,17 @@ public class CommandCompleter implements TabCompleter {
 	 */
 	private void addTypes(List<String> list, ArgumentTypes type) {
 		switch (type) {
-			case GIVE:
+			case GIVE -> {
 				list.add("armor");
 				list.add("material");
-			case EDIT:
+			}
+			case EDIT -> {
 				list.add("emerald_count");
 				list.add("kill_amount");
-			case MATERIAL: list.addAll(Arrays.asList(plugin.materialTypes));
-			case ARMOR: list.addAll(Arrays.asList(plugin.armorTypes));
-			case SLOT: list.addAll(Arrays.asList(plugin.slotTypes));
+			}
+			case MATERIAL -> list.addAll(Arrays.asList(plugin.materialTypes));
+			case ARMOR -> list.addAll(Arrays.asList(plugin.armorTypes));
+			case SLOT -> list.addAll(Arrays.asList(plugin.slotTypes));
 		}
 	}
 

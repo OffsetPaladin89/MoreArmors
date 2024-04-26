@@ -2,7 +2,10 @@ package me.offsetpaladin89.MoreArmors.commands;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.Main;
-import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
+import me.offsetpaladin89.MoreArmors.enums.ArmorType;
+import me.offsetpaladin89.MoreArmors.enums.MaterialType;
+import me.offsetpaladin89.MoreArmors.items.DestroyerArmor;
+import me.offsetpaladin89.MoreArmors.items.EmeraldArmor;
 import me.offsetpaladin89.MoreArmors.enums.PermissionType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -16,6 +19,9 @@ import java.text.MessageFormat;
 import java.util.List;
 
 import static me.offsetpaladin89.MoreArmors.Main.*;
+import static me.offsetpaladin89.MoreArmors.Main.sendColoredMessage;
+import static me.offsetpaladin89.MoreArmors.enums.ArmorType.getSetType;
+import static me.offsetpaladin89.MoreArmors.enums.SlotType.typeFromString;
 
 public class Commands implements CommandExecutor {
 
@@ -139,12 +145,12 @@ public class Commands implements CommandExecutor {
 			invalidArgument(sender, args[4]);
 			return;
 		}
-		if(args.length == 5) plugin.give.giveCommand(sender, target, args[3], args[4], 0);
+		if(args.length == 5) giveItem(sender, target, args[3], args[4], 0);
 		if(args.length > 5 && !plugin.isWholeNumber(args[5])) {
 			invalidArgument(sender, args[5]);
 			return;
 		}
-		if(args.length == 6) plugin.give.giveCommand(sender, target, args[3], args[4], Integer.parseInt(args[5]));
+		if(args.length == 6) giveItem(sender, target, args[3], args[4], Integer.parseInt(args[5]));
 		if(args.length > 6) tooManyArguments(sender);
 	}
 
@@ -154,12 +160,12 @@ public class Commands implements CommandExecutor {
 			invalidArgument(sender, args[3]);
 			return;
 		}
-		if(args.length == 4) plugin.give.giveCommand(sender, target, args[3], 1);
+		if(args.length == 4) giveItem(sender, target, args[3], 1);
 		if(args.length > 4 && !plugin.isWholeNumber(args[4])) {
 			invalidArgument(sender, args[4]);
 			return;
 		}
-		if(args.length == 5) plugin.give.giveCommand(sender, target, args[3], Integer.parseInt(args[4]));
+		if(args.length == 5) giveItem(sender, target, args[3], Integer.parseInt(args[4]));
 	}
 
 	private void handleEdit(CommandSender sender, String[] args) {
@@ -200,10 +206,38 @@ public class Commands implements CommandExecutor {
 		}
 		else if(type.equalsIgnoreCase("kill_amount")) {
 			if(!nbtItem.getString("CustomItemID").equals("destroyer")) return;
-			nbtItem.setInteger("KillAmount", amount);
-			inventory.setItemInMainHand(plugin.armorConstructor.createDestroyerArmor(nbtItem.getItem()));
+			inventory.setItemInMainHand(new DestroyerArmor(hand, amount).getItem());
 			resetItemMessage(sender, target, hand);
 		}
+	}
+
+	public void giveItem(CommandSender sender, Player target, String type, String slot, Integer amount) {
+		ItemStack item =  ArmorType.getItem(getSetType(type), typeFromString(slot), amount);
+		PlayerInventory inventory = target.getInventory();
+		if (inventory.firstEmpty() == -1) target.getWorld().dropItem(target.getLocation().add(0.0D, 0.5D, 0.0D), item);
+		else inventory.addItem(item);
+		giveMessage(sender, target, 1, item);
+	}
+
+	public void giveItem(CommandSender sender, Player target, String type, Integer amount) {
+		MaterialType mType = MaterialType.getMaterialType(type);
+		ItemStack item = MaterialType.getItem(mType, amount);
+		PlayerInventory inventory = target.getInventory();
+		if (List.of(plugin.noStackMaterials).contains(mType)) {
+			for (int x = 0; x < amount; x++) {
+				item = MaterialType.getItem(mType, amount);
+				if (inventory.firstEmpty() == -1) target.getWorld().dropItem(target.getLocation().add(0.0D, 0.5D, 0.0D), item);
+				else inventory.addItem(item);
+			}
+		}
+		else if (inventory.firstEmpty() == -1) target.getWorld().dropItem(target.getLocation().add(0.0D, 0.5D, 0.0D), item);
+		else inventory.addItem(item);
+		giveMessage(sender, target, amount, item);
+	}
+
+	private void giveMessage(CommandSender sender, Player target, Integer n, ItemStack i) {
+		sendColoredMessage(target, MessageFormat.format("{0} Received {1}x {2}&e.", prefix(), n, i.getItemMeta().getDisplayName()));
+		sendColoredMessage(sender, MessageFormat.format("{0} Gave {1} {2}x {3}&e.", prefix(), target.getName(), n, i.getItemMeta().getDisplayName()));
 	}
 
 	@Override

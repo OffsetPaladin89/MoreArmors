@@ -1,5 +1,8 @@
 package me.offsetpaladin89.MoreArmors.enums;
 
+import me.offsetpaladin89.MoreArmors.items.*;
+import org.bukkit.inventory.ItemStack;
+
 public enum ArmorType {
     EMERALD, END, EXPERIENCE, MINER, NETHER, SEA_GREED, SPEEDSTER, TITAN, DESTROYER;
 
@@ -31,4 +34,18 @@ public enum ArmorType {
 	        case DESTROYER -> "Destroyer";
         };
     }
+	
+	public static ItemStack getItem(ArmorType type, SlotType slot, int amount) {
+		return switch(type) {
+			case EMERALD -> new EmeraldArmor(slot, amount).getItem();
+			case END -> new EndArmor(slot).getItem();
+			case EXPERIENCE -> new ExperienceArmor(slot).getItem();
+			case MINER -> new MinerArmor(slot).getItem();
+			case NETHER -> new NetherArmor(slot).getItem();
+			case SEA_GREED -> new SeaGreedArmor(slot).getItem();
+			case SPEEDSTER -> new SpeedsterArmor(slot).getItem();
+			case TITAN -> new TitanArmor(slot).getItem();
+			case DESTROYER -> new DestroyerArmor(slot, amount).getItem();
+		};
+	}
 }

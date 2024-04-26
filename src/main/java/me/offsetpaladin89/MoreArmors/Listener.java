@@ -2,8 +2,7 @@ package me.offsetpaladin89.MoreArmors;
 
 import com.cryptomorin.xseries.XSound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
-import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
-import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.items.EmeraldArmor;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -75,20 +74,16 @@ public class Listener implements org.bukkit.event.Listener {
 					p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 60, 1, false, false));
 					p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 60, 1, false, false));
 				} else if (!plugin.isAirOrNull(inv.getHelmet())) {
-					NBTItem nbt = new NBTItem(inv.getHelmet());
-					if (nbt.getString("CustomItemID").equals("destroyer") && config.getBoolean("destroyerarmor.enabled")) p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 60, 0, false, false));
-				} else {
 					ItemStack i = inv.getHelmet();
-					if (!plugin.isAirOrNull(i)) {
-						NBTItem nbt = new NBTItem(i);
-						String cID = nbt.getString("CustomItemID");
-						if (cID.equals("nether") || cID.equals("end")) {
-							ItemMeta im = i.getItemMeta();
-							im.removeAttributeModifier(Attribute.GENERIC_MAX_HEALTH);
-							i.setItemMeta(im);
-							inv.setHelmet(i);
-						}
+					NBTItem nbt = new NBTItem(i);
+					String cID = nbt.getString("CustomItemID");
+					if (cID.equals("nether") || cID.equals("end")) {
+						ItemMeta im = i.getItemMeta();
+						im.removeAttributeModifier(Attribute.GENERIC_MAX_HEALTH);
+						i.setItemMeta(im);
+						inv.setHelmet(i);
 					}
+					else if(cID.equalsIgnoreCase("destroyer") && config.getBoolean("destroyerarmor.enabled")) p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 60, 0, false, false));
 				}
 			}
 
@@ -205,7 +200,7 @@ public class Listener implements org.bukkit.event.Listener {
 						currentItem = nbtItem.getItem();
 						int emeraldAmount = nbtItem.getInteger("EmeraldCount");
 						EquipmentSlot slot = currentItem.getType().getEquipmentSlot();
-						inventory.setItem(i, new EmeraldArmor(currentItem, SlotType.matchSlot(slot), emeraldAmount).getItem());
+						inventory.setItem(i, new EmeraldArmor(currentItem, emeraldAmount).getItem());
 					}
 				}
 			}

@@ -2,7 +2,6 @@ package me.offsetpaladin89.MoreArmors;
 
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
-import me.offsetpaladin89.MoreArmors.items.Armors;
 import me.offsetpaladin89.MoreArmors.items.Materials;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -13,12 +12,10 @@ public class RegisterRecipes {
 
 	private final Main plugin;
 	private final Materials materials;
-	private final Armors armors;
 
 	public RegisterRecipes(Main plugin) {
 		this.plugin = plugin;
 		this.materials = plugin.materials;
-		this.armors = plugin.armorSets;
 	}
 
 	/** Registers all the armor sets in MoreArmors. */
