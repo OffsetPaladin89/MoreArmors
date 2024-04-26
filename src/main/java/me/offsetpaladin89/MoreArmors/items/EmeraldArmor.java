@@ -76,7 +76,7 @@ public class EmeraldArmor extends Armor {
 	}
 
 	public ItemStack getItem() {
-		ItemStack item = getBaseItem(getLore());
+		ItemStack item = getBaseItem(getLore(), "emerald");
 		LeatherArmorMeta itemMeta = (LeatherArmorMeta) item.getItemMeta();
 		itemMeta.setColor(Color.LIME);
 		int healthBoost = emeraldAmount / 50 > 5 ? 10 : emeraldAmount / 50 * 2;

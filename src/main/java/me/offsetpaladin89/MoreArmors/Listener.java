@@ -2,6 +2,7 @@ package me.offsetpaladin89.MoreArmors;
 
 import com.cryptomorin.xseries.XSound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import me.offsetpaladin89.MoreArmors.items.DestroyerArmor;
 import me.offsetpaladin89.MoreArmors.items.EmeraldArmor;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -196,11 +197,7 @@ public class Listener implements org.bukkit.event.Listener {
 				NBTItem nbtItem = new NBTItem(currentItem);
 				if (nbtItem.getString("CustomItemID").equals("emerald") && config.getBoolean("emeraldarmor.enabled")) {
 					if (event.getBlock().getType().equals(Material.EMERALD_ORE) || event.getBlock().getType().equals(Material.DEEPSLATE_EMERALD_ORE)) {
-						nbtItem.setInteger("EmeraldCount", nbtItem.getInteger("EmeraldCount") + 1);
-						currentItem = nbtItem.getItem();
-						int emeraldAmount = nbtItem.getInteger("EmeraldCount");
-						EquipmentSlot slot = currentItem.getType().getEquipmentSlot();
-						inventory.setItem(i, new EmeraldArmor(currentItem, emeraldAmount).getItem());
+						inventory.setItem(i, new EmeraldArmor(currentItem, nbtItem.getInteger("EmeraldCount") + 1).getItem());
 					}
 				}
 			}
@@ -294,9 +291,7 @@ public class Listener implements org.bukkit.event.Listener {
 					if (!plugin.isAirOrNull(currentItem)) {
 						NBTItem nbtItem = new NBTItem(currentItem);
 						if (nbtItem.getString("CustomItemID").equals("destroyer") && config.getBoolean("destroyerarmor.enabled")) {
-							nbtItem.setInteger("KillAmount", nbtItem.getInteger("KillAmount") + 1);
-							currentItem = nbtItem.getItem();
-							inventory.setItem(i, plugin.armorConstructor.createDestroyerArmor(currentItem));
+							inventory.setItem(i, new DestroyerArmor(currentItem, nbtItem.getInteger("KillAmount") + 1).getItem());
 						}
 					}
 				}

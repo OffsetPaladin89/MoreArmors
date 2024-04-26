@@ -74,7 +74,7 @@ public class EndArmor extends Armor {
 	}
 
 	public ItemStack getItem() {
-		ItemStack item = getBaseItem(getLore());
+		ItemStack item = getBaseItem(getLore(), "end");
 		ItemMeta itemMeta = item.getItemMeta();
 		LeatherArmorMeta leatherItemMeta;
 		if (item.getType().equals(Material.PLAYER_HEAD)) SkullUtils.applySkin(itemMeta, "fee4eabeb72f19088ade78266191c8f77398cc0d80cdd27563a5d66b71912b28");

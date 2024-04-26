@@ -55,7 +55,7 @@ public class MinerArmor extends Armor {
 	}
 
 	public ItemStack getItem() {
-		ItemStack item = getBaseItem(getLore());
+		ItemStack item = getBaseItem(getLore(), "miner");
 		LeatherArmorMeta itemMeta = (LeatherArmorMeta) item.getItemMeta();
 		itemMeta.setColor(Color.GRAY);
 		item.setItemMeta(itemMeta);

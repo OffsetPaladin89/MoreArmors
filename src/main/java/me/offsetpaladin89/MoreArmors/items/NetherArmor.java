@@ -72,7 +72,7 @@ public class NetherArmor extends Armor {
 	}
 
 	public ItemStack getItem() {
-		ItemStack item = getBaseItem(getLore());
+		ItemStack item = getBaseItem(getLore(), "nether");
 		ItemMeta itemMeta = item.getItemMeta();
 		LeatherArmorMeta leatherItemMeta;
 		if (item.getType().equals(Material.PLAYER_HEAD)) SkullUtils.applySkin(itemMeta, "cdf74e323ed41436965f5c57ddf2815d5332fe999e68fbb9d6cf5c8bd4139f");

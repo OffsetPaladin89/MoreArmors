@@ -9,6 +9,11 @@ import me.offsetpaladin89.MoreArmors.Main;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
+import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.items.DestroyerArmor;
+import me.offsetpaladin89.MoreArmors.items.EndArmor;
+import me.offsetpaladin89.MoreArmors.items.NetherArmor;
+import me.offsetpaladin89.MoreArmors.items.SeaGreedArmor;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -67,10 +72,10 @@ public record Inventories(Main plugin) {
 
 		craftableItems.addItem(new GuiItem(armorItem(createPotion(PotionType.LONG_SWIFTNESS), "speedster", Rarity.RARE), event -> armorCraftingInventory(p, ArmorType.SPEEDSTER).show(p)));
 		craftableItems.addItem(new GuiItem(armorItem(new ItemStack(Material.GOLDEN_PICKAXE), "miner", Rarity.UNCOMMON), event -> armorCraftingInventory(p, ArmorType.MINER).show(p)));
-		craftableItems.addItem(new GuiItem(armorItem(plugin.armorSets.NetherArmor(EquipmentSlot.HEAD), "nether", Rarity.LEGENDARY), event -> armorCraftingInventory(p, ArmorType.NETHER).show(p)));
-		craftableItems.addItem(new GuiItem(armorItem(plugin.armorSets.EndArmor(EquipmentSlot.HEAD), "end", Rarity.LEGENDARY), event -> armorCraftingInventory(p, ArmorType.END).show(p)));
-		craftableItems.addItem(new GuiItem(armorItem(plugin.armorSets.SeaGreedArmor(EquipmentSlot.HEAD), "sea greed", Rarity.MYTHIC), event -> armorCraftingInventory(p, ArmorType.SEA_GREED).show(p)));
-		craftableItems.addItem(new GuiItem(armorItem(plugin.armorSets.DestroyerArmor(EquipmentSlot.HEAD, 0), "destroyer", Rarity.MYTHIC), event -> armorCraftingInventory(p, ArmorType.DESTROYER).show(p)));
+		craftableItems.addItem(new GuiItem(armorItem(new NetherArmor(SlotType.HELMET).getItem(), "nether", Rarity.LEGENDARY), event -> armorCraftingInventory(p, ArmorType.NETHER).show(p)));
+		craftableItems.addItem(new GuiItem(armorItem(new EndArmor(SlotType.HELMET).getItem(), "end", Rarity.LEGENDARY), event -> armorCraftingInventory(p, ArmorType.END).show(p)));
+		craftableItems.addItem(new GuiItem(armorItem(new SeaGreedArmor(SlotType.HELMET).getItem(), "sea greed", Rarity.MYTHIC), event -> armorCraftingInventory(p, ArmorType.SEA_GREED).show(p)));
+		craftableItems.addItem(new GuiItem(armorItem(new DestroyerArmor(SlotType.HELMET, 0).getItem(), "destroyer", Rarity.MYTHIC), event -> armorCraftingInventory(p, ArmorType.DESTROYER).show(p)));
 		craftableItems.addItem(new GuiItem(materialItem(), event -> materialCraftingInventory(p).show(p)));
 		craftableItems.align(OutlinePane.Alignment.CENTER);
 
@@ -159,7 +164,7 @@ public record Inventories(Main plugin) {
 		return g;
 	}
 
-	public ChestGui craft(Player p, ArmorType type, EquipmentSlot slot) {
+	public ChestGui craft(Player p, ArmorType type, SlotType slot) {
 		ChestGui g = new ChestGui(4, plugin.convertColoredString("&0Crafting: " + getArmor(type, slot).getItemMeta().getDisplayName()));
 
 		g.addPane(background(3));
@@ -172,16 +177,16 @@ public record Inventories(Main plugin) {
 		g.setOnGlobalClick(event -> event.setCancelled(true));
 
 		OutlinePane craftableItems = new OutlinePane(1, 1, 7, 1);
-		craftableItems.addItem(new GuiItem(getArmor(type, EquipmentSlot.HEAD), event -> {
+		craftableItems.addItem(new GuiItem(getArmor(type, SlotType.HELMET), event -> {
 
 		}));
-		craftableItems.addItem(new GuiItem(getArmor(type, EquipmentSlot.CHEST), event -> {
+		craftableItems.addItem(new GuiItem(getArmor(type, SlotType.CHESTPLATE), event -> {
 
 		}));
-		craftableItems.addItem(new GuiItem(getArmor(type, EquipmentSlot.LEGS), event -> {
+		craftableItems.addItem(new GuiItem(getArmor(type, SlotType.LEGGINGS), event -> {
 
 		}));
-		craftableItems.addItem(new GuiItem(getArmor(type, EquipmentSlot.FEET), event -> {
+		craftableItems.addItem(new GuiItem(getArmor(type, SlotType.BOOTS), event -> {
 
 		}));
 		craftableItems.setGap(1);
@@ -228,18 +233,8 @@ public record Inventories(Main plugin) {
 
 	}
 
-	private ItemStack getArmor(ArmorType type, EquipmentSlot slot) {
-		ItemStack i = switch(type) {
-			case EMERALD -> plugin.armorSets.EmeraldArmor(slot, 0);
-			case END -> plugin.armorSets.EndArmor(slot);
-			case EXPERIENCE -> plugin.armorSets.ExperienceArmor(slot);
-			case MINER -> plugin.armorSets.MinerArmor(slot);
-			case NETHER -> plugin.armorSets.NetherArmor(slot);
-			case SEA_GREED -> plugin.armorSets.SeaGreedArmor(slot);
-			case SPEEDSTER -> plugin.armorSets.SpeedsterArmor(slot);
-			case TITAN -> plugin.armorSets.TitanArmor(slot);
-			case DESTROYER -> plugin.armorSets.DestroyerArmor(slot, 0);
-		};
+	private ItemStack getArmor(ArmorType type, SlotType slot) {
+		ItemStack i = ArmorType.getItem(type, slot, 0);
 		ItemMeta im = i.getItemMeta();
 		ArrayList<String> lore = (ArrayList<String>) im.getLore();
 		addLore(lore, "");

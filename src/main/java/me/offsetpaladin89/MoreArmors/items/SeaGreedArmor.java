@@ -76,7 +76,7 @@ public class SeaGreedArmor extends Armor {
 	}
 
 	public ItemStack getItem() {
-		ItemStack item = getBaseItem(getLore());
+		ItemStack item = getBaseItem(getLore(), "seagreed");
 		ItemMeta itemMeta = item.getItemMeta();
 		LeatherArmorMeta leatherItemMeta;
 		if (item.getType().equals(Material.PLAYER_HEAD)) SkullUtils.applySkin(itemMeta, "935541523f14c78d8de98cc296c798f0b867ba85344ed77f6dae12455a174");

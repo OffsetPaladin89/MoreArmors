@@ -60,7 +60,7 @@ public class SpeedsterArmor extends Armor {
 	}
 
 	public ItemStack getItem() {
-		ItemStack item = getBaseItem(getLore());
+		ItemStack item = getBaseItem(getLore(), "speedster");
 		LeatherArmorMeta itemMeta = (LeatherArmorMeta) item.getItemMeta();
 		itemMeta.setColor(Color.WHITE);
 		itemMeta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, new AttributeModifier(UUID.randomUUID(), "movementSpeed", 0.04, AttributeModifier.Operation.ADD_NUMBER, SlotType.matchSlot(slot)));

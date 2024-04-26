@@ -55,7 +55,7 @@ public class ExperienceArmor extends Armor {
 	}
 
 	public ItemStack getItem() {
-		ItemStack item = getBaseItem(getLore());
+		ItemStack item = getBaseItem(getLore(), "experience");
 		LeatherArmorMeta itemMeta = (LeatherArmorMeta) item.getItemMeta();
 		itemMeta.setColor(Color.BLUE);
 		item.setItemMeta(itemMeta);

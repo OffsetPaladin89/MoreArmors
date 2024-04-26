@@ -44,7 +44,7 @@ public class Armor {
 		return nbtItem;
 	}
 
-	protected ItemStack getBaseItem(ArrayList<String> lore) {
+	protected ItemStack getBaseItem(ArrayList<String> lore, String id) {
 		ItemMeta itemMeta = item.getItemMeta();
 		itemMeta.setDisplayName(name);
 		itemMeta.setLore(lore);
@@ -53,7 +53,7 @@ public class Armor {
 		itemMeta.removeAttributeModifier(SlotType.matchSlot(slot));
 		itemMeta.addAttributeModifier(Attribute.GENERIC_ARMOR, new AttributeModifier(UUID.randomUUID(), "armor", armor, AttributeModifier.Operation.ADD_NUMBER, SlotType.matchSlot(slot)));
 		item.setItemMeta(itemMeta);
-		return getNBTItem("emerald").getItem();
+		return getNBTItem(id).getItem();
 	}
 
 	protected void addFooter(ArrayList<String> lore) {

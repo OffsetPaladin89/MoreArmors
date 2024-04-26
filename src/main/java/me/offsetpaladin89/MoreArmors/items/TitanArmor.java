@@ -60,7 +60,7 @@ public class TitanArmor extends Armor {
 	}
 
 	public ItemStack getItem() {
-		ItemStack item = getBaseItem(getLore());
+		ItemStack item = getBaseItem(getLore(), "titan");
 		ItemMeta itemMeta = item.getItemMeta();
 		itemMeta.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, new AttributeModifier(UUID.randomUUID(), "maxHealth", 2, AttributeModifier.Operation.ADD_NUMBER, SlotType.matchSlot(slot)));
 		item.setItemMeta(itemMeta);

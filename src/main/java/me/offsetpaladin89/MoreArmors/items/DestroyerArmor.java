@@ -102,7 +102,7 @@ public class DestroyerArmor extends Armor {
 	}
 
 	public ItemStack getItem() {
-		ItemStack item = getBaseItem(getLore(slot));
+		ItemStack item = getBaseItem(getLore(slot), "destroyer");
 		ItemMeta itemMeta = item.getItemMeta();
 		LeatherArmorMeta leatherItemMeta;
 		if (item.getType().equals(Material.PLAYER_HEAD)) SkullUtils.applySkin(itemMeta, "ea0076ab9a5c0ed8ebd08bb18137321df0fdc8abc7499465cc32221ca192ad43");

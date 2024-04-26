@@ -5,7 +5,6 @@ import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
 import me.offsetpaladin89.MoreArmors.commands.Commands;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.fonts.GrayFont;
-import me.offsetpaladin89.MoreArmors.handlers.CraftHandler;
 import me.offsetpaladin89.MoreArmors.handlers.DamageHandler;
 import me.offsetpaladin89.MoreArmors.handlers.HologramHandler;
 import me.offsetpaladin89.MoreArmors.inventories.Inventories;
@@ -46,7 +45,6 @@ public class Main extends JavaPlugin {
 	public RegisterRecipes recipeRegistry;
 
 	public void onEnable() {
-		new CraftHandler(this);
 		new DamageHandler(this);
 		new CommandCompleter(this);
 
