@@ -14,9 +14,9 @@ public enum PermissionType {
 	GUI;
 
 	/**
-	 * Returns the String interpretation of the permission.
-	 * @param type the permission type
-	 * @return the String interpretation of the permission
+	 * Returns the String interpretation of the PermissionType type.
+	 * @param type the PermissionType to get the String interpretation of
+	 * @return the String interpretation of the PermissionType type
 	 */
 	public static String getPermission(PermissionType type) {
 		return switch (type) {

@@ -2,6 +2,8 @@ package me.offsetpaladin89.MoreArmors.handlers;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.Main;
+import me.offsetpaladin89.MoreArmors.enums.ArmorType;
+import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.World.Environment;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Arrow;
@@ -11,6 +13,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.PlayerInventory;
+
+import static me.offsetpaladin89.MoreArmors.Main.matchingCustomItem;
+import static me.offsetpaladin89.MoreArmors.enums.ArmorType.DESTROYER;
+import static me.offsetpaladin89.MoreArmors.enums.ArmorType.NETHER;
+import static me.offsetpaladin89.MoreArmors.enums.SlotType.*;
 
 public class DamageHandler implements Listener {
 
@@ -41,31 +48,34 @@ public class DamageHandler implements Listener {
 		}
 	}
 
-	public Float destroyerDamage(Player p) {
-		if(!plugin.config.getConfig("config").getBoolean("destroyerarmor.enabled")) return 0f;
-		PlayerInventory inv = p.getInventory();
-		return (plugin.matchingCustomItem(inv.getHelmet(), "destroyer") ? (new NBTItem(inv.getHelmet()).getInteger("KillAmount") / 100 > 10 ? 10f : new NBTItem(inv.getHelmet()).getInteger("KillAmount") / 100) : 0f) +
-				(plugin.matchingCustomItem(inv.getChestplate(), "destroyer") ? (new NBTItem(inv.getChestplate()).getInteger("KillAmount") / 100 > 10 ? 10f : new NBTItem(inv.getChestplate()).getInteger("KillAmount") / 100) : 0f) +
-				(plugin.matchingCustomItem(inv.getLeggings(), "destroyer") ? (new NBTItem(inv.getLeggings()).getInteger("KillAmount") / 100 > 10 ? 10f : new NBTItem(inv.getLeggings()).getInteger("KillAmount") / 100) : 0f) +
-				(plugin.matchingCustomItem(inv.getBoots(), "destroyer") ? (new NBTItem(inv.getBoots()).getInteger("KillAmount") / 100 > 10 ? 10f : new NBTItem(inv.getBoots()).getInteger("KillAmount") / 100) : 0f);
+	private Float getDestroyerBonus(PlayerInventory i, SlotType type) {
+		NBTItem nbtItem = new NBTItem(getItem(i, type));
+		int killAmount = nbtItem.getInteger("KillAmount");
+		return killAmount / 100 > 10 ? 10f : killAmount / 100;
 	}
 
-    public Float netherDamage(Player p, Environment env) {
-        PlayerInventory inventory = p.getInventory();
-        return env.equals(Environment.NETHER) && plugin.config.getConfig("config").getBoolean("netherarmor.enabled") ? (plugin.IsFullCustomSet("nether", inventory) ? 1f : 0f) +
-                (plugin.matchingCustomItem(inventory.getHelmet(), "nether") ? 0.1f : 0f) +
-                (plugin.matchingCustomItem(inventory.getChestplate(), "nether") ? 0.1f : 0f) +
-                (plugin.matchingCustomItem(inventory.getLeggings(), "nether") ? 0.1f : 0f) +
-                (plugin.matchingCustomItem(inventory.getBoots(), "nether") ? 0.1f : 0f) + 1f : 1f;
-    }
+	private Float getSlotDamage(PlayerInventory i, ArmorType armorType, SlotType slotType) {
+		return switch (armorType) {
+			case DESTROYER -> matchingCustomItem(getItem(i, slotType), armorType) ? getDestroyerBonus(i, slotType) : 0f;
+			case NETHER, END -> matchingCustomItem(getItem(i, slotType), armorType) ? 0.1f : 0f;
+			default -> 0f;
+		};
+	}
 
-	public Float endDamage(Player p, Environment env) {
-		PlayerInventory inventory = p.getInventory();
-		return env.equals(Environment.THE_END) && plugin.config.getConfig("config").getBoolean("endarmor.enabled") ? (plugin.IsFullCustomSet("end", inventory) ? 1f : 0f) +
-				(plugin.matchingCustomItem(inventory.getHelmet(), "end") ? 0.1f : 0f) +
-				(plugin.matchingCustomItem(inventory.getChestplate(), "end") ? 0.1f : 0f) +
-				(plugin.matchingCustomItem(inventory.getLeggings(), "end") ? 0.1f : 0f) +
-				(plugin.matchingCustomItem(inventory.getBoots(), "end") ? 0.1f : 0f) + 1f : 1f;
+	private Float destroyerDamage(Player p) {
+		PlayerInventory i = p.getInventory();
+		return getSlotDamage(i, DESTROYER, HELMET)
+				+ getSlotDamage(i, DESTROYER, CHESTPLATE)
+				+ getSlotDamage(i, DESTROYER, LEGGINGS)
+				+ getSlotDamage(i, DESTROYER, BOOTS);
+	}
+
+	private Float netherDamage(Player p) {
+		PlayerInventory i = p.getInventory();
+		return getSlotDamage(i, NETHER, HELMET)
+				+ getSlotDamage(i, NETHER, CHESTPLATE)
+				+ getSlotDamage(i, NETHER, LEGGINGS)
+				+ getSlotDamage(i, NETHER, BOOTS);
 	}
 
 	public Float seaGreedDamage(Player p) {

@@ -3,6 +3,7 @@ package me.offsetpaladin89.MoreArmors;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
 import me.offsetpaladin89.MoreArmors.commands.Commands;
+import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.fonts.GrayFont;
 import me.offsetpaladin89.MoreArmors.handlers.DamageHandler;
@@ -102,11 +103,11 @@ public class Main extends JavaPlugin {
 		return isAirOrNull(new ItemStack[]{inventory.getHelmet(), inventory.getChestplate(), inventory.getLeggings(), inventory.getBoots()});
 	}
 
-	public Boolean matchingCustomItem(ItemStack item, String itemID) {
-		return !isAirOrNull(item) && new NBTItem(item).getString("CustomItemID").equals(itemID);
+	public static Boolean matchingCustomItem(ItemStack item, ArmorType itemID) {
+		return !isAirOrNull(item) && new NBTItem(item).getString("CustomItemID").equalsIgnoreCase(ArmorType.getSetName(itemID));
 	}
 
-	public boolean isAirOrNull(ItemStack item) {
+	public static boolean isAirOrNull(ItemStack item) {
 		return item == null || item.getType().equals(Material.AIR);
 	}
 

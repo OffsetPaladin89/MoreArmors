@@ -52,9 +52,9 @@ public enum ArmorType {
     }
 
 	/**
-	 * Returns the name of the specified ArmorType.
-	 * @param type the ArmorType to search for
-	 * @return the name of the specified ArmorType
+	 * Returns the String interpretation of the specified ArmorType.
+	 * @param type the ArmorType to get the String interpretation of
+	 * @return the String interpretation of the specified ArmorType
 	 */
     public static String getSetName(ArmorType type) {
         return switch(type) {
@@ -71,11 +71,11 @@ public enum ArmorType {
     }
 
 	/**
-	 * Returns the base item with the specified ArmorType, SlotType and an amount.
+	 * Returns the base ItemStack with the specified ArmorType, SlotType and an Integer amount.
 	 * @param type the ArmorType to get the item for
 	 * @param slot the SlotType to get the item for
-	 * @param amount the special amount, this argument is optional/can be 0
-	 * @return the base item with the specified ArmorType, SlotType and an amount
+	 * @param amount the special Integer amount, this argument is optional/can be 0
+	 * @return the base ItemStack with the specified ArmorType, SlotType and an Integer amount
 	 */
 	public static ItemStack getItem(ArmorType type, SlotType slot, int amount) {
 		return switch(type) {

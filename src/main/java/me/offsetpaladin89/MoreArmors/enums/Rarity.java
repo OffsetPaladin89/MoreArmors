@@ -1,8 +1,42 @@
 package me.offsetpaladin89.MoreArmors.enums;
 
 public enum Rarity {
-    COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, MYTHIC, DIVINE, SPECIAL, ADMIN, DEVELOPER;
 
+    /** Common Rarity */
+    COMMON,
+
+    /** Uncommon Rarity */
+    UNCOMMON,
+
+    /** Rare Rarity */
+    RARE,
+
+    /** Epic Rarity */
+    EPIC,
+
+    /** Legendary Rarity */
+    LEGENDARY,
+
+    /** Mythic Rarity */
+    MYTHIC,
+
+    /** Divine Rarity */
+    DIVINE,
+
+    /** Special Rarity */
+    SPECIAL,
+
+    /** Admin Rarity */
+    ADMIN,
+
+    /** Developer Rarity */
+    DEVELOPER;
+
+    /**
+     * Returns the String color for a specified Integer rarity.
+     * @param rarity the Integer rarity to get the String color of
+     * @return the String color for a specified Integer rarity
+     */
     public static String getColorRarity(Integer rarity) {
         return switch (rarity) {
             case 1 -> "&f";
@@ -18,6 +52,11 @@ public enum Rarity {
         };
     }
 
+    /**
+     * Returns the String color for a specified Rarity.
+     * @param rarity the Rarity to get the String color of
+     * @return the String color for a specified Rarity
+     */
     public static String getColorRarity(Rarity rarity) {
         return switch (rarity) {
             case COMMON -> "&f";
@@ -33,6 +72,11 @@ public enum Rarity {
         };
     }
 
+    /**
+     * Returns the Rarity for a specified Integer rarity.
+     * @param rarity the Integer rarity to get the Rarity of
+     * @return the Rarity for a specified Integer rarity
+     */
     public static Rarity getRarity(Integer rarity) {
         return switch (rarity) {
             case 1 -> COMMON;

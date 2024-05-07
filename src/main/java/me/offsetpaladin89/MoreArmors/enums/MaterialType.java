@@ -5,30 +5,68 @@ import org.bukkit.inventory.ItemStack;
 import static me.offsetpaladin89.MoreArmors.items.Materials.*;
 
 public enum MaterialType {
+
+	/** Compacted Blaze Rod Material Type */
 	COMPACTED_BLAZE_ROD,
+
+	/** Compacted Cobblestone Material Type */
 	COMPACTED_COBBLESTONE,
+
+	/** Compacted End Stone Material Type */
 	COMPACTED_END_STONE,
+
+	/** Compacted Eye of Ender Material Type */
 	COMPACTED_EYE_OF_ENDER,
+
+	/** Compacted Soul Sand Material Type */
 	COMPACTED_SOUL_SAND,
+
+	/** Compacted Sugar Cane Material Type */
 	COMPACTED_SUGAR_CANE,
+
+	/** Compacted Nether Crown Material Type */
 	NETHER_CROWN,
+
+	/** Compacted Diamond Material Type */
 	COMPACTED_DIAMOND,
+
+	/** Compacted Diamond Block Material Type */
 	COMPACTED_DIAMOND_BLOCK,
+
+	/** Compacted Gold Material Type */
 	COMPACTED_GOLD,
+
+	/** Compacted Gold Block Material Type */
 	COMPACTED_GOLD_BLOCK,
+
+	/** Compacted Prismarine Material Type */
 	COMPACTED_PRISMARINE,
+
+	/** Compacted Redstone Material Type */
 	COMPACTED_REDSTONE,
+
+	/** Compacted Iron Material Type */
 	COMPACTED_IRON,
+
+	/** Compacted Iron Block Material Type */
 	COMPACTED_IRON_BLOCK,
+
+	/** Star Dust Material Type */
 	STAR_DUST,
+
+	/** Machine Part Material Type */
 	MACHINE_PART,
+
+	/** Energy Cell Material Type */
 	ENERGY_CELL,
+
+	/** Machine Core Material Type */
 	MACHINE_CORE;
 
 	/**
-	 * Returns the MaterialType depending on a string.
-	 * @param s the string to get the MaterialType 
-	 * @return
+	 * Returns the MaterialType depending on a String s.
+	 * @param s the String to get the MaterialType
+	 * @return the MaterialType depending on a String s
 	 */
 	public static MaterialType getMaterialType(String s) {
 		return switch (s.toLowerCase()) {
@@ -55,6 +93,12 @@ public enum MaterialType {
 		};
 	}
 
+	/**
+	 * Returns the ItemStack of the specified MaterialType and Integer amount.
+	 * @param type the MaterialType of the item
+	 * @param amount the Integer amount of the item
+	 * @return the ItemStack of the specified MaterialType and Integer amount
+	 */
 	public static ItemStack getItem(MaterialType type, int amount) {
 		return switch(type) {
 			case COMPACTED_BLAZE_ROD -> CompactedBlazeRod(amount);
