@@ -4,7 +4,7 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.Main;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
-import org.bukkit.World.Environment;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
@@ -15,8 +15,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.PlayerInventory;
 
 import static me.offsetpaladin89.MoreArmors.Main.matchingCustomItem;
-import static me.offsetpaladin89.MoreArmors.enums.ArmorType.DESTROYER;
-import static me.offsetpaladin89.MoreArmors.enums.ArmorType.NETHER;
+import static me.offsetpaladin89.MoreArmors.enums.ArmorType.*;
 import static me.offsetpaladin89.MoreArmors.enums.SlotType.*;
 
 public class DamageHandler implements Listener {
@@ -34,7 +33,7 @@ public class DamageHandler implements Listener {
 		if(event.getDamager() instanceof Player && event.getEntity() instanceof LivingEntity) {
 			Player player = (Player) event.getDamager();
             event.setDamage(event.getDamage() + destroyerDamage(player));
-            event.setDamage(event.getDamage() * netherDamage(player, player.getWorld().getEnvironment()) * seaGreedDamage(player) * endDamage(player, player.getWorld().getEnvironment()));
+			event.setDamage(event.getDamage() * netherDamage(player) * seaGreedDamage(player) * endDamage(player));
             if(config.getBoolean("damageindicators")) plugin.hologramHandler.createDamageHologram(player, player.getLocation(), (LivingEntity) event.getEntity(), 20L, event.getDamage());
 		}
 		if(event.getDamager() instanceof Arrow && event.getEntity() instanceof LivingEntity) {
@@ -42,7 +41,7 @@ public class DamageHandler implements Listener {
 			if(damager.getShooter() instanceof Player) {
 				Player player = (Player) damager.getShooter();
                 event.setDamage(event.getDamage() + destroyerDamage(player));
-                event.setDamage(event.getDamage() * netherDamage(player, player.getWorld().getEnvironment()) * seaGreedDamage(player) * endDamage(player, player.getWorld().getEnvironment()));
+                event.setDamage(event.getDamage() * netherDamage(player) * seaGreedDamage(player) * endDamage(player));
 				if(config.getBoolean("damageindicators")) plugin.hologramHandler.createDamageHologram(player, damager.getLocation(), (LivingEntity) event.getEntity(), 20L, event.getDamage());
 			}
 		}
@@ -70,16 +69,31 @@ public class DamageHandler implements Listener {
 				+ getSlotDamage(i, DESTROYER, BOOTS);
 	}
 
+	private Float endDamage(Player p) {
+		PlayerInventory i = p.getInventory();
+		if(!p.getWorld().getEnvironment().equals(World.Environment.THE_END)) return 1f;
+		if(!plugin.config.getConfig("config").getBoolean("endarmor.enabled")) return 1f;
+		return 1 + getSlotDamage(i, END, HELMET)
+				+ getSlotDamage(i, END, CHESTPLATE)
+				+ getSlotDamage(i, END, LEGGINGS)
+				+ getSlotDamage(i, END, BOOTS);
+	}
+
 	private Float netherDamage(Player p) {
 		PlayerInventory i = p.getInventory();
-		return getSlotDamage(i, NETHER, HELMET)
+		if(!p.getWorld().getEnvironment().equals(World.Environment.NETHER)) return 1f;
+		if(!plugin.config.getConfig("config").getBoolean("netherarmor.enabled")) return 1f;
+		return 1 + getSlotDamage(i, NETHER, HELMET)
 				+ getSlotDamage(i, NETHER, CHESTPLATE)
 				+ getSlotDamage(i, NETHER, LEGGINGS)
 				+ getSlotDamage(i, NETHER, BOOTS);
 	}
 
-	public Float seaGreedDamage(Player p) {
+	private Float seaGreedDamage(Player p) {
 		PlayerInventory inventory = p.getInventory();
-		return p.isInWater() && plugin.config.getConfig("config").getBoolean("seagreedarmor.enabled") ? (plugin.IsFullCustomSet("seagreed", inventory) ? 1f : 0f) + 1f : 1f;
+		if(!p.isInWater()) return 1f;
+		if(!plugin.config.getConfig("config").getBoolean("seagreedarmor.enabled")) return 1f;
+		if(!plugin.IsFullCustomSet("seagreed", inventory)) return 1f;
+		return 2f;
 	}
 }
