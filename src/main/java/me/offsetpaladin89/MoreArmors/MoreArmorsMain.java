@@ -1,5 +1,9 @@
 package me.offsetpaladin89.MoreArmors;
 
+import com.cryptomorin.xseries.profiles.builder.ProfileInstruction;
+import com.cryptomorin.xseries.profiles.builder.XSkull;
+import com.cryptomorin.xseries.profiles.objects.ProfileInputType;
+import com.cryptomorin.xseries.profiles.objects.Profileable;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.armors.Armors;
 import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
@@ -18,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -116,6 +121,10 @@ public class MoreArmorsMain extends JavaPlugin {
 
 	public boolean isAirOrNull(ItemStack item) {
 		return item == null || item.getType().equals(Material.AIR);
+	}
+
+	public ProfileInstruction<ItemMeta> getSkull(ItemMeta iMeta, String skullID) {
+		return XSkull.of(iMeta).profile(Profileable.of(ProfileInputType.TEXTURE_HASH.getProfile(skullID)));
 	}
 
 	public boolean isAirOrNull(ItemStack[] items) {

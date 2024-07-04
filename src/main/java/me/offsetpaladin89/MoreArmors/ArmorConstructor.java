@@ -1,6 +1,8 @@
 package me.offsetpaladin89.MoreArmors;
 
-import com.cryptomorin.xseries.SkullUtils;
+import com.cryptomorin.xseries.profiles.builder.XSkull;
+import com.cryptomorin.xseries.profiles.objects.ProfileInputType;
+import com.cryptomorin.xseries.profiles.objects.Profileable;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import org.bukkit.Color;
@@ -62,7 +64,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		LeatherArmorMeta leatherItemMeta;
 		ArrayList<String> lore = new ArrayList<>();
 		// Display
-		if (item.getType().equals(Material.PLAYER_HEAD)) SkullUtils.applySkin(itemMeta, "fee4eabeb72f19088ade78266191c8f77398cc0d80cdd27563a5d66b71912b28");
+		if (item.getType().equals(Material.PLAYER_HEAD)) itemMeta = plugin.getSkull(itemMeta, "fee4eabeb72f19088ade78266191c8f77398cc0d80cdd27563a5d66b71912b28").apply();
 		else {
 			leatherItemMeta = (LeatherArmorMeta) item.getItemMeta();
 			leatherItemMeta.setColor(Color.PURPLE);
@@ -152,7 +154,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		LeatherArmorMeta leatherItemMeta;
 		ArrayList<String> lore = new ArrayList<>();
 		// Display
-		if (item.getType().equals(Material.PLAYER_HEAD)) SkullUtils.applySkin(itemMeta, "cdf74e323ed41436965f5c57ddf2815d5332fe999e68fbb9d6cf5c8bd4139f");
+		if (item.getType().equals(Material.PLAYER_HEAD)) itemMeta = plugin.getSkull(itemMeta, "cdf74e323ed41436965f5c57ddf2815d5332fe999e68fbb9d6cf5c8bd4139f").apply();
 		else {
 			leatherItemMeta = (LeatherArmorMeta) item.getItemMeta();
 			leatherItemMeta.setColor(Color.GRAY);
@@ -192,7 +194,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		LeatherArmorMeta leatherItemMeta;
 		ArrayList<String> lore = new ArrayList<>();
 		// Display
-		if (item.getType().equals(Material.PLAYER_HEAD)) SkullUtils.applySkin(itemMeta, "935541523f14c78d8de98cc296c798f0b867ba85344ed77f6dae12455a174");
+		if (item.getType().equals(Material.PLAYER_HEAD)) itemMeta = plugin.getSkull(itemMeta, "935541523f14c78d8de98cc296c798f0b867ba85344ed77f6dae12455a174").apply();
 		else {
 			leatherItemMeta = (LeatherArmorMeta) item.getItemMeta();
 			leatherItemMeta.setColor(Color.fromRGB(130, 140, 100));
@@ -295,7 +297,7 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		LeatherArmorMeta leatherItemMeta;
 		ArrayList<String> lore = new ArrayList<>();
 		//Display
-		if (item.getType().equals(Material.PLAYER_HEAD)) SkullUtils.applySkin(itemMeta, "ea0076ab9a5c0ed8ebd08bb18137321df0fdc8abc7499465cc32221ca192ad43");
+		if (item.getType().equals(Material.PLAYER_HEAD)) itemMeta = plugin.getSkull(itemMeta, "ea0076ab9a5c0ed8ebd08bb18137321df0fdc8abc7499465cc32221ca192ad43").apply();
 		else {
 			leatherItemMeta = (LeatherArmorMeta) item.getItemMeta();
 			leatherItemMeta.setColor(Color.fromRGB(228, 232, 235));

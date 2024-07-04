@@ -6,33 +6,15 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedDataValue;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.cryptomorin.xseries.ReflectionUtils;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import net.minecraft.network.chat.ChatModifier;
-import net.minecraft.network.chat.ComponentContents;
-import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.server.level.WorldServer;
-import net.minecraft.util.FormattedString;
-import net.minecraft.world.entity.Display;
-import net.minecraft.world.entity.EntityTypes;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import org.yaml.snakeyaml.serializer.Serializer;
 
-import java.awt.*;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
-
-import static com.cryptomorin.xseries.ReflectionUtils.getCraftClass;
-import static com.cryptomorin.xseries.ReflectionUtils.getNMSClass;
 
 public class HologramHandler {
 

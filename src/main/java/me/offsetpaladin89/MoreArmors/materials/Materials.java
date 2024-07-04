@@ -1,6 +1,5 @@
 package me.offsetpaladin89.MoreArmors.materials;
 
-import com.cryptomorin.xseries.SkullUtils;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import dev.dbassett.skullcreator.SkullCreator;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
@@ -79,7 +78,7 @@ public record Materials(MoreArmorsMain plugin) {
 	private ItemStack createMaterialSkull(String skinID, Rarity rarity, String itemName, String itemID, Integer amount) {
 		ItemStack item = SkullCreator.createSkull();
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta = SkullUtils.applySkin(itemmeta, skinID);
+		itemmeta = plugin.getSkull(itemmeta, skinID).apply();
 		item.setItemMeta(itemmeta);
 		item.setAmount(amount);
 		NBTItem nbtItem = new NBTItem(addData(item, rarity, itemName, itemID));
@@ -89,7 +88,7 @@ public record Materials(MoreArmorsMain plugin) {
 	private ItemStack createMaterialSkull(String skinID, Rarity rarity, String itemName, String itemID) {
 		ItemStack item = SkullCreator.createSkull();
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta = SkullUtils.applySkin(itemmeta, skinID);
+		itemmeta = plugin.getSkull(itemmeta, skinID).apply();
 		item.setItemMeta(itemmeta);
 
 		NBTItem nbtItem = new NBTItem(addData(item, rarity, itemName, itemID));
