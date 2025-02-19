@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.profiles.builder.ProfileInstruction;
 import com.cryptomorin.xseries.profiles.builder.XSkull;
 import com.cryptomorin.xseries.profiles.objects.ProfileInputType;
 import com.cryptomorin.xseries.profiles.objects.Profileable;
+import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.armors.Armors;
 import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
@@ -106,14 +107,26 @@ public class MoreArmorsMain extends JavaPlugin {
 		return new ShapedRecipe(new NamespacedKey(this, key), i);
 	}
 
+	// Checks if the user is wearing a full set of custom armor
 	public boolean IsFullCustomSet(String tag, PlayerInventory inventory) {
-		if (WearingFullSet(inventory)) return false;
-		return new NBTItem(inventory.getHelmet()).getString("CustomItemID").equals(tag) && new NBTItem(inventory.getChestplate()).getString("CustomItemID").equals(tag) && new NBTItem(inventory.getLeggings()).getString("CustomItemID").equals(tag) && new NBTItem(inventory.getBoots()).getString("CustomItemID").equals(tag);
+		ItemStack helmet = inventory.getHelmet();
+		ItemStack chestplate = inventory.getChestplate();
+		ItemStack leggings = inventory.getLeggings();
+		ItemStack boots = inventory.getBoots();
+
+		if(isAirOrNull(helmet) || isAirOrNull(chestplate) || isAirOrNull(leggings) || isAirOrNull(boots)) return false;
+
+        boolean hasHelmet = NBT.get(helmet, nbt -> (String) nbt.getString("CustomItemID")).equals(tag);
+		boolean hasChestplate = NBT.get(chestplate, nbt -> (String) nbt.getString("CustomItemID")).equals(tag);
+		boolean hasLeggings = NBT.get(leggings, nbt -> (String) nbt.getString("CustomItemID")).equals(tag);
+		boolean hasBoots = NBT.get(boots, nbt -> (String) nbt.getString("CustomItemID")).equals(tag);
+
+		return hasHelmet && hasChestplate && hasLeggings && hasBoots;
 	}
 
-	public boolean WearingFullSet(PlayerInventory inventory) {
-		return isAirOrNull(new ItemStack[]{inventory.getHelmet(), inventory.getChestplate(), inventory.getLeggings(), inventory.getBoots()});
-	}
+//	public boolean WearingFullSet(PlayerInventory inventory) {
+//		return isAirOrNull(new ItemStack[]{inventory.getHelmet(), inventory.getChestplate(), inventory.getLeggings(), inventory.getBoots()});
+//	}
 
 	public Boolean matchingCustomItem(ItemStack item, String itemID) {
 		return !isAirOrNull(item) && new NBTItem(item).getString("CustomItemID").equals(itemID);

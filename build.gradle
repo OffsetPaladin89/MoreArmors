@@ -3,29 +3,20 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.1'
 }
 
-def pluginName = rootProject.name
 group = 'me.offsetpaladin89'
-version = '3.8.1'
-
-task processPluginYml(type: Copy) {
-    from('src/main/resources') {
-        include 'plugin.yml.template'
-        rename('plugin.yml.template', 'plugin.yml')
-        expand(version: project.version, pluginName: pluginName)
-    }
-    into "$buildDir/processedResources"
-}
+version = rootProject.version
 
 repositories {
     mavenCentral()
     mavenLocal()
-    maven { url = 'https://repo.codemc.org/repository/maven-public/' }
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
     maven { url = 'https://github.com/deanveloper/SkullCreator/raw/mvn-repo/' }
     maven { url = "https://repo.dmulloy2.net/repository/public/" }
+    maven { url = uri("https://repo.codemc.io/repository/maven-public/") }
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot:1.20.4-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.21.1-R0.1-SNAPSHOT'
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.1.0'
     implementation 'de.tr7zw:item-nbt-api:+'
     implementation 'dev.dbassett:skullcreator:+'
@@ -38,12 +29,6 @@ shadowJar {
     relocate 'de.tr7zw.changeme.nbtapi', 'libs/nbt-api'
     relocate 'com.cryptomorin.xseries', 'libs/x-series'
     relocate 'com.github.fracpete.romannumerals4j', 'libs/romannumerals4j'
-
-    from("$buildDir/processedResources") { include 'plugin.yml' }
 }
-
-shadowJar.dependsOn processResources
-
-jar { enabled = false }
 
 build { dependsOn shadowJar }
