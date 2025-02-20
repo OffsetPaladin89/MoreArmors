@@ -1,15 +1,15 @@
 package me.offsetpaladin89.MoreArmors;
 
-import com.cryptomorin.xseries.profiles.builder.XSkull;
-import com.cryptomorin.xseries.profiles.objects.ProfileInputType;
-import com.cryptomorin.xseries.profiles.objects.Profileable;
-import de.tr7zw.changeme.nbtapi.NBTItem;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
+import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,24 +21,35 @@ import java.util.UUID;
 public record ArmorConstructor(MoreArmorsMain plugin) {
 
 	public ItemStack createEmeraldArmor(ItemStack item) {
-		NBTItem nbtItem = new NBTItem(item);
-		return createEmeraldArmor(item, item.getItemMeta().getDisplayName(), Rarity.getRarity(nbtItem.getInteger("Rarity")), nbtItem.getInteger("Armor"), nbtItem.getInteger("ArmorToughness"), nbtItem.getInteger("EmeraldCount"), EquipmentSlot.valueOf(nbtItem.getString("AttributeSlot")));
+		String itemName = item.getItemMeta().getDisplayName();
+
+		NBT.get(item, nbt -> {
+			Rarity rarity = nbt.getEnum("Rarity", Rarity.class);
+			int armor = nbt.getInteger("Armor");
+			int armorToughness = nbt.getInteger("ArmorToughness");
+			int emeraldCount = nbt.getInteger("EmeraldCount");
+
+			return createEmeraldArmor(item, itemName, rarity, armor, armorToughness, emeraldCount);
+		});
+
+		return item;
 	}
 
-	public ItemStack createEmeraldArmor(ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness, int emeraldAmount, EquipmentSlot equipmentSlot) {
+	public ItemStack createEmeraldArmor(ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness, int emeraldCount) {
 		LeatherArmorMeta itemMeta = (LeatherArmorMeta) item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
-		int healthBoost = emeraldAmount / 50 > 5 ? 10 : emeraldAmount / 50 * 2;
+		int healthBoost = emeraldCount / 25;
+		if(healthBoost > 10) healthBoost = 10;
 		// Display
 		itemMeta.setDisplayName(plugin.convertColoredString(Rarity.getColorRarity(rarity) + displayName));
 		itemMeta.setColor(Color.LIME);
 		// Lore
 		lore.add(plugin.convertColoredString("&6Piece Upgrade: Emerald Blood"));
 		lore.add(plugin.convertColoredString("&7Mine emeralds to increase your max health."));
-		if (emeraldAmount >= 250) lore.add(plugin.convertColoredString("&7Current Bonus (&a5&8/&a5&7): &e+10 Health &a&lMAXED OUT"));
+		if (emeraldCount >= 250) lore.add(plugin.convertColoredString("&7Current Bonus (&a5&8/&a5&7): &e+10 Health &a&lMAXED OUT"));
 		else {
-			lore.add(plugin.convertColoredString("&7Current Bonus (&a" + emeraldAmount / 50 + "&8/&a5&7): &e+" + emeraldAmount / 50 + " Health"));
-			lore.add(plugin.convertColoredString("&7Next Upgrade: &e+" + (emeraldAmount / 50 + 2) + " Health &8(&a" + emeraldAmount % 50 + "&7/&c50&8)"));
+			lore.add(plugin.convertColoredString("&7Current Bonus (&a" + emeraldCount / 50 + "&8/&a5&7): &e+" + emeraldCount / 50 + " Health"));
+			lore.add(plugin.convertColoredString("&7Next Upgrade: &e+" + (emeraldCount / 50 + 2) + " Health &8(&a" + emeraldCount % 50 + "&7/&c50&8)"));
 			lore.add(plugin.convertColoredString("&8Max +10 Health"));
 		}
 		lore.add("");
@@ -48,15 +59,25 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		itemMeta.setUnbreakable(true);
 		itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES);
 		// Attributes
-		itemMeta.removeAttributeModifier(equipmentSlot);
-		itemMeta.addAttributeModifier(Attribute.GENERIC_ARMOR, new AttributeModifier(UUID.randomUUID(), "armor", armor, AttributeModifier.Operation.ADD_NUMBER, equipmentSlot));
-		itemMeta.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, new AttributeModifier(UUID.randomUUID(), "maxHealth", healthBoost, AttributeModifier.Operation.ADD_NUMBER, equipmentSlot));
-		itemMeta.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS, new AttributeModifier(UUID.randomUUID(), "armorToughness", armorToughness, AttributeModifier.Operation.ADD_NUMBER, equipmentSlot));
+		ListMultimap<Attribute, AttributeModifier> attributeModifiers = ArrayListMultimap.create();
+		AttributeModifier armorAttribute = new AttributeModifier(plugin.pluginKey, armor, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR);
+		AttributeModifier healthAttribute = new AttributeModifier(plugin.pluginKey, healthBoost, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR);
+		AttributeModifier armorToughnessAttribute = new AttributeModifier(plugin.pluginKey, armorToughness, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR);
+
+		attributeModifiers.put(Attribute.ARMOR, armorAttribute);
+		attributeModifiers.put(Attribute.MAX_HEALTH, healthAttribute);
+		attributeModifiers.put(Attribute.ARMOR_TOUGHNESS, armorToughnessAttribute);
+
+		itemMeta.setAttributeModifiers(attributeModifiers);
+
 		item.setItemMeta(itemMeta);
+
 		// NBT Values
-		NBTItem nbtItem = addNBT(item, "emerald", rarity, armor, armorToughness, equipmentSlot);
-		nbtItem.setInteger("EmeraldCount", emeraldAmount);
-		return nbtItem.getItem();
+		addNBT(item, "emerald", rarity, armor, armorToughness);
+		NBT.modify(item, nbt -> {
+			nbt.setInteger("EmeraldCount", emeraldCount);
+		});
+		return item;
 	}
 
 	public ItemStack createEndArmor(ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness, EquipmentSlot equipmentSlot) {
@@ -354,16 +375,13 @@ public record ArmorConstructor(MoreArmorsMain plugin) {
 		return nbtItem.getItem();
 	}
 
-	private NBTItem addNBT(ItemStack item, String customItemID, Rarity rarity, int armor, int armorToughness, EquipmentSlot slot) {
-		NBTItem nbtItem = new NBTItem(item);
-		nbtItem.setBoolean("IsCustomItem", true);
-		nbtItem.setString("CustomItemID", customItemID);
-		nbtItem.setString("CustomItemType", "armor");
-		nbtItem.setInteger("Rarity", rarity.ordinal() + 1);
-		nbtItem.setInteger("Armor", armor);
-		nbtItem.setInteger("ArmorToughness", armorToughness);
-		nbtItem.setString("AttributeSlot", slot.name());
-		if (item.getType().equals(Material.PLAYER_HEAD)) nbtItem.setString("UUID", UUID.randomUUID().toString());
-		return nbtItem;
+	private void addNBT(ItemStack item, String customItemID, Rarity rarity, int armor, int armorToughness) {
+		NBT.modify(item, nbt -> {
+			nbt.setString("CustomItemID", customItemID);
+			nbt.setEnum("Rarity", rarity);
+			nbt.setInteger("Armor", armor);
+			nbt.setInteger("ArmorToughness", armorToughness);
+			if(item.getType().equals(Material.PLAYER_HEAD)) nbt.setUUID("UUID", UUID.randomUUID());
+		});
 	}
 }

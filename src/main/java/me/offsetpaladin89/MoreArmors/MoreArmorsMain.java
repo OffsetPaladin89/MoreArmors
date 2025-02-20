@@ -5,7 +5,6 @@ import com.cryptomorin.xseries.profiles.builder.XSkull;
 import com.cryptomorin.xseries.profiles.objects.ProfileInputType;
 import com.cryptomorin.xseries.profiles.objects.Profileable;
 import de.tr7zw.changeme.nbtapi.NBT;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.armors.Armors;
 import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
 import me.offsetpaladin89.MoreArmors.commands.Commands;
@@ -18,7 +17,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -32,6 +30,7 @@ import java.util.Map;
 
 public class MoreArmorsMain extends JavaPlugin {
 
+	public final NamespacedKey pluginKey = new NamespacedKey(this, "MoreArmors");
 	public final String[] armorTypes = {"emerald", "end", "experience", "miner", "nether", "seagreed", "speedster", "titan", "destroyer"};
 	public final String[] materialTypes = {"compacted_blaze_rod", "compacted_cobblestone", "compacted_end_stone", "compacted_eye_of_ender", "compacted_soul_sand", "compacted_sugar_cane", "nether_crown", "compacted_diamond", "compacted_diamond_block", "compacted_gold", "compacted_gold_block", "compacted_prismarine", "compacted_iron", "compacted_iron_block", "compacted_redstone", "machine_part", "machine_core", "energy_cell", "star_dust"};
 	public final String[] slotTypes = {"helmet", "chestplate", "leggings", "boots"};
@@ -124,12 +123,9 @@ public class MoreArmorsMain extends JavaPlugin {
 		return hasHelmet && hasChestplate && hasLeggings && hasBoots;
 	}
 
-//	public boolean WearingFullSet(PlayerInventory inventory) {
-//		return isAirOrNull(new ItemStack[]{inventory.getHelmet(), inventory.getChestplate(), inventory.getLeggings(), inventory.getBoots()});
-//	}
-
-	public Boolean matchingCustomItem(ItemStack item, String itemID) {
-		return !isAirOrNull(item) && new NBTItem(item).getString("CustomItemID").equals(itemID);
+	public boolean matchingCustomItem(ItemStack item, String itemID) {
+		if(isAirOrNull(item)) return false;
+		return NBT.get(item, nbt -> (String) nbt.getString("CustomItemID")).equals(itemID);
 	}
 
 	public boolean isAirOrNull(ItemStack item) {
@@ -138,15 +134,6 @@ public class MoreArmorsMain extends JavaPlugin {
 
 	public ProfileInstruction<ItemMeta> getSkull(ItemMeta iMeta, String skullID) {
 		return XSkull.of(iMeta).profile(Profileable.of(ProfileInputType.TEXTURE_HASH.getProfile(skullID)));
-	}
-
-	public boolean isAirOrNull(ItemStack[] items) {
-		for (ItemStack i : items) {
-			if (i == null || i.getType().equals(Material.AIR)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public boolean isInteger(String string) {
