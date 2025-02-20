@@ -62,8 +62,8 @@ public record Materials(MoreArmorsMain plugin) {
 		ItemMeta itemmeta = item.getItemMeta();
 		ArrayList<String> lore = new ArrayList<>();
 		lore.add("");
-		lore.add(plugin.convertColoredString(Rarity.getColorRarity(rarity) + "&l" + rarity.toString() + " MATERIAL"));
-		itemmeta.setDisplayName(plugin.convertColoredString(Rarity.getColorRarity(rarity) + name));
+		lore.add(MoreArmorsMain.colorString(Rarity.getColorRarity(rarity) + "&l" + rarity.toString() + " MATERIAL"));
+		itemmeta.setDisplayName(MoreArmorsMain.colorString(Rarity.getColorRarity(rarity) + name));
 		itemmeta.setLore(lore);
 		itemmeta.addEnchant(Enchantment.MENDING, 1, false);
 		itemmeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

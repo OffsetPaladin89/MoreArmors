@@ -5,7 +5,7 @@ import com.cryptomorin.xseries.profiles.builder.XSkull;
 import com.cryptomorin.xseries.profiles.objects.ProfileInputType;
 import com.cryptomorin.xseries.profiles.objects.Profileable;
 import de.tr7zw.changeme.nbtapi.NBT;
-import me.offsetpaladin89.MoreArmors.armors.Armors;
+import me.offsetpaladin89.MoreArmors.armors.ArmorsRecord;
 import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
 import me.offsetpaladin89.MoreArmors.commands.Commands;
 import me.offsetpaladin89.MoreArmors.commands.Give;
@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class MoreArmorsMain extends JavaPlugin {
 
-	public final NamespacedKey pluginKey = new NamespacedKey(this, "MoreArmors");
+	public static final NamespacedKey pluginKey = new NamespacedKey(getPlugin(MoreArmorsMain.class), "MoreArmors");
 	public final String[] armorTypes = {"emerald", "end", "experience", "miner", "nether", "seagreed", "speedster", "titan", "destroyer"};
 	public final String[] materialTypes = {"compacted_blaze_rod", "compacted_cobblestone", "compacted_end_stone", "compacted_eye_of_ender", "compacted_soul_sand", "compacted_sugar_cane", "nether_crown", "compacted_diamond", "compacted_diamond_block", "compacted_gold", "compacted_gold_block", "compacted_prismarine", "compacted_iron", "compacted_iron_block", "compacted_redstone", "machine_part", "machine_core", "energy_cell", "star_dust"};
 	public final String[] slotTypes = {"helmet", "chestplate", "leggings", "boots"};
@@ -38,7 +38,7 @@ public class MoreArmorsMain extends JavaPlugin {
 
 	public HologramHandler hologramHandler;
 	public Give give;
-	public Armors armorSets;
+	public ArmorsRecord armorSets;
 	public ArmorConstructor armorConstructor;
 	public ArmorSetAbilityHandler armorSetAbilities;
 	public ConfigHandler configHandler;
@@ -54,22 +54,22 @@ public class MoreArmorsMain extends JavaPlugin {
 		commands = new Commands(this);
 		configHandler = new ConfigHandler(this);
 		hologramHandler = new HologramHandler(this);
-		armorSets = new Armors(this);
+		armorSets = new ArmorsRecord(this);
 		armorConstructor = new ArmorConstructor(this);
-		armorSetAbilities = new ArmorSetAbilityHandler(this);
+//		armorSetAbilities = new ArmorSetAbilityHandler(this);
 		materials = new Materials(this);
 		give = new Give(this);
 
-		ArmorChecker();
+//		ArmorChecker();
 		registerConfig();
-		armorSets.RegisterArmorRecipes();
+//		armorSets.RegisterArmorRecipes();
 		materials.RegisterMaterialsRecipes();
 	}
 
 	public void reloadConfig(CommandSender s) {
 		registerConfig();
 		getServer().resetRecipes();
-		armorSets.RegisterArmorRecipes();
+//		armorSets.RegisterArmorRecipes();
 		materials.RegisterMaterialsRecipes();
 		sendColoredMessage(s, commands.messages.prefix() + " &aSuccessfully reloaded config!");
 	}
@@ -86,20 +86,20 @@ public class MoreArmorsMain extends JavaPlugin {
 		configHandler.saveConfigDefaults("config", defaultValues);
 	}
 
-	public String convertColoredString(String msg) {
-		return ChatColor.translateAlternateColorCodes('&', msg);
+	public static String colorString(String s) {
+		return ChatColor.translateAlternateColorCodes('&', s);
 	}
 
 	public void sendConsoleMessage(String s) {
-		getServer().getConsoleSender().sendMessage(convertColoredString(s));
+		getServer().getConsoleSender().sendMessage(colorString(s));
 	}
 
 	public void sendPlayerMessage(Player p, String s) {
-		p.sendMessage(convertColoredString(s));
+		p.sendMessage(colorString(s));
 	}
 
 	public void sendColoredMessage(CommandSender s, String m) {
-		s.sendMessage(convertColoredString(m));
+		s.sendMessage(colorString(m));
 	}
 
 	public ShapedRecipe shapedRecipe(String key, ItemStack i) {
@@ -148,7 +148,7 @@ public class MoreArmorsMain extends JavaPlugin {
 	public void ArmorChecker() {
 		new BukkitRunnable() {
 			public void run() {
-				armorSetAbilities.scanPlayers(getServer().getOnlinePlayers().toArray());
+//				armorSetAbilities.scanPlayers(getServer().getOnlinePlayers().toArray());
 			}
 		}.runTaskTimer(this, 0, 5);
 	}

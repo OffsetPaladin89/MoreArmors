@@ -69,66 +69,66 @@ public record CommandHandler(MoreArmorsMain plugin) {
 		}
 	}
 
-	public void editMessage(Integer length, CommandSender sender, String player, String type, String specialValue) {
-
-		if (length > 1) {
-			if (plugin.getServer().getPlayer(player) == null) {
-				invalidArgument(sender, player);
-				return;
-			}
-		}
-		if (length < 3) {
-			plugin.sendColoredMessage(sender, "");
-			plugin.sendColoredMessage(sender, prefix() + " &6Edit Command Options: &e(/morearmors edit " + player + " ... )");
-			if (length == 2) {
-				plugin.sendColoredMessage(sender, "&6> &eemerald_count");
-				plugin.sendColoredMessage(sender, "&6> &ekill_amount");
-			}
-			return;
-		}
-		Player target = plugin.getServer().getPlayer(player);
-		PlayerInventory inventory = target.getInventory();
-		if (plugin.isAirOrNull(inventory.getItemInMainHand())) {
-			notHoldingItem(sender);
-			return;
-		}
-		ItemStack hand = inventory.getItemInMainHand();
-		NBTItem nbtItem = new NBTItem(hand);
-		if (type.equalsIgnoreCase("emerald_count")) {
-			if (nbtItem.getString("CustomItemID").equals("emerald")) {
-				if (length == 3) {
-					nbtItem.setInteger("EmeraldCount", 0);
-					inventory.setItemInMainHand(plugin.armorConstructor.createEmeraldArmor(nbtItem.getItem()));
-					resetItemMessage(sender, target, hand);
-				} else if (length == 4) {
-					if (plugin.isInteger(specialValue)) {
-						nbtItem.setInteger("EmeraldCount", Integer.parseInt(specialValue));
-						inventory.setItemInMainHand(plugin.armorConstructor.createEmeraldArmor(nbtItem.getItem()));
-						editItemMessage(sender, target, hand);
-					} else invalidArgument(sender, specialValue);
-				} else tooManyArguments(sender);
-			} else notHoldingItem(sender);
-		} else if (type.equals("kill_amount")) {
-			if (length == 3) {
-				nbtItem.setInteger("KillAmount", 0);
-				inventory.setItemInMainHand(plugin.armorConstructor.createDestroyerArmor(nbtItem.getItem()));
-				resetItemMessage(sender, target, hand);
-			} else if (length == 4) {
-				if (plugin.isInteger(specialValue)) {
-					nbtItem.setInteger("KillAmount", Integer.parseInt(specialValue));
-					inventory.setItemInMainHand(plugin.armorConstructor.createDestroyerArmor(nbtItem.getItem()));
-					editItemMessage(sender, target, hand);
-				} else invalidArgument(sender, specialValue);
-			} else tooManyArguments(sender);
-		} else invalidArgument(sender, type);
-	}
+//	public void editMessage(Integer length, CommandSender sender, String player, String type, String specialValue) {
+//
+//		if (length > 1) {
+//			if (plugin.getServer().getPlayer(player) == null) {
+//				invalidArgument(sender, player);
+//				return;
+//			}
+//		}
+//		if (length < 3) {
+//			plugin.sendColoredMessage(sender, "");
+//			plugin.sendColoredMessage(sender, prefix() + " &6Edit Command Options: &e(/morearmors edit " + player + " ... )");
+//			if (length == 2) {
+//				plugin.sendColoredMessage(sender, "&6> &eemerald_count");
+//				plugin.sendColoredMessage(sender, "&6> &ekill_amount");
+//			}
+//			return;
+//		}
+//		Player target = plugin.getServer().getPlayer(player);
+//		PlayerInventory inventory = target.getInventory();
+//		if (plugin.isAirOrNull(inventory.getItemInMainHand())) {
+//			notHoldingItem(sender);
+//			return;
+//		}
+//		ItemStack hand = inventory.getItemInMainHand();
+//		NBTItem nbtItem = new NBTItem(hand);
+//		if (type.equalsIgnoreCase("emerald_count")) {
+//			if (nbtItem.getString("CustomItemID").equals("emerald")) {
+//				if (length == 3) {
+//					nbtItem.setInteger("EmeraldCount", 0);
+//					inventory.setItemInMainHand(plugin.armorConstructor.createEmeraldArmor(nbtItem.getItem()));
+//					resetItemMessage(sender, target, hand);
+//				} else if (length == 4) {
+//					if (plugin.isInteger(specialValue)) {
+//						nbtItem.setInteger("EmeraldCount", Integer.parseInt(specialValue));
+//						inventory.setItemInMainHand(plugin.armorConstructor.createEmeraldArmor(nbtItem.getItem()));
+//						editItemMessage(sender, target, hand);
+//					} else invalidArgument(sender, specialValue);
+//				} else tooManyArguments(sender);
+//			} else notHoldingItem(sender);
+//		} else if (type.equals("kill_amount")) {
+//			if (length == 3) {
+//				nbtItem.setInteger("KillAmount", 0);
+//				inventory.setItemInMainHand(plugin.armorConstructor.createDestroyerArmor(nbtItem.getItem()));
+//				resetItemMessage(sender, target, hand);
+//			} else if (length == 4) {
+//				if (plugin.isInteger(specialValue)) {
+//					nbtItem.setInteger("KillAmount", Integer.parseInt(specialValue));
+//					inventory.setItemInMainHand(plugin.armorConstructor.createDestroyerArmor(nbtItem.getItem()));
+//					editItemMessage(sender, target, hand);
+//				} else invalidArgument(sender, specialValue);
+//			} else tooManyArguments(sender);
+//		} else invalidArgument(sender, type);
+//	}
 
 	public void notHoldingItem(CommandSender s) {
 		plugin.sendColoredMessage(s, prefix() + " &cYou are not holding a valid item!");
 	}
 
 	public String prefix() {
-		return plugin.convertColoredString("&e(&6MoreArmors&e)");
+		return MoreArmorsMain.colorString("&e(&6MoreArmors&e)");
 	}
 
 	public void tooManyArguments(CommandSender sender) {

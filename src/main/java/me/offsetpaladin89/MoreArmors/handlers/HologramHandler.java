@@ -59,7 +59,7 @@ public class HologramHandler {
 				// make the display pivot around the center
 				new WrappedDataValue(15, WrappedDataWatcher.Registry.get(Byte.class), (byte) 0x03),
 				// apply the string to the text display
-				new WrappedDataValue(23, WrappedDataWatcher.Registry.getChatComponentSerializer(), WrappedChatComponent.fromText(plugin.convertColoredString(s)).getHandle())
+				new WrappedDataValue(23, WrappedDataWatcher.Registry.getChatComponentSerializer(), WrappedChatComponent.fromText(MoreArmorsMain.colorString(s)).getHandle())
 		);
 		// write the data values to the packet
 		textDisplayData.getDataValueCollectionModifier().write(0, dataValues);

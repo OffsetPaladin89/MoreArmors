@@ -2,10 +2,8 @@ package me.offsetpaladin89.MoreArmors.handlers;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import me.offsetpaladin89.MoreArmors.armors.Armors;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -368,11 +366,11 @@ public class CraftHandler implements Listener {
 					for (int x = 0; x < leastValue; x++) {
 						if (nbtResult.getString("CustomItemType").equals("armor")) {
 							EquipmentSlot slotType = SlotType.matchSlot(SlotType.matchType(result));
-							if (rCustomID.equals("miner")) craftItem(p, plugin.armorSets.MinerArmor(slotType));
-							if (rCustomID.equals("nether")) craftItem(p, plugin.armorSets.NetherArmor(slotType));
-							if (rCustomID.equals("end")) craftItem(p, plugin.armorSets.EndArmor(slotType));
-							if (rCustomID.equals("seagreed")) craftItem(p, plugin.armorSets.SeaGreedArmor(slotType));
-							if (rCustomID.equals("destroyer")) craftItem(p, plugin.armorSets.DestroyerArmor(slotType, 0));
+//							if (rCustomID.equals("miner")) craftItem(p, plugin.armorSets.MinerArmor(slotType));
+//							if (rCustomID.equals("nether")) craftItem(p, plugin.armorSets.NetherArmor(slotType));
+//							if (rCustomID.equals("end")) craftItem(p, plugin.armorSets.EndArmor(slotType));
+//							if (rCustomID.equals("seagreed")) craftItem(p, plugin.armorSets.SeaGreedArmor(slotType));
+//							if (rCustomID.equals("destroyer")) craftItem(p, plugin.armorSets.DestroyerArmor(slotType, 0));
 						}
 						if (rCustomID.equals("nether_crown")) craftItem(p, plugin.materials.NetherCrown());
 						if (rCustomID.equals("energy_cell")) craftItem(p, plugin.materials.EnergyCell());

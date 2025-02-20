@@ -1,8 +1,11 @@
 package me.offsetpaladin89.MoreArmors.listeners;
 
 import com.cryptomorin.xseries.XSound;
+import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
+import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
+import me.offsetpaladin89.MoreArmors.enums.CustomItemID;
 import org.bukkit.*;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
@@ -105,20 +108,23 @@ public class MoreArmorsListener implements Listener {
 		for (int i = 0; i < inventory.getSize(); i++) {
 			ItemStack currentItem = inventory.getItem(i);
 			if (!plugin.isAirOrNull(currentItem)) {
-				NBTItem nbtItem = new NBTItem(currentItem);
-				if (nbtItem.getString("CustomItemID").equals("emerald") && config.getBoolean("emeraldarmor.enabled")) {
+				if (NBT.get(currentItem, nbt -> (CustomItemID) nbt.getEnum("CustomItemID", CustomItemID.class)).equals(CustomItemID.EMERALD) && config.getBoolean("emeraldarmor.enabled")) {
 					if (event.getBlock().getType().equals(Material.EMERALD_ORE) || event.getBlock().getType().equals(Material.DEEPSLATE_EMERALD_ORE)) {
-						nbtItem.setInteger("EmeraldCount", nbtItem.getInteger("EmeraldCount") + 1);
-						currentItem = nbtItem.getItem();
-						inventory.setItem(i, plugin.armorConstructor.createEmeraldArmor(currentItem));
+
+						EmeraldArmor emeraldArmor = new EmeraldArmor(currentItem);
+
+						emeraldArmor.createItemFromNBT();
+						emeraldArmor.increaseEmeraldCount(1);
+
+						inventory.setItem(i, emeraldArmor.getItem());
 					}
 				}
 			}
 		}
 		if (plugin.IsFullCustomSet("experience", player.getInventory()) && config.getBoolean("experiencearmor.enabled")) {event.setExpToDrop(event.getExpToDrop() * 2);}
 		if (plugin.IsFullCustomSet("miner", player.getInventory()) && config.getBoolean("minerarmor.enabled")) {
-			if (player.hasPotionEffect(PotionEffectType.FAST_DIGGING)) {if (player.getPotionEffect(PotionEffectType.FAST_DIGGING).getAmplifier() == 1) {player.removePotionEffect(PotionEffectType.FAST_DIGGING);}}
-			player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 100, 1));
+			if (player.hasPotionEffect(PotionEffectType.HASTE)) {if (player.getPotionEffect(PotionEffectType.HASTE).getAmplifier() == 1) {player.removePotionEffect(PotionEffectType.HASTE);}}
+			player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 100, 1));
 		}
 
 		if (player.isInWater()) {
@@ -187,13 +193,13 @@ public class MoreArmorsListener implements Listener {
 				PlayerInventory inventory = killer.getInventory();
 				if (plugin.IsFullCustomSet("experience", inventory) && config.getBoolean("experiencearmor.enabled")) {event.setDroppedExp(event.getDroppedExp() * 2);}
 				if (plugin.IsFullCustomSet("titan", inventory) && config.getBoolean("titanarmor.enabled")) {
-					if (killer.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE)) {if (killer.getPotionEffect(PotionEffectType.DAMAGE_RESISTANCE).getAmplifier() == 0) {killer.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);}}
-					killer.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 200, 0, false, false));
+					if (killer.hasPotionEffect(PotionEffectType.RESISTANCE)) {if (killer.getPotionEffect(PotionEffectType.RESISTANCE).getAmplifier() == 0) {killer.removePotionEffect(PotionEffectType.RESISTANCE);}}
+					killer.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 200, 0, false, false));
 				}
 				if (plugin.IsFullCustomSet("seagreed", inventory) && config.getBoolean("seagreedarmor.enabled")) {
 					Random r = new Random();
 					if (entity.getType().equals(EntityType.ELDER_GUARDIAN) && r.nextDouble() <= 0.25d) {
-						killer.sendTitle(plugin.convertColoredString("&c&l&kzzz &r&4&lBLESSING OF THE SEA GOD &c&l&kzzz"), "", -1, -1, -1);
+						killer.sendTitle(MoreArmorsMain.colorString("&c&l&kzzz &r&4&lBLESSING OF THE SEA GOD &c&l&kzzz"), "", -1, -1, -1);
 						killer.playSound(killer, Sound.BLOCK_END_PORTAL_SPAWN, SoundCategory.MASTER, 1, 1.4f);
 						for (int i = 0; i < 3; i++) {killer.getWorld().strikeLightningEffect(killer.getLocation().subtract((r.nextInt(0, 280) - 140f) / 100f, 1, (r.nextInt(0, 280) - 140f) / 100f));}
 						seaGreedEffects(killer);
@@ -206,7 +212,7 @@ public class MoreArmorsListener implements Listener {
 						if (nbtItem.getString("CustomItemID").equals("destroyer") && config.getBoolean("destroyerarmor.enabled")) {
 							nbtItem.setInteger("KillAmount", nbtItem.getInteger("KillAmount") + 1);
 							currentItem = nbtItem.getItem();
-							inventory.setItem(i, plugin.armorConstructor.createDestroyerArmor(currentItem));
+//							inventory.setItem(i, plugin.armorConstructor.createDestroyerArmor(currentItem));
 						}
 					}
 				}
@@ -217,10 +223,10 @@ public class MoreArmorsListener implements Listener {
 	public void seaGreedEffects(Player player) {
 		giveItem(new ItemStack(Material.DIAMOND_BLOCK, 20), player);
 		giveItem(new ItemStack(Material.GOLD_BLOCK, 100), player);
-		player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 72000, 2, false, false));
-		player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 72000, 1, false, false));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 72000, 2, false, false));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 72000, 1, false, false));
 		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 72000, 1, false, false));
-		player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 72000, 1, false, false));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 72000, 1, false, false));
 	}
 
 	public void giveItem(ItemStack item, Player player) {

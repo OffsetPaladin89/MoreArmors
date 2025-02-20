@@ -1,10 +1,13 @@
 package me.offsetpaladin89.MoreArmors.commands;
 
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
+import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -35,17 +38,26 @@ public record Give(MoreArmorsMain plugin) {
 	}
 
 	public ItemStack give(ArmorType type, SlotType slotType, Integer specialValue) {
-		return switch (type) {
-			case EMERALD -> plugin.armorSets.EmeraldArmor(SlotType.matchSlot(slotType), specialValue);
-			case END -> plugin.armorSets.EndArmor(SlotType.matchSlot(slotType));
-			case EXPERIENCE -> plugin.armorSets.ExperienceArmor(SlotType.matchSlot(slotType));
-			case MINER -> plugin.armorSets.MinerArmor(SlotType.matchSlot(slotType));
-			case NETHER -> plugin.armorSets.NetherArmor(SlotType.matchSlot(slotType));
-			case SEA_GREED -> plugin.armorSets.SeaGreedArmor(SlotType.matchSlot(slotType));
-			case SPEEDSTER -> plugin.armorSets.SpeedsterArmor(SlotType.matchSlot(slotType));
-			case TITAN -> plugin.armorSets.TitanArmor(SlotType.matchSlot(slotType));
-			case DESTROYER -> plugin.armorSets.DestroyerArmor(SlotType.matchSlot(slotType), specialValue);
-		};
+		EmeraldArmor emeraldHelmet = new EmeraldArmor(new ItemStack(Material.LEATHER_HELMET));
+
+		emeraldHelmet.setArmor(3);
+		emeraldHelmet.setArmorToughness(2);
+		emeraldHelmet.setEmeraldCount(0);
+		emeraldHelmet.createItem();
+
+		return emeraldHelmet.getItem();
+
+//		return switch (type) {
+//			case EMERALD -> plugin.armorSets.EmeraldArmor(SlotType.matchSlot(slotType), specialValue);
+//			case END -> plugin.armorSets.EndArmor(SlotType.matchSlot(slotType));
+//			case EXPERIENCE -> plugin.armorSets.ExperienceArmor(SlotType.matchSlot(slotType));
+//			case MINER -> plugin.armorSets.MinerArmor(SlotType.matchSlot(slotType));
+//			case NETHER -> plugin.armorSets.NetherArmor(SlotType.matchSlot(slotType));
+//			case SEA_GREED -> plugin.armorSets.SeaGreedArmor(SlotType.matchSlot(slotType));
+//			case SPEEDSTER -> plugin.armorSets.SpeedsterArmor(SlotType.matchSlot(slotType));
+//			case TITAN -> plugin.armorSets.TitanArmor(SlotType.matchSlot(slotType));
+//			case DESTROYER -> plugin.armorSets.DestroyerArmor(SlotType.matchSlot(slotType), specialValue);
+//		};
 	}
 
 	public void giveCommand(CommandSender sender, Player target, String type, SlotType slotType, Integer specialValue) {
@@ -71,7 +83,7 @@ public record Give(MoreArmorsMain plugin) {
 	}
 
 	public void giveMessage(CommandSender sender, Player target, Integer n, ItemStack i) {
-		target.sendMessage(plugin.convertColoredString("&e(&6MoreArmors&e) Received " + n + "x " + i.getItemMeta().getDisplayName() + "&e."));
-		sender.sendMessage(plugin.convertColoredString("&e(&6MoreArmors&e) Gave " + target.getName() + " " + n + "x " + i.getItemMeta().getDisplayName() + "&e."));
+//		target.sendMessage(plugin.convertColoredString("&e(&6MoreArmors&e) Received " + n + "x " + i.getItemMeta().getDisplayName() + "&e."));
+//		sender.sendMessage(plugin.convertColoredString("&e(&6MoreArmors&e) Gave " + target.getName() + " " + n + "x " + i.getItemMeta().getDisplayName() + "&e."));
 	}
 }
