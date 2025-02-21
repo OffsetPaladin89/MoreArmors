@@ -2,13 +2,12 @@ package me.offsetpaladin89.MoreArmors.commands;
 
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
-import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
-import org.bukkit.Material;
+import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -37,16 +36,8 @@ public record Give(MoreArmorsMain plugin) {
 		};
 	}
 
-	public ItemStack give(ArmorType type, SlotType slotType, Integer specialValue) {
-		EmeraldArmor emeraldHelmet = new EmeraldArmor(new ItemStack(Material.LEATHER_HELMET));
-
-		emeraldHelmet.setArmor(3);
-		emeraldHelmet.setArmorToughness(2);
-		emeraldHelmet.setEmeraldCount(0);
-		emeraldHelmet.createItem();
-
-		return emeraldHelmet.getItem();
-
+	public ItemStack give(ArmorType type, SlotType slot) {
+		return new EmeraldArmor(slot).getItem();
 //		return switch (type) {
 //			case EMERALD -> plugin.armorSets.EmeraldArmor(SlotType.matchSlot(slotType), specialValue);
 //			case END -> plugin.armorSets.EndArmor(SlotType.matchSlot(slotType));
@@ -60,9 +51,10 @@ public record Give(MoreArmorsMain plugin) {
 //		};
 	}
 
-	public void giveCommand(CommandSender sender, Player target, String type, SlotType slotType, Integer specialValue) {
-		ItemStack item = give(ArmorType.getSetType(type), slotType, specialValue);
+	public void giveCommand(CommandSender sender, Player target, String type, SlotType slot, Integer specialValue) {
+//		ItemStack item = give(ArmorType.getSetType(type), slotType, specialValue);
 		PlayerInventory inventory = target.getInventory();
+		ItemStack item = give(ArmorType.getSetType(type), slot);
 		if (inventory.firstEmpty() == -1) target.getWorld().dropItem(target.getLocation().add(0.0D, 0.5D, 0.0D), item);
 		else inventory.addItem(item);
 		giveMessage(sender, target, 1, item);

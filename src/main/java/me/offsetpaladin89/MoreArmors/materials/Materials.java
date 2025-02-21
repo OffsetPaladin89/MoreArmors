@@ -16,23 +16,23 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public record Materials(MoreArmorsMain plugin) {
-	public ItemStack CompactedSugarCane(Integer amount) { return addData(new ItemStack(Material.SUGAR_CANE, amount), Rarity.UNCOMMON, "Compacted Sugar Cane", "compacted_sugar_cane"); }
-	public ItemStack CompactedCobblestone(Integer amount) { return addData(new ItemStack(Material.COBBLESTONE, amount), Rarity.COMMON, "Compacted Cobblestone", "compacted_cobblestone"); }
-	public ItemStack CompactedSoulSand(Integer amount) { return addData(new ItemStack(Material.SOUL_SAND, amount), Rarity.UNCOMMON, "Compacted Soul Sand", "compacted_soul_sand"); }
-	public ItemStack CompactedBlazeRod(Integer amount) { return addData(new ItemStack(Material.BLAZE_ROD, amount), Rarity.UNCOMMON, "Compacted Blaze Rod", "compacted_blaze_rod"); }
+	public ItemStack CompactedSugarCane(int amount) { return addData(new ItemStack(Material.SUGAR_CANE, amount), Rarity.UNCOMMON, "Compacted Sugar Cane", "compacted_sugar_cane"); }
+	public ItemStack CompactedCobblestone(int amount) { return addData(new ItemStack(Material.COBBLESTONE, amount), Rarity.COMMON, "Compacted Cobblestone", "compacted_cobblestone"); }
+	public ItemStack CompactedSoulSand(int amount) { return addData(new ItemStack(Material.SOUL_SAND, amount), Rarity.UNCOMMON, "Compacted Soul Sand", "compacted_soul_sand"); }
+	public ItemStack CompactedBlazeRod(int amount) { return addData(new ItemStack(Material.BLAZE_ROD, amount), Rarity.UNCOMMON, "Compacted Blaze Rod", "compacted_blaze_rod"); }
 	public ItemStack NetherCrown() { return createMaterialSkull("3e4f49535a276aacc4dc84133bfe81be5f2a4799a4c04d9a4ddb72d819ec2b2b", Rarity.EPIC, "Nether Crown", "nether_crown"); }
-	public ItemStack CompactedEndStone(Integer amount) { return addData(new ItemStack(Material.END_STONE, amount), Rarity.COMMON, "Compacted End Stone", "compacted_end_stone"); }
-	public ItemStack CompactedEyeOfEnder(Integer amount) { return addData(new ItemStack(Material.ENDER_EYE, amount), Rarity.UNCOMMON, "Compacted Eye of Ender", "compacted_eye_of_ender"); }
-	public ItemStack CompactedDiamond(Integer amount) { return addData(new ItemStack(Material.DIAMOND, amount), Rarity.UNCOMMON, "Compacted Diamond", "compacted_diamond"); }
-	public ItemStack CompactedDiamondBlock(Integer amount) { return addData(new ItemStack(Material.DIAMOND_BLOCK, amount), Rarity.RARE, "Compacted Diamond Block", "compacted_diamond_block"); }
-	public ItemStack CompactedGold(Integer amount) { return addData(new ItemStack(Material.GOLD_INGOT, amount), Rarity.UNCOMMON, "Compacted Gold Ingot", "compacted_gold"); }
-	public ItemStack CompactedGoldBlock(Integer amount) { return addData(new ItemStack(Material.GOLD_BLOCK, amount), Rarity.RARE, "Compacted Gold Block", "compacted_gold_block"); }
-	public ItemStack CompactedPrismarine(Integer amount) { return addData(new ItemStack(Material.PRISMARINE, amount), Rarity.UNCOMMON, "Compacted Prismarine", "compacted_prismarine"); }
-	public ItemStack CompactedRedstone(Integer amount) { return addData(new ItemStack(Material.REDSTONE, amount), Rarity.UNCOMMON, "Compacted Redstone", "compacted_redstone"); }
-	public ItemStack CompactedIron(Integer amount) { return addData(new ItemStack(Material.IRON_INGOT, amount), Rarity.UNCOMMON, "Compacted Iron Ingot", "compacted_iron"); }
-	public ItemStack CompactedIronBlock(Integer amount) { return addData(new ItemStack(Material.IRON_BLOCK, amount), Rarity.RARE, "Compacted Iron Block", "compacted_iron_block"); }
-	public ItemStack StarDust(Integer amount) { return addData(new ItemStack(Material.GHAST_TEAR, amount), Rarity.RARE, "Star Dust", "star_dust"); }
-	public ItemStack MachinePart(Integer amount) { return createMaterialSkull("6131a36e70ffaa7ca7e672ae6ac20b7fc1e457c43a8e1069e7b14ecdb8576", Rarity.RARE, "Machine Part", "machine_part", amount); }
+	public ItemStack CompactedEndStone(int amount) { return addData(new ItemStack(Material.END_STONE, amount), Rarity.COMMON, "Compacted End Stone", "compacted_end_stone"); }
+	public ItemStack CompactedEyeOfEnder(int amount) { return addData(new ItemStack(Material.ENDER_EYE, amount), Rarity.UNCOMMON, "Compacted Eye of Ender", "compacted_eye_of_ender"); }
+	public ItemStack CompactedDiamond(int amount) { return addData(new ItemStack(Material.DIAMOND, amount), Rarity.UNCOMMON, "Compacted Diamond", "compacted_diamond"); }
+	public ItemStack CompactedDiamondBlock(int amount) { return addData(new ItemStack(Material.DIAMOND_BLOCK, amount), Rarity.RARE, "Compacted Diamond Block", "compacted_diamond_block"); }
+	public ItemStack CompactedGold(int amount) { return addData(new ItemStack(Material.GOLD_INGOT, amount), Rarity.UNCOMMON, "Compacted Gold Ingot", "compacted_gold"); }
+	public ItemStack CompactedGoldBlock(int amount) { return addData(new ItemStack(Material.GOLD_BLOCK, amount), Rarity.RARE, "Compacted Gold Block", "compacted_gold_block"); }
+	public ItemStack CompactedPrismarine(int amount) { return addData(new ItemStack(Material.PRISMARINE, amount), Rarity.UNCOMMON, "Compacted Prismarine", "compacted_prismarine"); }
+	public ItemStack CompactedRedstone(int amount) { return addData(new ItemStack(Material.REDSTONE, amount), Rarity.UNCOMMON, "Compacted Redstone", "compacted_redstone"); }
+	public ItemStack CompactedIron(int amount) { return addData(new ItemStack(Material.IRON_INGOT, amount), Rarity.UNCOMMON, "Compacted Iron Ingot", "compacted_iron"); }
+	public ItemStack CompactedIronBlock(int amount) { return addData(new ItemStack(Material.IRON_BLOCK, amount), Rarity.RARE, "Compacted Iron Block", "compacted_iron_block"); }
+	public ItemStack StarDust(int amount) { return addData(new ItemStack(Material.GHAST_TEAR, amount), Rarity.RARE, "Star Dust", "star_dust"); }
+	public ItemStack MachinePart(int amount) { return createMaterialSkull("6131a36e70ffaa7ca7e672ae6ac20b7fc1e457c43a8e1069e7b14ecdb8576", Rarity.RARE, "Machine Part", "machine_part", amount); }
 	public ItemStack EnergyCell() { return createMaterialSkull("9ac52419b99025828c89fa825945e6948e45bb5a22e4425a59e9096e4c1ac38", Rarity.EPIC, "Energy Cell", "energy_cell"); }
 	public ItemStack MachineCore() { return createMaterialSkull("76856a8f37b6c3146854f2caa7101b9dd592f4669a3c75f941e2859552bd1ae8", Rarity.LEGENDARY, "Machine Core", "machine_core"); }
 	public void RegisterMaterialsRecipes() {
@@ -78,7 +78,7 @@ public record Materials(MoreArmorsMain plugin) {
 	private ItemStack createMaterialSkull(String skinID, Rarity rarity, String itemName, String itemID, Integer amount) {
 		ItemStack item = SkullCreator.createSkull();
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta = plugin.getSkull(itemmeta, skinID).apply();
+//		itemmeta = plugin.getSkull(itemmeta, skinID).apply();
 		item.setItemMeta(itemmeta);
 		item.setAmount(amount);
 		NBTItem nbtItem = new NBTItem(addData(item, rarity, itemName, itemID));
@@ -88,7 +88,7 @@ public record Materials(MoreArmorsMain plugin) {
 	private ItemStack createMaterialSkull(String skinID, Rarity rarity, String itemName, String itemID) {
 		ItemStack item = SkullCreator.createSkull();
 		ItemMeta itemmeta = item.getItemMeta();
-		itemmeta = plugin.getSkull(itemmeta, skinID).apply();
+//		itemmeta = plugin.getSkull(itemmeta, skinID).apply();
 		item.setItemMeta(itemmeta);
 
 		NBTItem nbtItem = new NBTItem(addData(item, rarity, itemName, itemID));

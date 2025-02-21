@@ -107,14 +107,15 @@ public class MoreArmorsListener implements Listener {
 
 		for (int i = 0; i < inventory.getSize(); i++) {
 			ItemStack currentItem = inventory.getItem(i);
-			if (!plugin.isAirOrNull(currentItem)) {
+			if (!plugin.isAirOrNull(currentItem) && NBT.get(currentItem, nbt -> nbt.getEnum("CustomItemID", CustomItemID.class) != null)) {
 				if (NBT.get(currentItem, nbt -> (CustomItemID) nbt.getEnum("CustomItemID", CustomItemID.class)).equals(CustomItemID.EMERALD) && config.getBoolean("emeraldarmor.enabled")) {
 					if (event.getBlock().getType().equals(Material.EMERALD_ORE) || event.getBlock().getType().equals(Material.DEEPSLATE_EMERALD_ORE)) {
-
 						EmeraldArmor emeraldArmor = new EmeraldArmor(currentItem);
 
 						emeraldArmor.createItemFromNBT();
 						emeraldArmor.increaseEmeraldCount(1);
+
+						emeraldArmor.updateItem();
 
 						inventory.setItem(i, emeraldArmor.getItem());
 					}

@@ -4,8 +4,11 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
+import me.offsetpaladin89.MoreArmors.enums.CustomItemID;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
+import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.EquipmentSlotGroup;
@@ -21,14 +24,18 @@ public class CustomArmor {
     protected Rarity rarity = Rarity.DEVELOPER;
     protected int armor = 0;
     protected int armorToughness = 0;
+    protected SlotType slot;
     protected String displayName = "Offset";
+    protected CustomItemID customItemID;
 
     protected ListMultimap<Attribute, AttributeModifier> attributeModifiers = ArrayListMultimap.create();
 
     CustomArmor(ItemStack item) {
         this.item = item;
+    }
 
-        setFlags();
+    CustomArmor(SlotType slot) {
+        this.slot = slot;
     }
 
     CustomArmor(ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness) {
@@ -37,11 +44,9 @@ public class CustomArmor {
         this.rarity = rarity;
         this.armor = armor;
         this.armorToughness = armorToughness;
-
-        setFlags();
     }
 
-    private void setFlags() {
+    protected void setFlags() {
         ItemMeta itemMeta = item.getItemMeta();
 
         itemMeta.setUnbreakable(true);
@@ -51,16 +56,21 @@ public class CustomArmor {
     }
 
     protected void baseAttributes() {
-        AttributeModifier armorAttribute = new AttributeModifier(MoreArmorsMain.pluginKey, armor, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR);
-        AttributeModifier armorToughnessAttribute = new AttributeModifier(MoreArmorsMain.pluginKey, armorToughness, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR);
+        AttributeModifier armorAttribute = new AttributeModifier(pluginKey(), armor, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR);
+        AttributeModifier armorToughnessAttribute = new AttributeModifier(pluginKey(), armorToughness, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR);
 
         attributeModifiers.put(Attribute.ARMOR, armorAttribute);
         attributeModifiers.put(Attribute.ARMOR_TOUGHNESS, armorToughnessAttribute);
     }
 
+    protected NamespacedKey pluginKey() {
+        return new NamespacedKey("morearmors", String.format("%s_%s", customItemID, slot).toLowerCase());
+    }
+
     protected void setAttributes() {
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setAttributeModifiers(attributeModifiers);
+        item.setItemMeta(itemMeta);
     }
 
     protected void baseNBT() {
@@ -72,8 +82,8 @@ public class CustomArmor {
         });
     }
 
-    protected void setDisplayName(String s) {
-        this.displayName = MoreArmorsMain.colorString(Rarity.getColorRarity(rarity) + s);
+    public void setDisplayName(String s) {
+        displayName = MoreArmorsMain.colorString(Rarity.getColorRarity(rarity) + s);
     }
 
     public void setRarity(Rarity rarity) {

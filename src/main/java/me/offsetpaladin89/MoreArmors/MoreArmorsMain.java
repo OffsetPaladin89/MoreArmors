@@ -1,11 +1,8 @@
 package me.offsetpaladin89.MoreArmors;
 
-import com.cryptomorin.xseries.profiles.builder.ProfileInstruction;
-import com.cryptomorin.xseries.profiles.builder.XSkull;
-import com.cryptomorin.xseries.profiles.objects.ProfileInputType;
-import com.cryptomorin.xseries.profiles.objects.Profileable;
 import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.armors.ArmorsRecord;
+import me.offsetpaladin89.MoreArmors.armors.CustomArmor;
 import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
 import me.offsetpaladin89.MoreArmors.commands.Commands;
 import me.offsetpaladin89.MoreArmors.commands.Give;
@@ -13,6 +10,7 @@ import me.offsetpaladin89.MoreArmors.handlers.*;
 import me.offsetpaladin89.MoreArmors.listeners.MainListener;
 import me.offsetpaladin89.MoreArmors.listeners.MoreArmorsListener;
 import me.offsetpaladin89.MoreArmors.materials.Materials;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -21,16 +19,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class MoreArmorsMain extends JavaPlugin {
 
-	public static final NamespacedKey pluginKey = new NamespacedKey(getPlugin(MoreArmorsMain.class), "MoreArmors");
 	public final String[] armorTypes = {"emerald", "end", "experience", "miner", "nether", "seagreed", "speedster", "titan", "destroyer"};
 	public final String[] materialTypes = {"compacted_blaze_rod", "compacted_cobblestone", "compacted_end_stone", "compacted_eye_of_ender", "compacted_soul_sand", "compacted_sugar_cane", "nether_crown", "compacted_diamond", "compacted_diamond_block", "compacted_gold", "compacted_gold_block", "compacted_prismarine", "compacted_iron", "compacted_iron_block", "compacted_redstone", "machine_part", "machine_core", "energy_cell", "star_dust"};
 	public final String[] slotTypes = {"helmet", "chestplate", "leggings", "boots"};
@@ -45,6 +44,9 @@ public class MoreArmorsMain extends JavaPlugin {
 	public Commands commands;
 
 	public void onEnable() {
+
+		new NamespacedKey(this, "morearmors");
+
 		new MainListener(this);
 		new MoreArmorsListener(this);
 		new CraftHandler(this);
@@ -94,6 +96,10 @@ public class MoreArmorsMain extends JavaPlugin {
 		getServer().getConsoleSender().sendMessage(colorString(s));
 	}
 
+	public static void sendDebugMessage(String s) {
+		Bukkit.getLogger().log(Level.INFO, s);
+	}
+
 	public void sendPlayerMessage(Player p, String s) {
 		p.sendMessage(colorString(s));
 	}
@@ -132,8 +138,14 @@ public class MoreArmorsMain extends JavaPlugin {
 		return item == null || item.getType().equals(Material.AIR);
 	}
 
-	public ProfileInstruction<ItemMeta> getSkull(ItemMeta iMeta, String skullID) {
-		return XSkull.of(iMeta).profile(Profileable.of(ProfileInputType.TEXTURE_HASH.getProfile(skullID)));
+//	public ProfileInstruction<ItemMeta> getSkull(ItemMeta iMeta, String skullID) {
+//		return XSkull.of(iMeta).profile(Profileable.of(ProfileInputType.TEXTURE_HASH.getProfile(skullID)));
+//	}
+
+	public static String formatNumber(int n) {
+		NumberFormat formatter = NumberFormat.getCompactNumberInstance(Locale.US, NumberFormat.Style.SHORT);
+		formatter.setMinimumFractionDigits(2);
+		return formatter.format(n);
 	}
 
 	public boolean isInteger(String string) {

@@ -1,14 +1,13 @@
 package me.offsetpaladin89.MoreArmors.handlers;
 
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 public record CommandHandler(MoreArmorsMain plugin) {
 
@@ -43,8 +42,8 @@ public record CommandHandler(MoreArmorsMain plugin) {
 								if (length == 5) plugin.give.giveCommand(sender, target, item.toLowerCase(), slotType, 0);
 								else {
 									if (plugin.isInteger(specialValue)) {
-										if (armorType.equals(ArmorType.EMERALD) || armorType.equals(ArmorType.DESTROYER)) plugin.give.giveCommand(sender, target, item.toLowerCase(), slotType, Integer.parseInt(specialValue));
-										else tooManyArguments(sender);
+//										if (armorType.equals(ArmorType.EMERALD) || armorType.equals(ArmorType.DESTROYER)) plugin.give.giveCommand(sender, target, item.toLowerCase(), slotType, Integer.parseInt(specialValue));
+//										else tooManyArguments(sender);
 									} else invalidArgument(sender, specialValue);
 								}
 							} else invalidArgument(sender, slot);

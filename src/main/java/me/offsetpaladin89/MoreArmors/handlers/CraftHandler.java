@@ -365,7 +365,7 @@ public class CraftHandler implements Listener {
 					if (rCustomID.equals("machine_part")) craftItem(p, plugin.materials.MachinePart(leastValue));
 					for (int x = 0; x < leastValue; x++) {
 						if (nbtResult.getString("CustomItemType").equals("armor")) {
-							EquipmentSlot slotType = SlotType.matchSlot(SlotType.matchType(result));
+//							EquipmentSlot slotType = SlotType.matchSlot(SlotType.matchType(result));
 //							if (rCustomID.equals("miner")) craftItem(p, plugin.armorSets.MinerArmor(slotType));
 //							if (rCustomID.equals("nether")) craftItem(p, plugin.armorSets.NetherArmor(slotType));
 //							if (rCustomID.equals("end")) craftItem(p, plugin.armorSets.EndArmor(slotType));

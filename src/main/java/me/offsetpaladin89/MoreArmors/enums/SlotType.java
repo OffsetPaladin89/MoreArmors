@@ -1,21 +1,21 @@
 package me.offsetpaladin89.MoreArmors.enums;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 public enum SlotType {
     HELMET, CHESTPLATE, LEGGINGS, BOOTS, NONE;
 
-    public static SlotType matchType(final ItemStack item){
-        if(isAirOrNull(item)) return null;
+    public static SlotType matchType(ItemStack item) {
+        if(isAirOrNull(item)) return NONE;
+
         String type = item.getType().toString();
-        if(item.getType().equals(Material.PLAYER_HEAD)) return HELMET;
-        if(type.endsWith("_HELMET")) return HELMET;
-        else if (type.endsWith("_CHESTPLATE") || type.endsWith("ELYTRA")) return CHESTPLATE;
-        else if (type.endsWith("_LEGGINGS")) return LEGGINGS;
-        else if (type.endsWith("_BOOTS")) return BOOTS;
-        else return null;
+
+        if(type.endsWith("HELMET") || type.endsWith("HEAD")) return HELMET;
+        else if(type.endsWith("CHESTPLATE") || type.endsWith("ELYTRA")) return CHESTPLATE;
+        else if(type.endsWith("LEGGINGS")) return LEGGINGS;
+        else if(type.endsWith("BOOTS")) return BOOTS;
+        return NONE;
     }
 
     public static SlotType typeFromString(String s) {
@@ -24,26 +24,11 @@ public enum SlotType {
             case "chestplate" -> CHESTPLATE;
             case "leggings" -> LEGGINGS;
             case "boots" -> BOOTS;
-	        default -> null;
+            default -> NONE;
         };
     }
 
-    public static Boolean validSlot(String s) {
-        switch(s.toLowerCase()) {
-            case "helmet", "chestplate", "leggings", "boots" -> { return true; }
-        };
-        return false;
+    private static boolean isAirOrNull(ItemStack item) {
+        return item == null || item.getType().equals(Material.AIR);
     }
-
-    public static EquipmentSlot matchSlot(SlotType type) {
-        return switch (type) {
-            case HELMET -> EquipmentSlot.HEAD;
-            case CHESTPLATE -> EquipmentSlot.CHEST;
-            case LEGGINGS -> EquipmentSlot.LEGS;
-            case BOOTS -> EquipmentSlot.FEET;
-            case NONE -> null;
-        };
-    }
-
-    private static boolean isAirOrNull(ItemStack item) { return item == null || item.getType().equals(Material.AIR); }
 }
