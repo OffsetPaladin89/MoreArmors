@@ -22,20 +22,20 @@ public class EmeraldArmor extends CustomArmor {
 
     private static final Color LEATHER_COLOR = Color.LIME;
 
-    private static final CustomItemID emeraldArmorID = CustomItemID.EMERALD;
+    private static final CustomItemID armorID = CustomItemID.EMERALD;
 
     private static final int UPGRADE_THRESHOLD = 50;
     private static final int MAX_EMERALD_COUNT = 250;
 
     public EmeraldArmor(ItemStack item) {
         super(item);
-        this.customItemID = emeraldArmorID;
+        this.customItemID = armorID;
     }
 
     public EmeraldArmor(SlotType slot) {
         super(slot);
         this.item = getBaseItem();
-        this.customItemID = emeraldArmorID;
+        this.customItemID = armorID;
         this.rarity = getDefaultRarity();
         this.displayName = MoreArmorsMain.colorString(Rarity.getColorRarity(rarity) + getDefaultName());
         this.emeraldCount = 0;
@@ -48,7 +48,7 @@ public class EmeraldArmor extends CustomArmor {
     public EmeraldArmor(ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness, int emeraldCount) {
         super(item, displayName, rarity, armor, armorToughness);
 
-        this.customItemID = emeraldArmorID;
+        this.customItemID = armorID;
         this.emeraldCount = emeraldCount;
 
         createItem();
@@ -83,7 +83,6 @@ public class EmeraldArmor extends CustomArmor {
 
         slot = SlotType.matchType(item);
         displayName = MoreArmorsMain.colorString(Rarity.getColorRarity(rarity) + item.getItemMeta().getDisplayName());
-        MoreArmorsMain.sendDebugMessage(String.format("Rarity: %s | Armor: %d | Armor Toughness: %d | Emerald Count: %d | Display Name: %s", rarity, armor, armorToughness, emeraldCount, displayName));
     }
 
     public void updateItem() {
