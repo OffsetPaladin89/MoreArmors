@@ -7,6 +7,7 @@ import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.CustomItemID;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.UUID;
 
@@ -27,6 +29,7 @@ public class CustomArmor {
     protected SlotType slot;
     protected String displayName = "Offset";
     protected CustomItemID customItemID;
+    protected int upgradeTier = 0;
 
     protected ListMultimap<Attribute, AttributeModifier> attributeModifiers = ArrayListMultimap.create();
 
@@ -55,6 +58,14 @@ public class CustomArmor {
         item.setItemMeta(itemMeta);
     }
 
+    protected void setLeatherColor(Color LEATHER_COLOR) {
+        LeatherArmorMeta itemMeta = (LeatherArmorMeta) item.getItemMeta();
+
+        itemMeta.setColor(LEATHER_COLOR);
+
+        item.setItemMeta(itemMeta);
+    }
+
     protected void baseAttributes() {
         AttributeModifier armorAttribute = new AttributeModifier(pluginKey(), armor, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR);
         AttributeModifier armorToughnessAttribute = new AttributeModifier(pluginKey(), armorToughness, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR);
@@ -78,8 +89,13 @@ public class CustomArmor {
             nbt.setEnum("Rarity", rarity);
             nbt.setInteger("Armor", armor);
             nbt.setInteger("ArmorToughness", armorToughness);
+            nbt.setInteger("UpgradeTier", upgradeTier);
             if(item.getType().equals(Material.PLAYER_HEAD)) nbt.setUUID("UUID", UUID.randomUUID());
         });
+    }
+
+    protected String getFormattedName(String displayName) {
+        return MoreArmorsMain.colorString(String.format("%s%s &b(+%d)", Rarity.getColorRarity(rarity), displayName, upgradeTier));
     }
 
     public void setDisplayName(String s) {

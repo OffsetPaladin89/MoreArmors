@@ -37,7 +37,7 @@ public class EmeraldArmor extends CustomArmor {
         this.item = getBaseItem();
         this.customItemID = armorID;
         this.rarity = getDefaultRarity();
-        this.displayName = MoreArmorsMain.colorString(Rarity.getColorRarity(rarity) + getDefaultName());
+        this.displayName = getFormattedName(getDefaultName());
         this.emeraldCount = 0;
         this.armor = getDefaultArmor();
         this.armorToughness = getDefaultArmorToughness();
@@ -62,7 +62,7 @@ public class EmeraldArmor extends CustomArmor {
         itemMeta.setDisplayName(displayName);
         item.setItemMeta(itemMeta);
 
-        setLeatherColor();
+        setLeatherColor(LEATHER_COLOR);
         setLore();
 
         setFlags();
@@ -82,14 +82,18 @@ public class EmeraldArmor extends CustomArmor {
         });
 
         slot = SlotType.matchType(item);
-        displayName = MoreArmorsMain.colorString(Rarity.getColorRarity(rarity) + item.getItemMeta().getDisplayName());
+        displayName = getFormattedName(item.getItemMeta().getDisplayName());
     }
 
     public void updateItem() {
+        setLeatherColor(LEATHER_COLOR);
         setLore();
+
+        setFlags();
 
         addAttributes();
 
+        baseNBT();
         addNBT();
     }
 
@@ -146,14 +150,6 @@ public class EmeraldArmor extends CustomArmor {
             case BOOTS -> "Emerald Boots";
             default -> null;
         };
-    }
-
-    private void setLeatherColor() {
-        LeatherArmorMeta itemMeta = (LeatherArmorMeta) item.getItemMeta();
-
-        itemMeta.setColor(LEATHER_COLOR);
-
-        item.setItemMeta(itemMeta);
     }
 
     public final ItemStack getItem() {

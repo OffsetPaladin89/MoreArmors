@@ -22,6 +22,10 @@ public class Lore {
         lore.add(colorString(String.format("%s&l%s", Rarity.getColorRarity(rarity), rarity)));
     }
 
+    public void addEmpty() {
+        lore.add("");
+    }
+
     public ArrayList<String> getLore() {
         return lore;
     }

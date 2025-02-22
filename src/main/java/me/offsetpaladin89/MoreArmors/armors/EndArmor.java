@@ -1,5 +1,7 @@
 package me.offsetpaladin89.MoreArmors.armors;
 
+import de.tr7zw.changeme.nbtapi.NBT;
+import me.offsetpaladin89.MoreArmors.Lore;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.CustomItemID;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
@@ -7,6 +9,7 @@ import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class EndArmor extends CustomArmor {
 
@@ -23,9 +26,73 @@ public class EndArmor extends CustomArmor {
         this.item = getBaseItem();
         this.customItemID = armorID;
         this.rarity = getDefaultRarity();
-        this.displayName = MoreArmorsMain.colorString(Rarity.getColorRarity(rarity) + getDefaultName());
+        this.displayName = getFormattedName(getDefaultName());
         this.armor = getDefaultArmor();
         this.armorToughness = getDefaultArmorToughness();
+
+        createItem();
+    }
+
+    private void setLore() {
+        ItemMeta itemMeta = item.getItemMeta();
+
+        Lore lore = new Lore();
+        lore.addColoredLine("&6Item Ability: Bane of the End");
+        lore.addColoredLine("&7Deal &c+10% &7damage while in &5The End&7.");
+        lore.addEmpty();
+        lore.addColoredLine("&6Full Set Bonus: End King");
+        lore.addColoredLine("&7Take &a50% &7reduced damage while in &5The End&7.");
+        lore.addColoredLine("&7Deal &c+100% &7damage while in &5The End&7.");
+        lore.addEmpty();
+        lore.addColoredLine("&6Full Set Ability: Ender Warp &e&lSHIFT LEFT CLICK");
+        lore.addColoredLine("&7Teleport &a10 blocks &7forwards while in &5The End&7.");
+        lore.addColoredLine("&81s Cooldown");
+        lore.addRarity(rarity);
+        itemMeta.setLore(lore.getLore());
+
+        item.setItemMeta(itemMeta);
+    }
+
+    public void createItem() {
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName(displayName);
+        item.setItemMeta(itemMeta);
+
+        if(this.item.getType().equals(Material.PLAYER_HEAD)) assignSkull(item);
+        else setLeatherColor(LEATHER_COLOR);
+        setLore();
+
+        setFlags();
+
+        baseAttributes();
+        setAttributes();
+
+        baseNBT();
+        addNBT();
+    }
+
+    public void createItemFromNBT() {
+        NBT.get(item, nbt -> {
+            rarity = nbt.getEnum("Rarity", Rarity.class);
+            armor = nbt.getInteger("Armor");
+            armorToughness = nbt.getInteger("ArmorToughness");
+        });
+
+        slot = SlotType.matchType(item);
+        displayName = getFormattedName(item.getItemMeta().getDisplayName());
+    }
+
+    public void updateItem() {
+        setLeatherColor(LEATHER_COLOR);
+        setLore();
+
+        setFlags();
+
+        baseAttributes();
+        setAttributes();
+
+        baseNBT();
+        addNBT();
     }
 
     public final ItemStack getItem() {
@@ -67,11 +134,21 @@ public class EndArmor extends CustomArmor {
 
     private ItemStack getBaseItem() {
         return switch (slot) {
-            case HELMET -> null; // TODO Add Helmet Skin
+            case HELMET -> new ItemStack(Material.PLAYER_HEAD);
             case CHESTPLATE -> new ItemStack(Material.LEATHER_CHESTPLATE);
             case LEGGINGS -> new ItemStack(Material.LEATHER_LEGGINGS);
             case BOOTS -> new ItemStack(Material.LEATHER_BOOTS);
             default -> null;
         };
+    }
+
+    private void assignSkull(ItemStack item) {
+        MoreArmorsMain.modifySkullSkin(item, "fee4eabeb72f19088ade78266191c8f77398cc0d80cdd27563a5d66b71912b28");
+    }
+
+    private void addNBT() {
+        NBT.modify(item, nbt -> {
+            nbt.setEnum("CustomItemID", customItemID);
+        });
     }
 }

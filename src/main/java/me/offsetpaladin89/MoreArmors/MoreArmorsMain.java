@@ -1,6 +1,11 @@
 package me.offsetpaladin89.MoreArmors;
 
+import com.cryptomorin.xseries.profiles.builder.ProfileInstruction;
+import com.cryptomorin.xseries.profiles.builder.XSkull;
+import com.cryptomorin.xseries.profiles.objects.ProfileInputType;
+import com.cryptomorin.xseries.profiles.objects.Profileable;
 import de.tr7zw.changeme.nbtapi.NBT;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import me.offsetpaladin89.MoreArmors.armors.ArmorsRecord;
 import me.offsetpaladin89.MoreArmors.armors.CustomArmor;
 import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
@@ -19,13 +24,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.NumberFormat;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 public class MoreArmorsMain extends JavaPlugin {
@@ -136,6 +140,19 @@ public class MoreArmorsMain extends JavaPlugin {
 
 	public boolean isAirOrNull(ItemStack item) {
 		return item == null || item.getType().equals(Material.AIR);
+	}
+
+	public static void modifySkullSkin(ItemStack item, String textureValue) {
+
+		String convertBase64Texture = Base64.getEncoder().encodeToString(String.format("{\"textures\":{\"SKIN\":{\"url\":\"http://textures.minecraft.net/texture/%s\"}}}", textureValue).getBytes());
+
+		NBT.modifyComponents(item, nbt -> {
+			ReadWriteNBT profileNbt = nbt.getOrCreateCompound("minecraft:profile");
+			profileNbt.setUUID("id", UUID.randomUUID());
+			ReadWriteNBT propertiesNbt = profileNbt.getCompoundList("properties").addCompound();
+			propertiesNbt.setString("name", "textures");
+			propertiesNbt.setString("value", convertBase64Texture);
+		});
 	}
 
 //	public ProfileInstruction<ItemMeta> getSkull(ItemMeta iMeta, String skullID) {
