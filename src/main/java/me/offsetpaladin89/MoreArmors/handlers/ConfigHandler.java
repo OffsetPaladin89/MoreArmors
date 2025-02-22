@@ -18,7 +18,7 @@ public record ConfigHandler(MoreArmorsMain plugin) {
 	}
 
 	public FileConfiguration getConfig(String name) {
-		File file = new File(plugin.getDataFolder() + "/" + name + ".yml");
+		File file = new File(String.format("%s/%s.yml", plugin.getDataFolder(), name));
 		FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
 		if (!file.exists()) {
@@ -30,7 +30,8 @@ public record ConfigHandler(MoreArmorsMain plugin) {
 					config.save(file);
 				}
 			} catch (Exception ignored) {}
-		} else {config = YamlConfiguration.loadConfiguration(file);}
+		}
+		else config = YamlConfiguration.loadConfiguration(file);
 		return config;
 	}
 
@@ -38,11 +39,16 @@ public record ConfigHandler(MoreArmorsMain plugin) {
 	public void saveConfig(FileConfiguration config, String name) {
 		File file = new File(plugin.getDataFolder() + "/" + name + ".yml");
 		fixPermissions(file);
-		try {config.save(file);} catch (IOException e) {e.printStackTrace();}
+		try {
+			config.save(file);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void fixPermissions(File file) {
-		if ((file.canWrite() || file.canRead())) {
+		if (!(file.canWrite() || file.canRead())) {
 			file.setWritable(true, false);
 			file.setReadable(true, false);
 		}

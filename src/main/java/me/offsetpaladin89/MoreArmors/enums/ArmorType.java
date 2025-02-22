@@ -1,9 +1,12 @@
 package me.offsetpaladin89.MoreArmors.enums;
 
-public enum ArmorType {
-    EMERALD, END, EXPERIENCE, MINER, NETHER, SEA_GREED, SPEEDSTER, TITAN, DESTROYER;
+import java.util.ArrayList;
+import java.util.List;
 
-    public static ArmorType getSetType(String s) {
+public enum ArmorType {
+    EMERALD, END, EXPERIENCE, MINER, NETHER, SEA_GREED, SPEEDSTER, TITAN, DESTROYER, INVALID;
+
+    public static ArmorType armorType(String s) {
         return switch(s.toLowerCase()) {
             case "emerald" -> EMERALD;
             case "end" -> END;
@@ -14,7 +17,13 @@ public enum ArmorType {
             case "seagreed" -> SEA_GREED;
             case "speedster" -> SPEEDSTER;
             case "titan" -> TITAN;
-	        default -> null;
+            default -> INVALID;
         };
+    }
+
+    public static List<String> allArmorTypes() {
+        ArrayList<String> arrayList = new ArrayList<>();
+        for(ArmorType type : ArmorType.values()) arrayList.add(type.toString().toLowerCase());
+        return arrayList;
     }
 }

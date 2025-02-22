@@ -4,6 +4,7 @@ import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +19,7 @@ public class CommandCompleter implements TabCompleter {
 		plugin.getServer().getPluginCommand("morearmors").setTabCompleter(this);
 	}
 
-	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
 		List<String> arguments = new ArrayList<>();
 		if (args.length == 1) {
 			if (sender.hasPermission("morearmors.edit")) {

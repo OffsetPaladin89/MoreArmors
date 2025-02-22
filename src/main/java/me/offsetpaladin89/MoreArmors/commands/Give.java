@@ -2,14 +2,16 @@ package me.offsetpaladin89.MoreArmors.commands;
 
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
-import me.offsetpaladin89.MoreArmors.enums.MaterialType;
-import me.offsetpaladin89.MoreArmors.enums.ArmorType;
-import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.armors.EndArmor;
+import me.offsetpaladin89.MoreArmors.handlers.CommandHandler;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+
+import me.offsetpaladin89.MoreArmors.handlers.CommandHandler.SlotType;
+import me.offsetpaladin89.MoreArmors.handlers.CommandHandler.ArmorType;
+import me.offsetpaladin89.MoreArmors.handlers.CommandHandler.MaterialType;
 
 public record Give(MoreArmorsMain plugin) {
 	public ItemStack give(MaterialType type, Integer amount) {
@@ -33,11 +35,16 @@ public record Give(MoreArmorsMain plugin) {
 			case MACHINE_PART -> plugin.materials.MachinePart(amount);
 			case ENERGY_CELL -> plugin.materials.EnergyCell();
 			case MACHINE_CORE -> plugin.materials.MachineCore();
-		};
+            case INVALID -> null;
+        };
 	}
 
 	public ItemStack give(ArmorType type, SlotType slot) {
-		return new EmeraldArmor(slot).getItem();
+		return switch (type) {
+			case EMERALD -> new EmeraldArmor(slot).getItem();
+			case END -> new EndArmor(slot).getItem();
+			default -> null;
+		};
 //		return switch (type) {
 //			case EMERALD -> plugin.armorSets.EmeraldArmor(SlotType.matchSlot(slotType), specialValue);
 //			case END -> plugin.armorSets.EndArmor(SlotType.matchSlot(slotType));
@@ -51,10 +58,9 @@ public record Give(MoreArmorsMain plugin) {
 //		};
 	}
 
-	public void giveCommand(CommandSender sender, Player target, String type, SlotType slot, Integer specialValue) {
-//		ItemStack item = give(ArmorType.getSetType(type), slotType, specialValue);
+	public void giveCommand(CommandSender sender, Player target, String type, SlotType slot) {
 		PlayerInventory inventory = target.getInventory();
-		ItemStack item = give(ArmorType.getSetType(type), slot);
+		ItemStack item = give(ArmorType.armorType(type), slot);
 		if (inventory.firstEmpty() == -1) target.getWorld().dropItem(target.getLocation().add(0.0D, 0.5D, 0.0D), item);
 		else inventory.addItem(item);
 		giveMessage(sender, target, 1, item);
