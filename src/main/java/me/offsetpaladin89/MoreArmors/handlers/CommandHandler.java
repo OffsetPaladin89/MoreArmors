@@ -11,6 +11,8 @@ import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.CommandType;
 
+import me.offsetpaladin89.MoreArmors.materials.Cobblestone;
+import me.offsetpaladin89.MoreArmors.materials.SugarCane;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -327,7 +329,50 @@ public record CommandHandler(MoreArmorsMain plugin) {
 
 	// TODO Give Material
 	private void giveItem(CommandSender sender, Player target, MaterialType materialType, int amount) {
+		PlayerInventory inventory = target.getInventory();
 
+		ItemStack item = switch (materialType) {
+            case SUGAR_CANE_0 -> new SugarCane.SugarCane0(16).getItem();
+            case COBBLESTONE_0 -> new Cobblestone.Cobblestone0(16).getItem();
+            case COBBLESTONE_1 -> new Cobblestone.Cobblestone1(16).getItem();
+            case COBBLESTONE_2 -> new Cobblestone.Cobblestone2(16).getItem();
+            case SOUL_SAND_0 -> null;
+            case SOUL_SAND_1 -> null;
+            case BLAZE_ROD_0 -> null;
+            case BLAZE_ROD_1 -> null;
+            case NETHER_CROWN_0 -> null;
+            case ENDSTONE_0 -> null;
+            case ENDSTONE_1 -> null;
+            case ENDSTONE_2 -> null;
+            case EYE_OF_ENDER_0 -> null;
+            case EYE_OF_ENDER_1 -> null;
+            case DIAMOND_BLOCK_0 -> null;
+            case GOLD_BLOCK_0 -> null;
+            case PRISMARINE_0 -> null;
+            case REDSTONE_BLOCK_0 -> null;
+            case IRON_BLOCK_0 -> null;
+            case STAR_DUST -> null;
+            case MACHINE_PART -> null;
+            case MACHINE_CORE -> null;
+            case ENERGY_CELL -> null;
+            case INVALID -> null;
+        };
+
+		int remaining = amount;
+		while(remaining >= 16) {
+			addItem(inventory, target, item);
+			remaining -= 16;
+		}
+
+		item.setAmount(remaining);
+		addItem(inventory, target, item);
+
+		giveMessage(sender, target, item, amount);
+	}
+
+	private void addItem(PlayerInventory inventory, Player target, ItemStack item) {
+		if (inventory.firstEmpty() == -1) target.getWorld().dropItem(target.getLocation().add(0.0D, 0.5D, 0.0D), item);
+		else inventory.addItem(item);
 	}
 
 	private void giveMessage(CommandSender sender, Player target, ItemStack item, int amount) {

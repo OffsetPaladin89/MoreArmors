@@ -1,7 +1,10 @@
 package me.offsetpaladin89.MoreArmors.listeners;
 
+import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
+import me.offsetpaladin89.MoreArmors.enums.ArmorType;
+import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,10 +31,10 @@ public class MainListener implements Listener {
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
-		NBTItem nbtItem = new NBTItem(event.getItemInHand());
-		if (nbtItem.getBoolean("IsCustomItem")) {
-			event.setCancelled(true);
-		}
+		NBT.get(event.getItemInHand(), nbt -> {
+			if(nbt.getEnum("ArmorID", ArmorType.class) != null) event.setCancelled(true);
+			else if(nbt.getEnum("MaterialID", MaterialType.class) != null) event.setCancelled(true);
+		});
 	}
 
 	@EventHandler

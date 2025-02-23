@@ -3,7 +3,7 @@ package me.offsetpaladin89.MoreArmors.armors;
 import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.Lore;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import me.offsetpaladin89.MoreArmors.enums.CustomItemID;
+import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.Color;
@@ -15,8 +15,6 @@ public class EndArmor extends CustomArmor {
 
     private static final Color LEATHER_COLOR = Color.PURPLE;
 
-    private static final CustomItemID armorID = CustomItemID.END;
-
     public EndArmor(ItemStack item) {
         super(item);
     }
@@ -24,7 +22,6 @@ public class EndArmor extends CustomArmor {
     public EndArmor(SlotType slot) {
         super(slot);
         this.item = getBaseItem();
-        this.customItemID = armorID;
         this.rarity = getDefaultRarity();
         this.displayName = getFormattedName(getDefaultName());
         this.armor = getDefaultArmor();
@@ -47,7 +44,7 @@ public class EndArmor extends CustomArmor {
         lore.addColoredLine("&6Full Set Ability: Ender Warp &e&lSHIFT LEFT CLICK");
         lore.addColoredLine("&7Teleport &a10 blocks &7forwards while in &5The End&7.");
         lore.addColoredLine("&81s Cooldown");
-        lore.addRarity(rarity);
+        lore.addArmorRarity(rarity);
         itemMeta.setLore(lore.getLore());
 
         item.setItemMeta(itemMeta);
@@ -57,6 +54,24 @@ public class EndArmor extends CustomArmor {
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setDisplayName(displayName);
         item.setItemMeta(itemMeta);
+
+        updateItem();
+    }
+
+    public void createItemFromNBT() {
+        NBT.get(item, nbt -> {
+            rarity = nbt.getEnum("Rarity", Rarity.class);
+            armor = nbt.getInteger("Armor");
+            armorToughness = nbt.getInteger("ArmorToughness");
+            armorID = nbt.getEnum("ArmorID", ArmorType.class);
+        });
+
+        slot = SlotType.matchType(item);
+        displayName = getFormattedName(item.getItemMeta().getDisplayName());
+    }
+
+    public void updateItem() {
+        this.armorID = ArmorType.END;
 
         if(this.item.getType().equals(Material.PLAYER_HEAD)) assignSkull(item);
         else setLeatherColor(LEATHER_COLOR);
@@ -68,31 +83,6 @@ public class EndArmor extends CustomArmor {
         setAttributes();
 
         baseNBT();
-        addNBT();
-    }
-
-    public void createItemFromNBT() {
-        NBT.get(item, nbt -> {
-            rarity = nbt.getEnum("Rarity", Rarity.class);
-            armor = nbt.getInteger("Armor");
-            armorToughness = nbt.getInteger("ArmorToughness");
-        });
-
-        slot = SlotType.matchType(item);
-        displayName = getFormattedName(item.getItemMeta().getDisplayName());
-    }
-
-    public void updateItem() {
-        setLeatherColor(LEATHER_COLOR);
-        setLore();
-
-        setFlags();
-
-        baseAttributes();
-        setAttributes();
-
-        baseNBT();
-        addNBT();
     }
 
     public final ItemStack getItem() {
@@ -144,11 +134,5 @@ public class EndArmor extends CustomArmor {
 
     private void assignSkull(ItemStack item) {
         MoreArmorsMain.modifySkullSkin(item, "fee4eabeb72f19088ade78266191c8f77398cc0d80cdd27563a5d66b71912b28");
-    }
-
-    private void addNBT() {
-        NBT.modify(item, nbt -> {
-            nbt.setEnum("CustomItemID", customItemID);
-        });
     }
 }

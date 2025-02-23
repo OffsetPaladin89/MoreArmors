@@ -17,9 +17,14 @@ public class Lore {
         lore.add(colorString(s));
     }
 
-    public void addRarity(Rarity rarity) {
+    public void addArmorRarity(Rarity rarity) {
         lore.add("");
         lore.add(colorString(String.format("%s&l%s", Rarity.getColorRarity(rarity), rarity)));
+    }
+
+    public void addMaterialRarity(Rarity rarity) {
+        lore.add("");
+        lore.add(colorString(String.format("%s&l%s MATERIAL", Rarity.getColorRarity(rarity), rarity)));
     }
 
     public void addEmpty() {

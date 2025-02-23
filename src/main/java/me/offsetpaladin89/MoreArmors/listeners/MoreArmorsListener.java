@@ -5,7 +5,7 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
-import me.offsetpaladin89.MoreArmors.enums.CustomItemID;
+import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import org.bukkit.*;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
@@ -105,23 +105,6 @@ public class MoreArmorsListener implements Listener {
 		Player player = event.getPlayer();
 		PlayerInventory inventory = player.getInventory();
 
-		for (int i = 0; i < inventory.getSize(); i++) {
-			ItemStack currentItem = inventory.getItem(i);
-			if (!plugin.isAirOrNull(currentItem) && NBT.get(currentItem, nbt -> nbt.getEnum("CustomItemID", CustomItemID.class) != null)) {
-				if (NBT.get(currentItem, nbt -> (CustomItemID) nbt.getEnum("CustomItemID", CustomItemID.class)).equals(CustomItemID.EMERALD) && config.getBoolean("emeraldarmor.enabled")) {
-					if (event.getBlock().getType().equals(Material.EMERALD_ORE) || event.getBlock().getType().equals(Material.DEEPSLATE_EMERALD_ORE)) {
-						EmeraldArmor emeraldArmor = new EmeraldArmor(currentItem);
-
-						emeraldArmor.createItemFromNBT();
-						emeraldArmor.increaseEmeraldCount(1);
-
-						emeraldArmor.updateItem();
-
-						inventory.setItem(i, emeraldArmor.getItem());
-					}
-				}
-			}
-		}
 		if (plugin.IsFullCustomSet("experience", player.getInventory()) && config.getBoolean("experiencearmor.enabled")) {event.setExpToDrop(event.getExpToDrop() * 2);}
 		if (plugin.IsFullCustomSet("miner", player.getInventory()) && config.getBoolean("minerarmor.enabled")) {
 			if (player.hasPotionEffect(PotionEffectType.HASTE)) {if (player.getPotionEffect(PotionEffectType.HASTE).getAmplifier() == 1) {player.removePotionEffect(PotionEffectType.HASTE);}}
@@ -138,6 +121,29 @@ public class MoreArmorsListener implements Listener {
 						b.getWorld().dropItemNaturally(b.getLocation(), new ItemStack(i.getType(), i.getAmount() * m));
 					}
 				}
+			}
+		}
+
+		for (int i = 0; i < inventory.getSize(); i++) {
+			ItemStack currentItem = inventory.getItem(i);
+			if(plugin.isAirOrNull(currentItem)) continue;
+
+			ArmorType armorType = NBT.get(currentItem, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class));
+
+			if(armorType == null) continue;
+
+			if(armorType.equals(ArmorType.EMERALD)) {
+				if(!config.getBoolean("emeraldarmor.enabled")) continue;
+				if(!(event.getBlock().getType().equals(Material.EMERALD_ORE) || event.getBlock().getType().equals(Material.DEEPSLATE_EMERALD_ORE))) continue;
+
+				EmeraldArmor emeraldArmor = new EmeraldArmor(currentItem);
+
+				emeraldArmor.createItemFromNBT();
+				emeraldArmor.increaseEmeraldCount(1);
+
+				emeraldArmor.updateItem();
+
+				inventory.setItem(i, emeraldArmor.getItem());
 			}
 		}
 	}

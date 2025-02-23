@@ -7,16 +7,20 @@ public enum EditType {
     EMERALD_COUNT, KILL_COUNT, INVALID;
 
     public static EditType editType(String s) {
-        return switch (s.toLowerCase()) {
-            case "emerald_count" -> EMERALD_COUNT;
-            case "kill_count" -> KILL_COUNT;
-            default -> INVALID;
-        };
+        EditType editType;
+        try {
+            editType = EditType.valueOf(s.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            editType = INVALID;
+        }
+        return editType;
     }
 
     public static List<String> allEditTypes() {
         ArrayList<String> arrayList = new ArrayList<>();
-        for(EditType type : EditType.values()) arrayList.add(type.toString().toLowerCase());
+        for(EditType type : EditType.values()) {
+            if(type != INVALID) arrayList.add(type.toString().toLowerCase());
+        }
         return arrayList;
     }
 }

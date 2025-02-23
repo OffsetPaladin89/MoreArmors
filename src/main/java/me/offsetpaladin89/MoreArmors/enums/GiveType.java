@@ -7,16 +7,20 @@ public enum GiveType {
     ARMOR, MATERIAL, INVALID;
 
     public static GiveType giveType(String s) {
-        return switch (s.toLowerCase()) {
-            case "armor" -> ARMOR;
-            case "material" -> MATERIAL;
-            default -> INVALID;
-        };
+        GiveType giveType;
+        try {
+            giveType = GiveType.valueOf(s.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            giveType = INVALID;
+        }
+        return giveType;
     }
 
     public static List<String> allGiveTypes() {
         ArrayList<String> arrayList = new ArrayList<>();
-        for(GiveType type : GiveType.values()) arrayList.add(type.toString().toLowerCase());
+        for(GiveType type : GiveType.values()) {
+            if(type != INVALID) arrayList.add(type.toString().toLowerCase());
+        }
         return arrayList;
     }
 }

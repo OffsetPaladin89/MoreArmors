@@ -3,7 +3,7 @@ package me.offsetpaladin89.MoreArmors.armors;
 import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.Lore;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import me.offsetpaladin89.MoreArmors.enums.CustomItemID;
+import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.Color;
@@ -13,7 +13,6 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 public class EmeraldArmor extends CustomArmor {
 
@@ -22,20 +21,16 @@ public class EmeraldArmor extends CustomArmor {
 
     private static final Color LEATHER_COLOR = Color.LIME;
 
-    private static final CustomItemID armorID = CustomItemID.EMERALD;
-
     private static final int UPGRADE_THRESHOLD = 50;
     private static final int MAX_EMERALD_COUNT = 250;
 
     public EmeraldArmor(ItemStack item) {
         super(item);
-        this.customItemID = armorID;
     }
 
     public EmeraldArmor(SlotType slot) {
         super(slot);
         this.item = getBaseItem();
-        this.customItemID = armorID;
         this.rarity = getDefaultRarity();
         this.displayName = getFormattedName(getDefaultName());
         this.emeraldCount = 0;
@@ -48,7 +43,6 @@ public class EmeraldArmor extends CustomArmor {
     public EmeraldArmor(ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness, int emeraldCount) {
         super(item, displayName, rarity, armor, armorToughness);
 
-        this.customItemID = armorID;
         this.emeraldCount = emeraldCount;
 
         createItem();
@@ -62,15 +56,7 @@ public class EmeraldArmor extends CustomArmor {
         itemMeta.setDisplayName(displayName);
         item.setItemMeta(itemMeta);
 
-        setLeatherColor(LEATHER_COLOR);
-        setLore();
-
-        setFlags();
-
-        addAttributes();
-
-        baseNBT();
-        addNBT();
+        updateItem();
     }
 
     public void createItemFromNBT() {
@@ -79,6 +65,7 @@ public class EmeraldArmor extends CustomArmor {
             armor = nbt.getInteger("Armor");
             armorToughness = nbt.getInteger("ArmorToughness");
             emeraldCount = nbt.getInteger("EmeraldCount");
+            armorID = nbt.getEnum("ArmorID", ArmorType.class);
         });
 
         slot = SlotType.matchType(item);
@@ -86,6 +73,8 @@ public class EmeraldArmor extends CustomArmor {
     }
 
     public void updateItem() {
+        this.armorID = ArmorType.EMERALD;
+
         setLeatherColor(LEATHER_COLOR);
         setLore();
 
@@ -176,7 +165,7 @@ public class EmeraldArmor extends CustomArmor {
             lore.addColoredLine(String.format("&7Next Upgrade: &e+%d Health &8(&a%d&7/&c50&8)", nextBonus, upgradeProgress));
             lore.addColoredLine("&8Max +10 Health");
         }
-        lore.addRarity(rarity);
+        lore.addArmorRarity(rarity);
         itemMeta.setLore(lore.getLore());
 
         item.setItemMeta(itemMeta);
@@ -196,7 +185,6 @@ public class EmeraldArmor extends CustomArmor {
     private void addNBT() {
         NBT.modify(item, nbt -> {
             nbt.setInteger("EmeraldCount", emeraldCount);
-            nbt.setEnum("CustomItemID", customItemID);
         });
     }
 
