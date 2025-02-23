@@ -12,22 +12,20 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class CustomMaterial {
 
     protected ItemStack item;
-    protected int amount;
     protected Rarity rarity;
     protected int upgradeTier;
     protected String displayName = "Offset";
     protected MaterialType materialID;
 
-    protected CustomMaterial(Rarity rarity, int upgradeTier, String displayName, MaterialType materialID, int amount) {
+    protected CustomMaterial(Rarity rarity, int upgradeTier, String displayName, MaterialType materialID) {
         this.rarity = rarity;
         this.upgradeTier = upgradeTier;
         this.displayName = getFormattedName(displayName);
         this.materialID = materialID;
-        this.amount = amount;
     }
 
     protected void createItem(Material material) {
-        item = new ItemStack(material, amount);
+        item = new ItemStack(material, 1);
 
         setDisplayName();
         setLore();
@@ -65,6 +63,10 @@ public class CustomMaterial {
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
         item.setItemMeta(itemMeta);
+    }
+
+    public void setAmount(int amount) {
+        item.setAmount(amount);
     }
 
     protected void setDisplayName() {

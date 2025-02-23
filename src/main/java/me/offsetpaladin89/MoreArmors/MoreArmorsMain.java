@@ -136,13 +136,13 @@ public class MoreArmorsMain extends JavaPlugin {
 		return item == null || item.getType().equals(Material.AIR);
 	}
 
-	public static void modifySkullSkin(ItemStack item, String textureValue) {
+	public static void modifySkullSkin(ItemStack item, String textureValue, UUID uuid) {
 
 		String convertBase64Texture = Base64.getEncoder().encodeToString(String.format("{\"textures\":{\"SKIN\":{\"url\":\"http://textures.minecraft.net/texture/%s\"}}}", textureValue).getBytes());
 
 		NBT.modifyComponents(item, nbt -> {
 			ReadWriteNBT profileNbt = nbt.getOrCreateCompound("minecraft:profile");
-			profileNbt.setUUID("id", UUID.randomUUID());
+			profileNbt.setUUID("id", uuid);
 			ReadWriteNBT propertiesNbt = profileNbt.getCompoundList("properties").addCompound();
 			propertiesNbt.setString("name", "textures");
 			propertiesNbt.setString("value", convertBase64Texture);

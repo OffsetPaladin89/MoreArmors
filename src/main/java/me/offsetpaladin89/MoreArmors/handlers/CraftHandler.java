@@ -1,18 +1,19 @@
 package me.offsetpaladin89.MoreArmors.handlers;
 
+import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
+import me.offsetpaladin89.MoreArmors.enums.ArmorType;
+import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.inventory.CraftingInventory;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,134 +27,150 @@ public class CraftHandler implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
+	private boolean isCustomItem(ItemStack item) {
+		boolean isMaterial = NBT.get(item, nbt -> nbt.getEnum("MaterialID", MaterialType.class) != null);
+		boolean isArmor = NBT.get(item, nbt -> nbt.getEnum("ArmorID", ArmorType.class) != null);
+		return isMaterial || isArmor;
+	}
+
 	@EventHandler
-	public void preCraftEvent(PrepareItemCraftEvent e) {
-		CraftingInventory inv = e.getInventory();
-		ItemStack result = inv.getResult();
-		if (!plugin.isAirOrNull(result)) {
-			NBTItem nbtResult = new NBTItem(result);
-			String rCustomID = nbtResult.getString("CustomItemID");
-			ItemStack[] cm = inv.getMatrix();
-			for (int x = 0; x < cm.length; x++) {
-				ItemStack i = cm[x];
-				if (!plugin.isAirOrNull(i)) {
-					NBTItem nbtItem = new NBTItem(i);
-					String iCustomID = nbtItem.getString("CustomItemID");
+	public void preCraftEvent(PrepareItemCraftEvent event) {
+		CraftingInventory inventory = event.getInventory();
+		ItemStack result = inventory.getResult();
 
-					// Although checking for isEmpty() is not the most efficient method,
-					// it makes the code much easier to understand.
+		if(plugin.isAirOrNull(result)) return;
+		ItemStack[] craftingMatrix = inventory.getMatrix();
 
-					// Armors
-					// Speedster Armor
-					if (rCustomID.equals("speedster")) {
-						if (!iCustomID.equals("compacted_sugar_cane")) inv.setResult(null);
-					}
-					// Miner Armor
-					if (rCustomID.equals("miner")) {
-						if (iCustomID.equals("compacted_cobblestone") && i.getAmount() < 32) inv.setResult(null);
-						if (iCustomID.isEmpty()) inv.setResult(null);
-					}
-					// Nether Armor
-					if (rCustomID.equals("nether")) {
-						if (iCustomID.equals("compacted_soul_sand") && i.getAmount() < 16) inv.setResult(null);
-						if (i.getType().equals(Material.PLAYER_HEAD) && !iCustomID.equals("nether_crown")) inv.setResult(null);
-						if (!i.getType().equals(Material.NETHER_STAR) && iCustomID.isEmpty()) inv.setResult(null);
-					}
-					// End Armor
-					if (rCustomID.equals("end")) {
-						if (iCustomID.equals("compacted_end_stone") && i.getAmount() < 32) inv.setResult(null);
-						if (iCustomID.equals("compacted_eye_of_ender") && i.getAmount() < 16) inv.setResult(null);
-						if (!i.getType().equals(Material.DRAGON_HEAD) && iCustomID.isEmpty()) inv.setResult(null);
-					}
-					// Sea Greed Armor
-					if (rCustomID.equals("seagreed")) {
-						if (iCustomID.equals("compacted_prismarine") && i.getAmount() < 16) inv.setResult(null);
-						if (iCustomID.equals("compacted_diamond_block") && i.getAmount() < 4) inv.setResult(null);
-						if (iCustomID.equals("compacted_gold_block") && i.getAmount() < 4) inv.setResult(null);
-						if (!i.getType().equals(Material.HEART_OF_THE_SEA) && iCustomID.isEmpty()) inv.setResult(null);
-					}
-					//  Destroyer Armor
-					if (rCustomID.equals("destroyer")) {
-						if (iCustomID.equals("compacted_iron_block") && i.getAmount() < 8) inv.setResult(null);
-						if (iCustomID.equals("machine_part") && i.getAmount() < 4) inv.setResult(null);
-						if (iCustomID.equals("machine_core") && x % 3 != 1) inv.setResult(null);
-						if (iCustomID.isEmpty()) inv.setResult(null);
-					}
-					// Materials
-					// Nether Crown
-					if (rCustomID.equals("nether_crown")) {
-						if (iCustomID.equals("compacted_blaze_rod") && i.getAmount() < 8) inv.setResult(null);
-						if (i.getType().equals(Material.BLAZE_ROD) && iCustomID.isEmpty()) inv.setResult(null);
-					}
-					// Compacted Diamond
-					if (rCustomID.equals("compacted_diamond")) {
-						if (i.getAmount() < 4) inv.setResult(null);
-					}
-					// Compacted Diamond Block
-					if (rCustomID.equals("compacted_diamond_block")) {
-						if (iCustomID.equals("compacted_diamond") && i.getAmount() < 4) inv.setResult(null);
-						if (iCustomID.isEmpty()) inv.setResult(null);
-						if (isBlockRecipe(cm)) inv.setResult(new ItemStack(Material.DIAMOND_BLOCK, 1));
-					}
-					// Compacted Gold
-					if (rCustomID.equals("compacted_gold")) {
-						if (i.getAmount() < 4) inv.setResult(null);
-					}
-					// Compacted Gold Block
-					if (rCustomID.equals("compacted_gold_block")) {
-						if (iCustomID.equals("compacted_gold") && i.getAmount() < 4) inv.setResult(null);
-						else if (iCustomID.isEmpty()) inv.setResult(null);
-						if (isBlockRecipe(cm)) inv.setResult(new ItemStack(Material.GOLD_BLOCK, 1));
-					}
-					// Compacted Redstone
-					if (rCustomID.equals("compacted_redstone")) {
-						if (i.getAmount() < 4) inv.setResult(null);
-					}
-					// Compacted Iron
-					if (rCustomID.equals("compacted_iron")) {
-						if (i.getAmount() < 4) inv.setResult(null);
-					}
-					// Compacted Iron Block
-					if (rCustomID.equals("compacted_iron_block")) {
-						if (iCustomID.equals("compacted_iron") && i.getAmount() < 4) inv.setResult(null);
-						else if (iCustomID.isEmpty()) inv.setResult(null);
-						if (isBlockRecipe(cm)) inv.setResult(new ItemStack(Material.IRON_BLOCK, 1));
-
-					}
-					// Star Dust
-					if (rCustomID.equals("star_dust")) {
-						if (iCustomID.equals("compacted_iron") && i.getAmount() < 4) inv.setResult(null);
-						if (i.getType().equals(Material.IRON_INGOT) && iCustomID.isEmpty()) inv.setResult(null);
-					}
-					//  Machine Part
-					if (rCustomID.equals("machine_part")) {
-						if (iCustomID.equals("compacted_iron") && i.getAmount() < 4) inv.setResult(null);
-						if (iCustomID.equals("compacted_redstone") && i.getAmount() < 4) inv.setResult(null);
-						if (iCustomID.isEmpty()) inv.setResult(null);
-					}
-					// Energy Cell
-					if (rCustomID.equals("energy_cell")) {
-						if (iCustomID.equals("compacted_iron") && i.getAmount() < 4) inv.setResult(null);
-						if (iCustomID.isEmpty()) inv.setResult(null);
-					}
-					// Machine Core
-					if (rCustomID.equals("machine_core")) {
-						// Energy Cell must be in the middle crafting slot
-						if (iCustomID.equals("energy_cell") && x != 4) inv.setResult(null);
-						if (iCustomID.equals("machine_part") && i.getAmount() < 4) inv.setResult(null);
-						if (iCustomID.equals("compacted_iron_block") && i.getAmount() < 8) inv.setResult(null);
-						if (iCustomID.isEmpty()) inv.setResult(null);
-					}
-					// Custom items cannot craft themselves
-					if (nbtResult.getBoolean("IsCustomItem") && nbtItem.getBoolean("IsCustomItem")) {
-						if (nbtResult.getString("CustomItemID").equals(nbtItem.getString("CustomItemID"))) inv.setResult(null);
-					}
-					// If a custom item and a vanilla item have the same recipe,
-					// cancel the recipe if custom items are in used in a vanilla recipe
-					if (!nbtResult.getBoolean("IsCustomItem") && nbtItem.getBoolean("IsCustomItem")) inv.setResult(null);
-				}
-			}
+		if(isCustomItem(result)) return;
+		for(ItemStack item : craftingMatrix) {
+			if(plugin.isAirOrNull(item)) continue;
+			if(isCustomItem(item)) inventory.setResult(null);
 		}
+
+//		if (!plugin.isAirOrNull(result)) {
+//			NBTItem nbtResult = new NBTItem(result);
+//			String rCustomID = nbtResult.getString("CustomItemID");
+//			ItemStack[] cm = inv.getMatrix();
+//			for (int x = 0; x < cm.length; x++) {
+//				ItemStack i = cm[x];
+//				if (!plugin.isAirOrNull(i)) {
+//					NBTItem nbtItem = new NBTItem(i);
+//					String iCustomID = nbtItem.getString("CustomItemID");
+//
+//					// Although checking for isEmpty() is not the most efficient method,
+//					// it makes the code much easier to understand.
+//
+//					// Armors
+//					// Speedster Armor
+//					if (rCustomID.equals("speedster")) {
+//						if (!iCustomID.equals("compacted_sugar_cane")) inv.setResult(null);
+//					}
+//					// Miner Armor
+//					if (rCustomID.equals("miner")) {
+//						if (iCustomID.equals("compacted_cobblestone") && i.getAmount() < 32) inv.setResult(null);
+//						if (iCustomID.isEmpty()) inv.setResult(null);
+//					}
+//					// Nether Armor
+//					if (rCustomID.equals("nether")) {
+//						if (iCustomID.equals("compacted_soul_sand") && i.getAmount() < 16) inv.setResult(null);
+//						if (i.getType().equals(Material.PLAYER_HEAD) && !iCustomID.equals("nether_crown")) inv.setResult(null);
+//						if (!i.getType().equals(Material.NETHER_STAR) && iCustomID.isEmpty()) inv.setResult(null);
+//					}
+//					// End Armor
+//					if (rCustomID.equals("end")) {
+//						if (iCustomID.equals("compacted_end_stone") && i.getAmount() < 32) inv.setResult(null);
+//						if (iCustomID.equals("compacted_eye_of_ender") && i.getAmount() < 16) inv.setResult(null);
+//						if (!i.getType().equals(Material.DRAGON_HEAD) && iCustomID.isEmpty()) inv.setResult(null);
+//					}
+//					// Sea Greed Armor
+//					if (rCustomID.equals("seagreed")) {
+//						if (iCustomID.equals("compacted_prismarine") && i.getAmount() < 16) inv.setResult(null);
+//						if (iCustomID.equals("compacted_diamond_block") && i.getAmount() < 4) inv.setResult(null);
+//						if (iCustomID.equals("compacted_gold_block") && i.getAmount() < 4) inv.setResult(null);
+//						if (!i.getType().equals(Material.HEART_OF_THE_SEA) && iCustomID.isEmpty()) inv.setResult(null);
+//					}
+//					//  Destroyer Armor
+//					if (rCustomID.equals("destroyer")) {
+//						if (iCustomID.equals("compacted_iron_block") && i.getAmount() < 8) inv.setResult(null);
+//						if (iCustomID.equals("machine_part") && i.getAmount() < 4) inv.setResult(null);
+//						if (iCustomID.equals("machine_core") && x % 3 != 1) inv.setResult(null);
+//						if (iCustomID.isEmpty()) inv.setResult(null);
+//					}
+//					// Materials
+//					// Nether Crown
+//					if (rCustomID.equals("nether_crown")) {
+//						if (iCustomID.equals("compacted_blaze_rod") && i.getAmount() < 8) inv.setResult(null);
+//						if (i.getType().equals(Material.BLAZE_ROD) && iCustomID.isEmpty()) inv.setResult(null);
+//					}
+//					// Compacted Diamond
+//					if (rCustomID.equals("compacted_diamond")) {
+//						if (i.getAmount() < 4) inv.setResult(null);
+//					}
+//					// Compacted Diamond Block
+//					if (rCustomID.equals("compacted_diamond_block")) {
+//						if (iCustomID.equals("compacted_diamond") && i.getAmount() < 4) inv.setResult(null);
+//						if (iCustomID.isEmpty()) inv.setResult(null);
+//						if (isBlockRecipe(cm)) inv.setResult(new ItemStack(Material.DIAMOND_BLOCK, 1));
+//					}
+//					// Compacted Gold
+//					if (rCustomID.equals("compacted_gold")) {
+//						if (i.getAmount() < 4) inv.setResult(null);
+//					}
+//					// Compacted Gold Block
+//					if (rCustomID.equals("compacted_gold_block")) {
+//						if (iCustomID.equals("compacted_gold") && i.getAmount() < 4) inv.setResult(null);
+//						else if (iCustomID.isEmpty()) inv.setResult(null);
+//						if (isBlockRecipe(cm)) inv.setResult(new ItemStack(Material.GOLD_BLOCK, 1));
+//					}
+//					// Compacted Redstone
+//					if (rCustomID.equals("compacted_redstone")) {
+//						if (i.getAmount() < 4) inv.setResult(null);
+//					}
+//					// Compacted Iron
+//					if (rCustomID.equals("compacted_iron")) {
+//						if (i.getAmount() < 4) inv.setResult(null);
+//					}
+//					// Compacted Iron Block
+//					if (rCustomID.equals("compacted_iron_block")) {
+//						if (iCustomID.equals("compacted_iron") && i.getAmount() < 4) inv.setResult(null);
+//						else if (iCustomID.isEmpty()) inv.setResult(null);
+//						if (isBlockRecipe(cm)) inv.setResult(new ItemStack(Material.IRON_BLOCK, 1));
+//
+//					}
+//					// Star Dust
+//					if (rCustomID.equals("star_dust")) {
+//						if (iCustomID.equals("compacted_iron") && i.getAmount() < 4) inv.setResult(null);
+//						if (i.getType().equals(Material.IRON_INGOT) && iCustomID.isEmpty()) inv.setResult(null);
+//					}
+//					//  Machine Part
+//					if (rCustomID.equals("machine_part")) {
+//						if (iCustomID.equals("compacted_iron") && i.getAmount() < 4) inv.setResult(null);
+//						if (iCustomID.equals("compacted_redstone") && i.getAmount() < 4) inv.setResult(null);
+//						if (iCustomID.isEmpty()) inv.setResult(null);
+//					}
+//					// Energy Cell
+//					if (rCustomID.equals("energy_cell")) {
+//						if (iCustomID.equals("compacted_iron") && i.getAmount() < 4) inv.setResult(null);
+//						if (iCustomID.isEmpty()) inv.setResult(null);
+//					}
+//					// Machine Core
+//					if (rCustomID.equals("machine_core")) {
+//						// Energy Cell must be in the middle crafting slot
+//						if (iCustomID.equals("energy_cell") && x != 4) inv.setResult(null);
+//						if (iCustomID.equals("machine_part") && i.getAmount() < 4) inv.setResult(null);
+//						if (iCustomID.equals("compacted_iron_block") && i.getAmount() < 8) inv.setResult(null);
+//						if (iCustomID.isEmpty()) inv.setResult(null);
+//					}
+//					// Custom items cannot craft themselves
+//					if (nbtResult.getBoolean("IsCustomItem") && nbtItem.getBoolean("IsCustomItem")) {
+//						if (nbtResult.getString("CustomItemID").equals(nbtItem.getString("CustomItemID"))) inv.setResult(null);
+//					}
+//					// If a custom item and a vanilla item have the same recipe,
+//					// cancel the recipe if custom items are in used in a vanilla recipe
+//					if (!nbtResult.getBoolean("IsCustomItem") && nbtItem.getBoolean("IsCustomItem")) inv.setResult(null);
+//				}
+//			}
+//		}
 	}
 
 	private boolean isBlockRecipe(ItemStack[] cm) {

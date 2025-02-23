@@ -11,8 +11,7 @@ import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.CommandType;
 
-import me.offsetpaladin89.MoreArmors.materials.Cobblestone;
-import me.offsetpaladin89.MoreArmors.materials.SugarCane;
+import me.offsetpaladin89.MoreArmors.materials.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -322,8 +321,7 @@ public record CommandHandler(MoreArmorsMain plugin) {
 			default -> null;
 		};
 
-		if (inventory.firstEmpty() == -1) target.getWorld().dropItem(target.getLocation().add(0.0D, 0.5D, 0.0D), item);
-		else inventory.addItem(item);
+		addItem(inventory, target, item, 1);
 		giveMessage(sender, target, item, 1);
 	}
 
@@ -332,45 +330,42 @@ public record CommandHandler(MoreArmorsMain plugin) {
 		PlayerInventory inventory = target.getInventory();
 
 		ItemStack item = switch (materialType) {
-            case SUGAR_CANE_0 -> new SugarCane.SugarCane0(16).getItem();
-            case COBBLESTONE_0 -> new Cobblestone.Cobblestone0(16).getItem();
-            case COBBLESTONE_1 -> new Cobblestone.Cobblestone1(16).getItem();
-            case COBBLESTONE_2 -> new Cobblestone.Cobblestone2(16).getItem();
-            case SOUL_SAND_0 -> null;
-            case SOUL_SAND_1 -> null;
-            case BLAZE_ROD_0 -> null;
-            case BLAZE_ROD_1 -> null;
-            case NETHER_CROWN_0 -> null;
-            case ENDSTONE_0 -> null;
-            case ENDSTONE_1 -> null;
-            case ENDSTONE_2 -> null;
-            case EYE_OF_ENDER_0 -> null;
-            case EYE_OF_ENDER_1 -> null;
-            case DIAMOND_BLOCK_0 -> null;
-            case GOLD_BLOCK_0 -> null;
-            case PRISMARINE_0 -> null;
-            case REDSTONE_BLOCK_0 -> null;
-            case IRON_BLOCK_0 -> null;
-            case STAR_DUST -> null;
-            case MACHINE_PART -> null;
-            case MACHINE_CORE -> null;
-            case ENERGY_CELL -> null;
+			case BLAZE_ROD_0 -> new BlazeRod.BlazeRod0().getItem();
+			case BLAZE_ROD_1 -> new BlazeRod.BlazeRod1().getItem();
+            case COBBLESTONE_0 -> new Cobblestone.Cobblestone0().getItem();
+            case COBBLESTONE_1 -> new Cobblestone.Cobblestone1().getItem();
+            case COBBLESTONE_2 -> new Cobblestone.Cobblestone2().getItem();
+			case DIAMOND_BLOCK_0 -> new DiamondBlock.DiamondBlock0().getItem();
+			case ENDSTONE_0 -> new Endstone.Endstone0().getItem();
+			case ENDSTONE_1 -> new Endstone.Endstone1().getItem();
+			case ENDSTONE_2 -> new Endstone.Endstone2().getItem();
+			case ENERGY_CELL -> new EnergyCell().getItem();
+			case EYE_OF_ENDER_0 -> new EyeOfEnder.EyeOfEnder0().getItem();
+			case EYE_OF_ENDER_1 -> new EyeOfEnder.EyeOfEnder1().getItem();
+			case GOLD_BLOCK_0 -> new GoldBlock.GoldBlock0().getItem();
+			case IRON_BLOCK_0 -> new IronBlock.IronBlock0().getItem();
+			case IRON_BLOCK_1 -> new IronBlock.IronBlock1().getItem();
+			case MACHINE_CORE -> new MachineCore().getItem();
+			case MACHINE_PART_0 -> new MachinePart.MachinePart0().getItem();
+			case MACHINE_PART_1 -> new MachinePart.MachinePart1().getItem();
+			case NETHER_CROWN -> new NetherCrown().getItem();
+			case PRISMARINE_0 -> new Prismarine.Prismarine0().getItem();
+			case REDSTONE_BLOCK_0 -> new RedstoneBlock.RedstoneBlock0().getItem();
+            case SOUL_SAND_0 -> new SoulSand.SoulSand0().getItem();
+            case SOUL_SAND_1 -> new SoulSand.SoulSand1().getItem();
+            case STAR_DUST -> new StarDust().getItem();
+			case SUGAR_CANE_0 -> new SugarCane.SugarCane0().getItem();
             case INVALID -> null;
         };
 
-		int remaining = amount;
-		while(remaining >= 16) {
-			addItem(inventory, target, item);
-			remaining -= 16;
-		}
-
-		item.setAmount(remaining);
-		addItem(inventory, target, item);
+		for(int i = 0; i < amount / 64; i++) addItem(inventory, target, item, 64);
+		addItem(inventory, target, item, amount % 64);
 
 		giveMessage(sender, target, item, amount);
 	}
 
-	private void addItem(PlayerInventory inventory, Player target, ItemStack item) {
+	private void addItem(PlayerInventory inventory, Player target, ItemStack item, int stackSize) {
+		item.setAmount(stackSize);
 		if (inventory.firstEmpty() == -1) target.getWorld().dropItem(target.getLocation().add(0.0D, 0.5D, 0.0D), item);
 		else inventory.addItem(item);
 	}

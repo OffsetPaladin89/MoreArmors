@@ -10,8 +10,8 @@ public class Cobblestone extends CustomMaterial {
     private static final String DEFAULT_NAME = "Cobblestone";
     private static final Material MATERIAL = Material.COBBLESTONE;
 
-    public Cobblestone(Rarity rarity, int upgradeTier, MaterialType materialType, int amount) {
-        super(rarity, upgradeTier, DEFAULT_NAME, materialType, amount);
+     Cobblestone(Rarity rarity, int upgradeTier, MaterialType materialType) {
+        super(rarity, upgradeTier, DEFAULT_NAME, materialType);
         createItem(MATERIAL);
     }
 
@@ -21,8 +21,8 @@ public class Cobblestone extends CustomMaterial {
         private static final int UPGRADE_TIER = 0;
         private static final MaterialType MATERIAL_TYPE = MaterialType.COBBLESTONE_0;
 
-        public Cobblestone0(int amount) {
-            super(DEFAULT_RARITY, UPGRADE_TIER, MATERIAL_TYPE, amount);
+        public Cobblestone0() {
+            super(DEFAULT_RARITY, UPGRADE_TIER, MATERIAL_TYPE);
         }
     }
 
@@ -32,8 +32,8 @@ public class Cobblestone extends CustomMaterial {
         private static final int UPGRADE_TIER = 1;
         private static final MaterialType MATERIAL_TYPE = MaterialType.COBBLESTONE_1;
 
-        public Cobblestone1(int amount) {
-            super(DEFAULT_RARITY, UPGRADE_TIER, MATERIAL_TYPE, amount);
+        public Cobblestone1() {
+            super(DEFAULT_RARITY, UPGRADE_TIER, MATERIAL_TYPE);
         }
     }
 
@@ -43,8 +43,8 @@ public class Cobblestone extends CustomMaterial {
         private static final int UPGRADE_TIER = 2;
         private static final MaterialType MATERIAL_TYPE = MaterialType.COBBLESTONE_2;
 
-        public Cobblestone2(int amount) {
-            super(DEFAULT_RARITY, UPGRADE_TIER, MATERIAL_TYPE, amount);
+        public Cobblestone2() {
+            super(DEFAULT_RARITY, UPGRADE_TIER, MATERIAL_TYPE);
         }
     }
 

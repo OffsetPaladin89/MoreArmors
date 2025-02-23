@@ -133,6 +133,6 @@ public class EndArmor extends CustomArmor {
     }
 
     private void assignSkull(ItemStack item) {
-        MoreArmorsMain.modifySkullSkin(item, "fee4eabeb72f19088ade78266191c8f77398cc0d80cdd27563a5d66b71912b28");
+        MoreArmorsMain.modifySkullSkin(item, "fee4eabeb72f19088ade78266191c8f77398cc0d80cdd27563a5d66b71912b28", null);
     }
 }
