@@ -379,7 +379,7 @@ public class CraftHandler implements Listener {
 					if (rCustomID.equals("compacted_iron")) craftItem(p, plugin.materials.CompactedIron(leastValue));
 					if (rCustomID.equals("compacted_iron_block")) craftItem(p, plugin.materials.CompactedIronBlock(leastValue));
 					if (rCustomID.equals("star_dust")) craftItem(p, plugin.materials.StarDust(leastValue * 8));
-					if (rCustomID.equals("machine_part")) craftItem(p, plugin.materials.MachinePart(leastValue));
+//					if (rCustomID.equals("machine_part")) craftItem(p, plugin.materials.MachinePart(leastValue));
 					for (int x = 0; x < leastValue; x++) {
 						if (nbtResult.getString("CustomItemType").equals("armor")) {
 //							EquipmentSlot slotType = SlotType.matchSlot(SlotType.matchType(result));
@@ -389,9 +389,9 @@ public class CraftHandler implements Listener {
 //							if (rCustomID.equals("seagreed")) craftItem(p, plugin.armorSets.SeaGreedArmor(slotType));
 //							if (rCustomID.equals("destroyer")) craftItem(p, plugin.armorSets.DestroyerArmor(slotType, 0));
 						}
-						if (rCustomID.equals("nether_crown")) craftItem(p, plugin.materials.NetherCrown());
-						if (rCustomID.equals("energy_cell")) craftItem(p, plugin.materials.EnergyCell());
-						if (rCustomID.equals("machine_core")) craftItem(p, plugin.materials.MachineCore());
+//						if (rCustomID.equals("nether_crown")) craftItem(p, plugin.materials.NetherCrown());
+//						if (rCustomID.equals("energy_cell")) craftItem(p, plugin.materials.EnergyCell());
+//						if (rCustomID.equals("machine_core")) craftItem(p, plugin.materials.MachineCore());
 					}
 				}
 			} else {
