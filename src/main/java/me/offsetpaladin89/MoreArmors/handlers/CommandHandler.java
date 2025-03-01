@@ -1,6 +1,9 @@
 package me.offsetpaladin89.MoreArmors.handlers;
 
+import me.offsetpaladin89.MoreArmors.CustomMaterial;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
+import me.offsetpaladin89.MoreArmors.RecipeHandler;
+import me.offsetpaladin89.MoreArmors.armors.CustomArmor;
 import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
 import me.offsetpaladin89.MoreArmors.armors.EndArmor;
 
@@ -12,11 +15,16 @@ import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.CommandType;
 
 import me.offsetpaladin89.MoreArmors.materials.*;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapedRecipe;
 
+import javax.naming.Name;
+import java.util.Iterator;
 import java.util.List;
 
 import static me.offsetpaladin89.MoreArmors.enums.GiveType.*;
@@ -328,53 +336,58 @@ public record CommandHandler(MoreArmorsMain plugin) {
 	private void giveItem(CommandSender sender, Player target, ArmorType armorType, SlotType slotType) {
 		PlayerInventory inventory = target.getInventory();
 
-		ItemStack item = switch (armorType) {
-			case EMERALD -> new EmeraldArmor(slotType).getItem();
-			case END -> new EndArmor(slotType).getItem();
+		CustomArmor item = switch (armorType) {
+			case EMERALD -> new EmeraldArmor(slotType);
+			case END -> new EndArmor(slotType);
 			default -> null;
 		};
 
-		addItem(inventory, target, item, 1);
-		giveMessage(sender, target, item, 1);
+		addItem(inventory, target, item.getItem(), 1);
+		giveMessage(sender, target, item.getItem(), 1);
 	}
 
 	// TODO Give Material
 	private void giveItem(CommandSender sender, Player target, MaterialType materialType, int amount) {
 		PlayerInventory inventory = target.getInventory();
 
-		ItemStack item = switch (materialType) {
-			case BLAZE_ROD_0 -> new BlazeRod.BlazeRod0().getItem();
-			case BLAZE_ROD_1 -> new BlazeRod.BlazeRod1().getItem();
-            case COBBLESTONE_0 -> new Cobblestone.Cobblestone0().getItem();
-            case COBBLESTONE_1 -> new Cobblestone.Cobblestone1().getItem();
-            case COBBLESTONE_2 -> new Cobblestone.Cobblestone2().getItem();
-			case DIAMOND_BLOCK_0 -> new DiamondBlock.DiamondBlock0().getItem();
-			case ENDSTONE_0 -> new Endstone.Endstone0().getItem();
-			case ENDSTONE_1 -> new Endstone.Endstone1().getItem();
-			case ENDSTONE_2 -> new Endstone.Endstone2().getItem();
-			case ENERGY_CELL -> new EnergyCell().getItem();
-			case EYE_OF_ENDER_0 -> new EyeOfEnder.EyeOfEnder0().getItem();
-			case EYE_OF_ENDER_1 -> new EyeOfEnder.EyeOfEnder1().getItem();
-			case GOLD_BLOCK_0 -> new GoldBlock.GoldBlock0().getItem();
-			case IRON_BLOCK_0 -> new IronBlock.IronBlock0().getItem();
-			case IRON_BLOCK_1 -> new IronBlock.IronBlock1().getItem();
-			case MACHINE_CORE -> new MachineCore().getItem();
-			case MACHINE_PART_0 -> new MachinePart.MachinePart0().getItem();
-			case MACHINE_PART_1 -> new MachinePart.MachinePart1().getItem();
-			case NETHER_CROWN -> new NetherCrown().getItem();
-			case PRISMARINE_0 -> new Prismarine.Prismarine0().getItem();
-			case REDSTONE_BLOCK_0 -> new RedstoneBlock.RedstoneBlock0().getItem();
-            case SOUL_SAND_0 -> new SoulSand.SoulSand0().getItem();
-            case SOUL_SAND_1 -> new SoulSand.SoulSand1().getItem();
-            case STAR_DUST -> new StarDust().getItem();
-			case SUGAR_CANE_0 -> new SugarCane.SugarCane0().getItem();
+		CustomMaterial item = switch (materialType) {
+			case BLAZE_ROD_0 -> new BlazeRod.BlazeRod0();
+			case BLAZE_ROD_1 -> new BlazeRod.BlazeRod1();
+            case COBBLESTONE_0 -> new Cobblestone.Cobblestone0();
+            case COBBLESTONE_1 -> new Cobblestone.Cobblestone1();
+            case COBBLESTONE_2 -> new Cobblestone.Cobblestone2();
+			case DIAMOND_BLOCK_0 -> new DiamondBlock.DiamondBlock0();
+			case ENDSTONE_0 -> new Endstone.Endstone0();
+			case ENDSTONE_1 -> new Endstone.Endstone1();
+			case ENDSTONE_2 -> new Endstone.Endstone2();
+			case ENERGY_CELL -> new EnergyCell();
+			case EYE_OF_ENDER_0 -> new EyeOfEnder.EyeOfEnder0();
+			case EYE_OF_ENDER_1 -> new EyeOfEnder.EyeOfEnder1();
+			case GOLD_BLOCK_0 -> new GoldBlock.GoldBlock0();
+			case IRON_BLOCK_0 -> new IronBlock.IronBlock0();
+			case IRON_BLOCK_1 -> new IronBlock.IronBlock1();
+			case MACHINE_CORE -> new MachineCore();
+			case MACHINE_PART_0 -> new MachinePart.MachinePart0();
+			case MACHINE_PART_1 -> new MachinePart.MachinePart1();
+			case NETHER_CROWN -> new NetherCrown();
+			case PRISMARINE_0 -> new Prismarine.Prismarine0();
+			case REDSTONE_BLOCK_0 -> new RedstoneBlock.RedstoneBlock0();
+            case SOUL_SAND_0 -> new SoulSand.SoulSand0();
+            case SOUL_SAND_1 -> new SoulSand.SoulSand1();
+            case STAR_DUST -> new StarDust();
+			case SUGAR_CANE_0 -> new SugarCane.SugarCane0();
             case INVALID -> null;
         };
 
-		for(int i = 0; i < amount / 64; i++) addItem(inventory, target, item, 64);
-		addItem(inventory, target, item, amount % 64);
+		for(int i = 0; i < amount / 64; i++) addItem(inventory, target, item.getItem(), 64);
+		addItem(inventory, target, item.getItem(), amount % 64);
 
-		giveMessage(sender, target, item, amount);
+		giveMessage(sender, target, item.getItem(), amount);
+        for (Iterator<Recipe> it = plugin.getServer().recipeIterator(); it.hasNext(); ) {
+            Recipe recipe = it.next();
+			if(recipe.getResult().hasItemMeta()) plugin.sendConsoleMessage(recipe.getResult().getItemMeta().getDisplayName());
+        }
+//		plugin.sendConsoleMessage("Recipe: " + plugin.getServer().getRecipe());
 	}
 
 	private void addItem(PlayerInventory inventory, Player target, ItemStack item, int stackSize) {

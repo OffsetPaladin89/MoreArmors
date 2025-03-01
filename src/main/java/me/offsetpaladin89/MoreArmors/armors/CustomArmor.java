@@ -95,6 +95,10 @@ public class CustomArmor {
         });
     }
 
+    public ItemStack getItem() {
+        return item;
+    }
+
     protected String getFormattedName(String displayName) {
         return MoreArmorsMain.colorString(String.format("%s%s &b(+%d)", Rarity.getColorRarity(rarity), displayName, upgradeTier));
     }
