@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum CommandType {
-    GIVE, EDIT, RELOAD, INFO, INVALID;
+    GIVE, EDIT, RELOAD, INFO, VIEWRECIPES, INVALID;
 
     public static CommandType commandType(String s) {
         CommandType commandType;

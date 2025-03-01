@@ -92,6 +92,7 @@ public record CommandHandler(MoreArmorsMain plugin) {
 				tooManyArguments(sender);
 			}
 			case RELOAD -> reloadCommand(sender, args);
+			case VIEWRECIPES -> viewRecipeCommand(sender, args);
 			case INVALID -> invalidArgument(sender, args[0]);
 		}
 	}
@@ -106,6 +107,18 @@ public record CommandHandler(MoreArmorsMain plugin) {
 			return;
 		}
 
+		tooManyArguments(sender);
+	}
+
+	private void viewRecipeCommand(CommandSender sender, String[] args) {
+		if (args.length == 1) {
+			if(!(sender instanceof Player player)) {
+				plugin.sendColoredMessage(sender, prefix() + " &cCommand sender must be a player!");
+				return;
+			}
+			plugin.inventoryHandler.viewRecipes(player);
+			return;
+		}
 		tooManyArguments(sender);
 	}
 

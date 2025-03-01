@@ -38,6 +38,7 @@ public class MoreArmorsMain extends JavaPlugin {
 	public ArmorSetAbilityHandler armorSetAbilities;
 	public ConfigHandler configHandler;
 	public Commands commands;
+	public InventoryHandler inventoryHandler;
 
 	public void onEnable() {
 
@@ -64,6 +65,7 @@ public class MoreArmorsMain extends JavaPlugin {
 //		materials.RegisterMaterialsRecipes();
 
 		new RecipeHandler(this);
+		inventoryHandler = new InventoryHandler(this);
 	}
 
 	public void reloadConfig(CommandSender s) {
