@@ -15,10 +15,6 @@ public class EndArmor extends CustomArmor {
 
     private static final Color LEATHER_COLOR = Color.PURPLE;
 
-    public EndArmor(ItemStack item) {
-        super(item);
-    }
-
     public EndArmor(SlotType slot) {
         super(slot);
         this.item = getBaseItem();
@@ -50,26 +46,6 @@ public class EndArmor extends CustomArmor {
         item.setItemMeta(itemMeta);
     }
 
-    public void createItem() {
-        ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.setDisplayName(displayName);
-        item.setItemMeta(itemMeta);
-
-        updateItem();
-    }
-
-    public void createItemFromNBT() {
-        NBT.get(item, nbt -> {
-            rarity = nbt.getEnum("Rarity", Rarity.class);
-            armor = nbt.getInteger("Armor");
-            armorToughness = nbt.getInteger("ArmorToughness");
-            armorID = nbt.getEnum("ArmorID", ArmorType.class);
-        });
-
-        slot = SlotType.matchType(item);
-        displayName = getFormattedName(item.getItemMeta().getDisplayName());
-    }
-
     public void updateItem() {
         this.armorID = ArmorType.END;
 
@@ -83,10 +59,6 @@ public class EndArmor extends CustomArmor {
         setAttributes();
 
         baseNBT();
-    }
-
-    public final ItemStack getItem() {
-        return item;
     }
 
     private int getDefaultArmor() {

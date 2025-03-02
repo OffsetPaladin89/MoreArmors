@@ -49,6 +49,18 @@ public class CustomArmor {
         this.armorToughness = armorToughness;
     }
 
+    public void createItem() {
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName(displayName);
+        item.setItemMeta(itemMeta);
+
+        updateItem();
+    }
+
+    protected void updateItem() {
+
+    }
+
     protected void setFlags() {
         ItemMeta itemMeta = item.getItemMeta();
 

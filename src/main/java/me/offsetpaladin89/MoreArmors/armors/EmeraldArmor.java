@@ -51,14 +51,6 @@ public class EmeraldArmor extends CustomArmor {
         addNBT();
     }
 
-    public void createItem() {
-        ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.setDisplayName(displayName);
-        item.setItemMeta(itemMeta);
-
-        updateItem();
-    }
-
     public void createItemFromNBT() {
         NBT.get(item, nbt -> {
             rarity = nbt.getEnum("Rarity", Rarity.class);
@@ -139,10 +131,6 @@ public class EmeraldArmor extends CustomArmor {
             case BOOTS -> "Emerald Boots";
             default -> null;
         };
-    }
-
-    public final ItemStack getItem() {
-        return item;
     }
 
     private void setLore() {

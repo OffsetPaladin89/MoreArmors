@@ -5,7 +5,6 @@ import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import me.offsetpaladin89.MoreArmors.armors.ArmorsRecord;
 import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
 import me.offsetpaladin89.MoreArmors.commands.Commands;
-import me.offsetpaladin89.MoreArmors.commands.Give;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.handlers.*;
 import me.offsetpaladin89.MoreArmors.listeners.MainListener;
@@ -32,7 +31,6 @@ public class MoreArmorsMain extends JavaPlugin {
 	public Materials materials;
 
 	public HologramHandler hologramHandler;
-	public Give give;
 	public ArmorsRecord armorSets;
 	public ArmorConstructor armorConstructor;
 	public ArmorSetAbilityHandler armorSetAbilities;
@@ -57,8 +55,6 @@ public class MoreArmorsMain extends JavaPlugin {
 		armorConstructor = new ArmorConstructor(this);
 //		armorSetAbilities = new ArmorSetAbilityHandler(this);
 		materials = new Materials(this);
-		give = new Give(this);
-
 //		ArmorChecker();
 		registerConfig();
 //		armorSets.RegisterArmorRecipes();

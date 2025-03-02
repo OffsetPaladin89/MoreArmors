@@ -1,6 +1,6 @@
 package me.offsetpaladin89.MoreArmors;
 
-import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
+import me.offsetpaladin89.MoreArmors.armors.*;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.materials.*;
@@ -25,6 +25,9 @@ public class RecipeHandler {
 
     private void registerArmorRecipes(FileConfiguration config) {
         registerEmeraldArmor(config.getBoolean("emeraldarmor.crafting"));
+        registerEndArmor(config.getBoolean("endarmor.crafting"));
+        registerExperienceArmor(config.getBoolean("experiencearmor.crafting"));
+        registerTitanArmor(config.getBoolean("titanarmor.crafting"));
     }
 
     private void registerMaterialRecipes(FileConfiguration config) {
@@ -285,10 +288,10 @@ public class RecipeHandler {
     private void registerEmeraldArmor(boolean register) {
         if(!register) return;
 
-        EmeraldArmor helmetItem = new EmeraldArmor(SlotType.HELMET);
-        EmeraldArmor chestplateItem = new EmeraldArmor(SlotType.CHESTPLATE);
-        EmeraldArmor leggingsItem = new EmeraldArmor(SlotType.LEGGINGS);
-        EmeraldArmor bootsItem = new EmeraldArmor(SlotType.BOOTS);
+        CustomArmor helmetItem = new EmeraldArmor(SlotType.HELMET);
+        CustomArmor chestplateItem = new EmeraldArmor(SlotType.CHESTPLATE);
+        CustomArmor leggingsItem = new EmeraldArmor(SlotType.LEGGINGS);
+        CustomArmor bootsItem = new EmeraldArmor(SlotType.BOOTS);
 
         NamespacedKey helmetKey = new NamespacedKey(plugin, "emerald_helmet");
         NamespacedKey chestplateKey = new NamespacedKey(plugin, "emerald_chestplate");
@@ -309,6 +312,118 @@ public class RecipeHandler {
         chestplateRecipe.setIngredient('A', Material.EMERALD_BLOCK);
         leggingsRecipe.setIngredient('A', Material.EMERALD_BLOCK);
         bootsRecipe.setIngredient('A', Material.EMERALD_BLOCK);
+
+        plugin.getServer().addRecipe(helmetRecipe);
+        plugin.getServer().addRecipe(chestplateRecipe);
+        plugin.getServer().addRecipe(leggingsRecipe);
+        plugin.getServer().addRecipe(bootsRecipe);
+    }
+
+    private void registerEndArmor(boolean register) {
+        if(!register) return;
+
+        CustomArmor helmetItem = new EndArmor(SlotType.HELMET);
+        CustomArmor chestplateItem = new EndArmor(SlotType.CHESTPLATE);
+        CustomArmor leggingsItem = new EndArmor(SlotType.LEGGINGS);
+        CustomArmor bootsItem = new EndArmor(SlotType.BOOTS);
+
+        NamespacedKey helmetKey = new NamespacedKey(plugin, "end_helmet");
+        NamespacedKey chestplateKey = new NamespacedKey(plugin, "end_chestplate");
+        NamespacedKey leggingsKey = new NamespacedKey(plugin, "end_leggings");
+        NamespacedKey bootsKey = new NamespacedKey(plugin, "end_boots");
+
+        ShapedRecipe helmetRecipe = new ShapedRecipe(helmetKey, helmetItem.getItem());
+        ShapedRecipe chestplateRecipe = new ShapedRecipe(chestplateKey, chestplateItem.getItem());
+        ShapedRecipe leggingsRecipe = new ShapedRecipe(leggingsKey, leggingsItem.getItem());
+        ShapedRecipe bootsRecipe = new ShapedRecipe(bootsKey, bootsItem.getItem());
+
+        helmetRecipe.shape("AAA", "ACA");
+        chestplateRecipe.shape("ABA", "AAA", "AAA");
+        leggingsRecipe.shape("AAA", "ABA", "A A");
+        bootsRecipe.shape("ABA", "A A");
+
+        RecipeChoice endStone = new RecipeChoice.ExactChoice(new Endstone.Endstone2().getItem());
+        RecipeChoice eyeOfEnder = new RecipeChoice.ExactChoice(new EyeOfEnder.EyeOfEnder1().getItem());
+
+        helmetRecipe.setIngredient('A', endStone);
+        helmetRecipe.setIngredient('C', Material.DRAGON_HEAD);
+
+        chestplateRecipe.setIngredient('A', endStone);
+        chestplateRecipe.setIngredient('B', eyeOfEnder);
+
+        leggingsRecipe.setIngredient('A', endStone);
+        leggingsRecipe.setIngredient('B', eyeOfEnder);
+
+        bootsRecipe.setIngredient('A', endStone);
+        bootsRecipe.setIngredient('B', eyeOfEnder);
+
+        plugin.getServer().addRecipe(helmetRecipe);
+        plugin.getServer().addRecipe(chestplateRecipe);
+        plugin.getServer().addRecipe(leggingsRecipe);
+        plugin.getServer().addRecipe(bootsRecipe);
+    }
+
+    private void registerExperienceArmor(boolean register) {
+        if(!register) return;
+
+        CustomArmor helmetItem = new ExperienceArmor(SlotType.HELMET);
+        CustomArmor chestplateItem = new ExperienceArmor(SlotType.CHESTPLATE);
+        CustomArmor leggingsItem = new ExperienceArmor(SlotType.LEGGINGS);
+        CustomArmor bootsItem = new ExperienceArmor(SlotType.BOOTS);
+
+        NamespacedKey helmetKey = new NamespacedKey(plugin, "experience_helmet");
+        NamespacedKey chestplateKey = new NamespacedKey(plugin, "experience_chestplate");
+        NamespacedKey leggingsKey = new NamespacedKey(plugin, "experience_leggings");
+        NamespacedKey bootsKey = new NamespacedKey(plugin, "experience_boots");
+
+        ShapedRecipe helmetRecipe = new ShapedRecipe(helmetKey, helmetItem.getItem());
+        ShapedRecipe chestplateRecipe = new ShapedRecipe(chestplateKey, chestplateItem.getItem());
+        ShapedRecipe leggingsRecipe = new ShapedRecipe(leggingsKey, leggingsItem.getItem());
+        ShapedRecipe bootsRecipe = new ShapedRecipe(bootsKey, bootsItem.getItem());
+
+        helmetRecipe.shape("AAA", "A A");
+        chestplateRecipe.shape("A A", "AAA", "AAA");
+        leggingsRecipe.shape("AAA", "A A", "A A");
+        bootsRecipe.shape("A A", "A A");
+
+        helmetRecipe.setIngredient('A', Material.LAPIS_BLOCK);
+        chestplateRecipe.setIngredient('A', Material.LAPIS_BLOCK);
+        leggingsRecipe.setIngredient('A', Material.LAPIS_BLOCK);
+        bootsRecipe.setIngredient('A', Material.LAPIS_BLOCK);
+
+        plugin.getServer().addRecipe(helmetRecipe);
+        plugin.getServer().addRecipe(chestplateRecipe);
+        plugin.getServer().addRecipe(leggingsRecipe);
+        plugin.getServer().addRecipe(bootsRecipe);
+    }
+
+    private void registerTitanArmor(boolean register) {
+        if(!register) return;
+
+        CustomArmor helmetItem = new TitanArmor(SlotType.HELMET);
+        CustomArmor chestplateItem = new TitanArmor(SlotType.CHESTPLATE);
+        CustomArmor leggingsItem = new TitanArmor(SlotType.LEGGINGS);
+        CustomArmor bootsItem = new TitanArmor(SlotType.BOOTS);
+
+        NamespacedKey helmetKey = new NamespacedKey(plugin, "titan_helmet");
+        NamespacedKey chestplateKey = new NamespacedKey(plugin, "titan_chestplate");
+        NamespacedKey leggingsKey = new NamespacedKey(plugin, "titan_leggings");
+        NamespacedKey bootsKey = new NamespacedKey(plugin, "titan_boots");
+
+        ShapedRecipe helmetRecipe = new ShapedRecipe(helmetKey, helmetItem.getItem());
+        ShapedRecipe chestplateRecipe = new ShapedRecipe(chestplateKey, chestplateItem.getItem());
+        ShapedRecipe leggingsRecipe = new ShapedRecipe(leggingsKey, leggingsItem.getItem());
+        ShapedRecipe bootsRecipe = new ShapedRecipe(bootsKey, bootsItem.getItem());
+
+        helmetRecipe.shape("AAA", "A A");
+        chestplateRecipe.shape("A A", "AAA", "AAA");
+        leggingsRecipe.shape("AAA", "A A", "A A");
+        bootsRecipe.shape("A A", "A A");
+
+        helmetRecipe.setIngredient('A', Material.IRON_BLOCK);
+        chestplateRecipe.setIngredient('A', Material.IRON_BLOCK);
+        leggingsRecipe.setIngredient('A', Material.IRON_BLOCK);
+        bootsRecipe.setIngredient('A', Material.IRON_BLOCK);
 
         plugin.getServer().addRecipe(helmetRecipe);
         plugin.getServer().addRecipe(chestplateRecipe);
