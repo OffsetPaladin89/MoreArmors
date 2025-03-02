@@ -8,6 +8,7 @@ import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import org.bukkit.*;
 import org.bukkit.World.Environment;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -105,8 +106,8 @@ public class MoreArmorsListener implements Listener {
 		Player player = event.getPlayer();
 		PlayerInventory inventory = player.getInventory();
 
-		if (plugin.IsFullCustomSet("experience", player.getInventory()) && config.getBoolean("experiencearmor.enabled")) {event.setExpToDrop(event.getExpToDrop() * 2);}
-		if (plugin.IsFullCustomSet("miner", player.getInventory()) && config.getBoolean("minerarmor.enabled")) {
+		if (plugin.IsFullCustomSet(ArmorType.EXPERIENCE, player.getInventory()) && config.getBoolean("experiencearmor.enabled")) {event.setExpToDrop(event.getExpToDrop() * 2);}
+		if (plugin.IsFullCustomSet(ArmorType.MINER, player.getInventory()) && config.getBoolean("minerarmor.enabled")) {
 			if (player.hasPotionEffect(PotionEffectType.HASTE)) {if (player.getPotionEffect(PotionEffectType.HASTE).getAmplifier() == 1) {player.removePotionEffect(PotionEffectType.HASTE);}}
 			player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 100, 1));
 		}
@@ -150,7 +151,7 @@ public class MoreArmorsListener implements Listener {
 
 	private Float oreMultiplier(Player p) {
 		PlayerInventory inventory = p.getInventory();
-		return ((plugin.matchingCustomItem(inventory.getHelmet(), "seagreed") && plugin.configHandler.getConfig("config").getBoolean("seagreedarmor.enabled") ? 0.5f : 0f)) + ((plugin.matchingCustomItem(inventory.getChestplate(), "seagreed") ? 0.5f : 0f)) + ((plugin.matchingCustomItem(inventory.getLeggings(), "seagreed") ? 0.5f : 0f)) + ((plugin.matchingCustomItem(inventory.getBoots(), "seagreed") ? 0.5f : 0f));
+		return ((plugin.matchingCustomItem(inventory.getHelmet(), ArmorType.SEA_GREED) && plugin.configHandler.getConfig("config").getBoolean("seagreedarmor.enabled") ? 0.5f : 0f)) + ((plugin.matchingCustomItem(inventory.getChestplate(), ArmorType.SEA_GREED) ? 0.5f : 0f)) + ((plugin.matchingCustomItem(inventory.getLeggings(), ArmorType.SEA_GREED) ? 0.5f : 0f)) + ((plugin.matchingCustomItem(inventory.getBoots(), ArmorType.SEA_GREED) ? 0.5f : 0f));
 	}
 
 	@EventHandler
@@ -160,7 +161,7 @@ public class MoreArmorsListener implements Listener {
 
 		Player p = e.getPlayer();
 		PlayerInventory inv = p.getInventory();
-		if (plugin.IsFullCustomSet("seagreed", p.getInventory()) && config.getBoolean("seagreedarmor.enabled")) {
+		if (plugin.IsFullCustomSet(ArmorType.SEA_GREED, p.getInventory()) && config.getBoolean("seagreedarmor.enabled")) {
 			p.setWalkSpeed(0.2F);
 			if (p.isSwimming()) {
 				Vector dir = p.getLocation().getDirection().normalize().multiply(1.4D); // 3 - 1.6
@@ -198,12 +199,12 @@ public class MoreArmorsListener implements Listener {
 			if (event.getEntity().getKiller() != null) {
 				Player killer = event.getEntity().getKiller();
 				PlayerInventory inventory = killer.getInventory();
-				if (plugin.IsFullCustomSet("experience", inventory) && config.getBoolean("experiencearmor.enabled")) {event.setDroppedExp(event.getDroppedExp() * 2);}
-				if (plugin.IsFullCustomSet("titan", inventory) && config.getBoolean("titanarmor.enabled")) {
+				if (plugin.IsFullCustomSet(ArmorType.EXPERIENCE, inventory) && config.getBoolean("experiencearmor.enabled")) {event.setDroppedExp(event.getDroppedExp() * 2);}
+				if (plugin.IsFullCustomSet(ArmorType.TITAN, inventory) && config.getBoolean("titanarmor.enabled")) {
 					if (killer.hasPotionEffect(PotionEffectType.RESISTANCE)) {if (killer.getPotionEffect(PotionEffectType.RESISTANCE).getAmplifier() == 0) {killer.removePotionEffect(PotionEffectType.RESISTANCE);}}
 					killer.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 200, 0, false, false));
 				}
-				if (plugin.IsFullCustomSet("seagreed", inventory) && config.getBoolean("seagreedarmor.enabled")) {
+				if (plugin.IsFullCustomSet(ArmorType.SEA_GREED, inventory) && config.getBoolean("seagreedarmor.enabled")) {
 					Random r = new Random();
 					if (entity.getType().equals(EntityType.ELDER_GUARDIAN) && r.nextDouble() <= 0.25d) {
 						killer.sendTitle(MoreArmorsMain.colorString("&c&l&kzzz &r&4&lBLESSING OF THE SEA GOD &c&l&kzzz"), "", -1, -1, -1);
@@ -247,7 +248,7 @@ public class MoreArmorsListener implements Listener {
 	public void onEntityDamage(EntityDamageEvent event) {
 		if (event.getEntity() instanceof Player player) {
 			PlayerInventory inventory = player.getInventory();
-			if (plugin.IsFullCustomSet("speedster", inventory) && plugin.configHandler.getConfig("config").getBoolean("speedsterarmor.enabled")) {
+			if (plugin.IsFullCustomSet(ArmorType.SPEEDSTER, inventory) && plugin.configHandler.getConfig("config").getBoolean("speedsterarmor.enabled")) {
 				if (player.hasPotionEffect(PotionEffectType.SPEED)) {if (player.getPotionEffect(PotionEffectType.SPEED).getAmplifier() == 1) {player.removePotionEffect(PotionEffectType.SPEED);}}
 				player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
 			}
@@ -259,7 +260,7 @@ public class MoreArmorsListener implements Listener {
 		Player player = event.getPlayer();
 		PlayerInventory inventory = player.getInventory();
 		if (event.getAction().equals(Action.LEFT_CLICK_AIR) && player.isSneaking()) {
-			if (plugin.IsFullCustomSet("end", inventory) && player.getWorld().getEnvironment().equals(Environment.THE_END) && plugin.configHandler.getConfig("config").getBoolean("endarmor.enabled")) {
+			if (plugin.IsFullCustomSet(ArmorType.END, inventory) && player.getWorld().getEnvironment().equals(Environment.THE_END) && plugin.configHandler.getConfig("config").getBoolean("endarmor.enabled")) {
 				if (!(teleportCooldown.contains(player))) {
 					Block block = player.getTargetBlock(null, 10);
 					Location playerlocation = player.getLocation();

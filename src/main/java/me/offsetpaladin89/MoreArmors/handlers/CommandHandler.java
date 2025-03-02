@@ -338,6 +338,9 @@ public record CommandHandler(MoreArmorsMain plugin) {
 			case EMERALD -> new EmeraldArmor(slotType);
 			case END -> new EndArmor(slotType);
 			case EXPERIENCE -> new ExperienceArmor(slotType);
+			case MINER -> new MinerArmor(slotType);
+			case NETHER -> new NetherArmor(slotType);
+			case SPEEDSTER -> new SpeedsterArmor(slotType);
 			case TITAN -> new TitanArmor(slotType);
 			default -> null;
 		};

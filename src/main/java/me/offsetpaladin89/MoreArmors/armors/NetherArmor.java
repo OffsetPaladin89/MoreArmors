@@ -1,6 +1,5 @@
 package me.offsetpaladin89.MoreArmors.armors;
 
-import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.Lore;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
@@ -8,14 +7,17 @@ import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class EndArmor extends CustomArmor {
+public class NetherArmor extends CustomArmor {
 
-    private static final Color LEATHER_COLOR = Color.PURPLE;
+    private static final Color LEATHER_COLOR = Color.GRAY;
 
-    public EndArmor(SlotType slot) {
+    public NetherArmor(SlotType slot) {
         super(slot);
         this.item = getBaseItem();
         this.rarity = getDefaultRarity();
@@ -30,17 +32,16 @@ public class EndArmor extends CustomArmor {
         ItemMeta itemMeta = item.getItemMeta();
 
         Lore lore = new Lore();
-        lore.addColoredLine("&6Item Ability: Bane of the End");
-        lore.addColoredLine("&7Deal &c+10% &7damage while in &5The End&7.");
+        lore.addColoredLine("&6Item Ability: Bane of the Nether");
+        lore.addColoredLine("&7Deal &c+10% &7damage while in &4The Nether&7.");
         lore.addEmpty();
-        lore.addColoredLine("&6Full Set Bonus: End King");
-        lore.addColoredLine("&7Take &a50% &7reduced damage while in &5The End&7.");
+        lore.addColoredLine("&6Full Set Bonus: Nether King");
+        lore.addColoredLine("&7Grants &aFire Resistance &7while");
+        lore.addColoredLine("&7in the Nether.");
         lore.addEmpty();
-        lore.addColoredLine("&7Deal &c+100% &7damage while in &5The End&7.");
+        lore.addColoredLine("&7Take &a50% &7reduced damage while in &4The Nether&7.");
         lore.addEmpty();
-        lore.addColoredLine("&6Full Set Ability: Ender Warp &e&lSHIFT LEFT CLICK");
-        lore.addColoredLine("&7Teleport &a10 blocks &7forwards while in &5The End&7.");
-        lore.addColoredLine("&81s Cooldown");
+        lore.addColoredLine("&7Deal &c+100% &7damage while in &4The Nether&7.");
         lore.addArmorRarity(rarity);
         itemMeta.setLore(lore.getLore());
 
@@ -48,7 +49,7 @@ public class EndArmor extends CustomArmor {
     }
 
     public void updateItem() {
-        this.armorID = ArmorType.END;
+        this.armorID = ArmorType.NETHER;
 
         if(this.item.getType().equals(Material.PLAYER_HEAD)) assignSkull(item);
         else setLeatherColor(LEATHER_COLOR);
@@ -80,10 +81,10 @@ public class EndArmor extends CustomArmor {
 
     private String getDefaultName() {
         return switch (slot) {
-            case HELMET -> "End Helmet";
-            case CHESTPLATE -> "End Chestplate";
-            case LEGGINGS -> "End Leggings";
-            case BOOTS -> "End Boots";
+            case HELMET -> "Nether Helmet";
+            case CHESTPLATE -> "Nether Chestplate";
+            case LEGGINGS -> "Nether Leggings";
+            case BOOTS -> "Nether Boots";
             default -> null;
         };
     }
@@ -106,6 +107,6 @@ public class EndArmor extends CustomArmor {
     }
 
     private void assignSkull(ItemStack item) {
-        MoreArmorsMain.modifySkullSkin(item, "fee4eabeb72f19088ade78266191c8f77398cc0d80cdd27563a5d66b71912b28", null);
+        MoreArmorsMain.modifySkullSkin(item, "cdf74e323ed41436965f5c57ddf2815d5332fe999e68fbb9d6cf5c8bd4139f", null);
     }
 }

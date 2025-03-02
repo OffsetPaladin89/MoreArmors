@@ -10,7 +10,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
-import org.checkerframework.checker.units.qual.Speed;
 
 public class RecipeHandler {
 
@@ -29,6 +28,7 @@ public class RecipeHandler {
         registerEndArmor(config.getBoolean("endarmor.crafting"));
         registerExperienceArmor(config.getBoolean("experiencearmor.crafting"));
         registerMinerArmor(config.getBoolean("minerarmor.crafting"));
+        registerNetherArmor(config.getBoolean("netherarmor.crafting"));
         registerSpeedsterArmor(config.getBoolean("speedsterarmor.crafting"));
         registerTitanArmor(config.getBoolean("titanarmor.crafting"));
     }
@@ -499,6 +499,50 @@ public class RecipeHandler {
         chestplateRecipe.setIngredient('A', sugarCane);
         leggingsRecipe.setIngredient('A', sugarCane);
         bootsRecipe.setIngredient('A', sugarCane);
+
+        plugin.getServer().addRecipe(helmetRecipe);
+        plugin.getServer().addRecipe(chestplateRecipe);
+        plugin.getServer().addRecipe(leggingsRecipe);
+        plugin.getServer().addRecipe(bootsRecipe);
+    }
+
+    private void registerNetherArmor(boolean register) {
+        if(!register) return;
+
+        CustomArmor helmetItem = new NetherArmor(SlotType.HELMET);
+        CustomArmor chestplateItem = new NetherArmor(SlotType.CHESTPLATE);
+        CustomArmor leggingsItem = new NetherArmor(SlotType.LEGGINGS);
+        CustomArmor bootsItem = new NetherArmor(SlotType.BOOTS);
+
+        NamespacedKey helmetKey = new NamespacedKey(plugin, "nether_helmet");
+        NamespacedKey chestplateKey = new NamespacedKey(plugin, "nether_chestplate");
+        NamespacedKey leggingsKey = new NamespacedKey(plugin, "nether_leggings");
+        NamespacedKey bootsKey = new NamespacedKey(plugin, "nether_boots");
+
+        ShapedRecipe helmetRecipe = new ShapedRecipe(helmetKey, helmetItem.getItem());
+        ShapedRecipe chestplateRecipe = new ShapedRecipe(chestplateKey, chestplateItem.getItem());
+        ShapedRecipe leggingsRecipe = new ShapedRecipe(leggingsKey, leggingsItem.getItem());
+        ShapedRecipe bootsRecipe = new ShapedRecipe(bootsKey, bootsItem.getItem());
+
+        helmetRecipe.shape("AAA", "ACA");
+        chestplateRecipe.shape("ABA", "AAA", "AAA");
+        leggingsRecipe.shape("AAA", "ABA", "A A");
+        bootsRecipe.shape("ABA", "A A");
+
+        RecipeChoice soulSand = new RecipeChoice.ExactChoice(new SoulSand.SoulSand1().getItem());
+        RecipeChoice netherCrown = new RecipeChoice.ExactChoice(new NetherCrown().getItem());
+
+        helmetRecipe.setIngredient('A', soulSand);
+        helmetRecipe.setIngredient('C', netherCrown);
+
+        chestplateRecipe.setIngredient('A', soulSand);
+        chestplateRecipe.setIngredient('B', Material.NETHER_STAR);
+
+        leggingsRecipe.setIngredient('A', soulSand);
+        leggingsRecipe.setIngredient('B', Material.NETHER_STAR);
+
+        bootsRecipe.setIngredient('A', soulSand);
+        bootsRecipe.setIngredient('B', Material.NETHER_STAR);
 
         plugin.getServer().addRecipe(helmetRecipe);
         plugin.getServer().addRecipe(chestplateRecipe);

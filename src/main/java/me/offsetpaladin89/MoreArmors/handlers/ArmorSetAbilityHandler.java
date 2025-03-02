@@ -2,6 +2,7 @@ package me.offsetpaladin89.MoreArmors.handlers;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
+import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
@@ -20,19 +21,28 @@ import java.util.UUID;
 
 public class ArmorSetAbilityHandler {
 //
-//	private static MoreArmorsMain plugin;
+	private static MoreArmorsMain plugin;
+
+	public ArmorSetAbilityHandler(MoreArmorsMain plugin) {
+		ArmorSetAbilityHandler.plugin = plugin;
+	}
 //
-//	public ArmorSetAbilityHandler(MoreArmorsMain plugin) {
-//		ArmorSetAbilityHandler.plugin = plugin;
-//	}
+	public void scanPlayers(Object[] players) {
+		FileConfiguration config = plugin.configHandler.getConfig("config");
+		for (Object obj : players) {
+			if (obj instanceof Player) {
+				Player p = (Player) obj;
+				PlayerInventory inv = p.getInventory();
+                World w = p.getLocation().getWorld();
+
+                if(plugin.IsFullCustomSet(ArmorType.TITAN, inv)) p.getAttribute(Attribute.SCALE).setBaseValue(1.5);
+                else p.getAttribute(Attribute.SCALE).setBaseValue(1);
+
+                if(plugin.IsFullCustomSet(ArmorType.NETHER, inv) && w.getEnvironment().equals(Environment.NETHER)) {
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 30, 0, false, false));
+                }
+
 //
-//	public void scanPlayers(Object[] players) {
-//		FileConfiguration config = plugin.configHandler.getConfig("config");
-//		for (Object obj : players) {
-//			if (obj instanceof Player) {
-//				Player p = (Player) obj;
-//				PlayerInventory inv = p.getInventory();
-//				World w = p.getLocation().getWorld();
 //				if (plugin.IsFullCustomSet("nether", p.getInventory()) && w.getEnvironment().equals(Environment.NETHER) && config.getBoolean("netherarmor.enabled")) {
 //					setHelmetHealth(inv, 20);
 //					p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 60, 0, false, false));
@@ -58,10 +68,10 @@ public class ArmorSetAbilityHandler {
 //						}
 //					}
 //				}
-//			}
-//
-//		}
-//	}
+			}
+
+		}
+	}
 //
 //	public void setHelmetHealth(PlayerInventory inv, Integer amount) {
 //		ItemStack effectItem = inv.getHelmet();

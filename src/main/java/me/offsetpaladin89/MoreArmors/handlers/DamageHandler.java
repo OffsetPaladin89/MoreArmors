@@ -3,6 +3,7 @@ package me.offsetpaladin89.MoreArmors.handlers;
 import com.cryptomorin.xseries.XSound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
+import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import org.bukkit.World.Environment;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -52,32 +53,32 @@ public class DamageHandler implements Listener {
 	public Float destroyerDamage(Player p) {
 		if(!plugin.configHandler.getConfig("config").getBoolean("destroyerarmor.enabled")) return 0f;
 		PlayerInventory inv = p.getInventory();
-		return (plugin.matchingCustomItem(inv.getHelmet(), "destroyer") ? (new NBTItem(inv.getHelmet()).getInteger("KillAmount") / 100 > 10 ? 10f : new NBTItem(inv.getHelmet()).getInteger("KillAmount") / 100) : 0f) +
-				(plugin.matchingCustomItem(inv.getChestplate(), "destroyer") ? (new NBTItem(inv.getChestplate()).getInteger("KillAmount") / 100 > 10 ? 10f : new NBTItem(inv.getChestplate()).getInteger("KillAmount") / 100) : 0f) +
-				(plugin.matchingCustomItem(inv.getLeggings(), "destroyer") ? (new NBTItem(inv.getLeggings()).getInteger("KillAmount") / 100 > 10 ? 10f : new NBTItem(inv.getLeggings()).getInteger("KillAmount") / 100) : 0f) +
-				(plugin.matchingCustomItem(inv.getBoots(), "destroyer") ? (new NBTItem(inv.getBoots()).getInteger("KillAmount") / 100 > 10 ? 10f : new NBTItem(inv.getBoots()).getInteger("KillAmount") / 100) : 0f);
+		return (plugin.matchingCustomItem(inv.getHelmet(), ArmorType.DESTROYER) ? (new NBTItem(inv.getHelmet()).getInteger("KillAmount") / 100 > 10 ? 10f : new NBTItem(inv.getHelmet()).getInteger("KillAmount") / 100) : 0f) +
+				(plugin.matchingCustomItem(inv.getChestplate(), ArmorType.DESTROYER) ? (new NBTItem(inv.getChestplate()).getInteger("KillAmount") / 100 > 10 ? 10f : new NBTItem(inv.getChestplate()).getInteger("KillAmount") / 100) : 0f) +
+				(plugin.matchingCustomItem(inv.getLeggings(), ArmorType.DESTROYER) ? (new NBTItem(inv.getLeggings()).getInteger("KillAmount") / 100 > 10 ? 10f : new NBTItem(inv.getLeggings()).getInteger("KillAmount") / 100) : 0f) +
+				(plugin.matchingCustomItem(inv.getBoots(), ArmorType.DESTROYER) ? (new NBTItem(inv.getBoots()).getInteger("KillAmount") / 100 > 10 ? 10f : new NBTItem(inv.getBoots()).getInteger("KillAmount") / 100) : 0f);
 	}
 
     public Float netherDamage(Player p, Environment env) {
         PlayerInventory inventory = p.getInventory();
-        return env.equals(Environment.NETHER) && plugin.configHandler.getConfig("config").getBoolean("netherarmor.enabled") ? (plugin.IsFullCustomSet("nether", inventory) ? 1f : 0f) +
-                (plugin.matchingCustomItem(inventory.getHelmet(), "nether") ? 0.1f : 0f) +
-                (plugin.matchingCustomItem(inventory.getChestplate(), "nether") ? 0.1f : 0f) +
-                (plugin.matchingCustomItem(inventory.getLeggings(), "nether") ? 0.1f : 0f) +
-                (plugin.matchingCustomItem(inventory.getBoots(), "nether") ? 0.1f : 0f) + 1f : 1f;
+        return env.equals(Environment.NETHER) && plugin.configHandler.getConfig("config").getBoolean("netherarmor.enabled") ? (plugin.IsFullCustomSet(ArmorType.NETHER, inventory) ? 1f : 0f) +
+                (plugin.matchingCustomItem(inventory.getHelmet(), ArmorType.NETHER) ? 0.1f : 0f) +
+                (plugin.matchingCustomItem(inventory.getChestplate(), ArmorType.NETHER) ? 0.1f : 0f) +
+                (plugin.matchingCustomItem(inventory.getLeggings(), ArmorType.NETHER) ? 0.1f : 0f) +
+                (plugin.matchingCustomItem(inventory.getBoots(), ArmorType.NETHER) ? 0.1f : 0f) + 1f : 1f;
     }
 
 	public Float endDamage(Player p, Environment env) {
 		PlayerInventory inventory = p.getInventory();
-		return env.equals(Environment.THE_END) && plugin.configHandler.getConfig("config").getBoolean("endarmor.enabled") ? (plugin.IsFullCustomSet("end", inventory) ? 1f : 0f) +
-				(plugin.matchingCustomItem(inventory.getHelmet(), "end") ? 0.1f : 0f) +
-				(plugin.matchingCustomItem(inventory.getChestplate(), "end") ? 0.1f : 0f) +
-				(plugin.matchingCustomItem(inventory.getLeggings(), "end") ? 0.1f : 0f) +
-				(plugin.matchingCustomItem(inventory.getBoots(), "end") ? 0.1f : 0f) + 1f : 1f;
+		return env.equals(Environment.THE_END) && plugin.configHandler.getConfig("config").getBoolean("endarmor.enabled") ? (plugin.IsFullCustomSet(ArmorType.END, inventory) ? 1f : 0f) +
+				(plugin.matchingCustomItem(inventory.getHelmet(), ArmorType.END) ? 0.1f : 0f) +
+				(plugin.matchingCustomItem(inventory.getChestplate(), ArmorType.END) ? 0.1f : 0f) +
+				(plugin.matchingCustomItem(inventory.getLeggings(), ArmorType.END) ? 0.1f : 0f) +
+				(plugin.matchingCustomItem(inventory.getBoots(), ArmorType.END) ? 0.1f : 0f) + 1f : 1f;
 	}
 
 	public Float seaGreedDamage(Player p) {
 		PlayerInventory inventory = p.getInventory();
-		return p.isInWater() && plugin.configHandler.getConfig("config").getBoolean("seagreedarmor.enabled") ? (plugin.IsFullCustomSet("seagreed", inventory) ? 1f : 0f) + 1f : 1f;
+		return p.isInWater() && plugin.configHandler.getConfig("config").getBoolean("seagreedarmor.enabled") ? (plugin.IsFullCustomSet(ArmorType.SEA_GREED, inventory) ? 1f : 0f) + 1f : 1f;
 	}
 }

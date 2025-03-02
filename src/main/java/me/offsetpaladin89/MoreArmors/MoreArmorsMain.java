@@ -53,12 +53,10 @@ public class MoreArmorsMain extends JavaPlugin {
 		hologramHandler = new HologramHandler(this);
 		armorSets = new ArmorsRecord(this);
 		armorConstructor = new ArmorConstructor(this);
-//		armorSetAbilities = new ArmorSetAbilityHandler(this);
+		armorSetAbilities = new ArmorSetAbilityHandler(this);
 		materials = new Materials(this);
-//		ArmorChecker();
+		ArmorChecker();
 		registerConfig();
-//		armorSets.RegisterArmorRecipes();
-//		materials.RegisterMaterialsRecipes();
 
 		new RecipeHandler(this);
 		inventoryHandler = new InventoryHandler(this);
@@ -67,7 +65,6 @@ public class MoreArmorsMain extends JavaPlugin {
 	public void reloadConfig(CommandSender s) {
 		registerConfig();
 		getServer().resetRecipes();
-//		armorSets.RegisterArmorRecipes();
 		materials.RegisterMaterialsRecipes();
 		sendColoredMessage(s, commands.messages.prefix() + " &aSuccessfully reloaded config!");
 	}
@@ -109,7 +106,7 @@ public class MoreArmorsMain extends JavaPlugin {
 	}
 
 	// Checks if the user is wearing a full set of custom armor
-	public boolean IsFullCustomSet(String tag, PlayerInventory inventory) {
+	public boolean IsFullCustomSet(ArmorType tag, PlayerInventory inventory) {
 		ItemStack helmet = inventory.getHelmet();
 		ItemStack chestplate = inventory.getChestplate();
 		ItemStack leggings = inventory.getLeggings();
@@ -117,17 +114,17 @@ public class MoreArmorsMain extends JavaPlugin {
 
 		if(isAirOrNull(helmet) || isAirOrNull(chestplate) || isAirOrNull(leggings) || isAirOrNull(boots)) return false;
 
-        boolean hasHelmet = NBT.get(helmet, nbt -> (String) nbt.getString("CustomItemID")).equals(tag);
-		boolean hasChestplate = NBT.get(chestplate, nbt -> (String) nbt.getString("CustomItemID")).equals(tag);
-		boolean hasLeggings = NBT.get(leggings, nbt -> (String) nbt.getString("CustomItemID")).equals(tag);
-		boolean hasBoots = NBT.get(boots, nbt -> (String) nbt.getString("CustomItemID")).equals(tag);
+        boolean hasHelmet = NBT.get(helmet, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class)).equals(tag);
+		boolean hasChestplate = NBT.get(chestplate, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class)).equals(tag);
+		boolean hasLeggings = NBT.get(leggings, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class)).equals(tag);
+		boolean hasBoots = NBT.get(boots, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class)).equals(tag);
 
 		return hasHelmet && hasChestplate && hasLeggings && hasBoots;
 	}
 
-	public boolean matchingCustomItem(ItemStack item, String itemID) {
+	public boolean matchingCustomItem(ItemStack item, ArmorType itemID) {
 		if(isAirOrNull(item)) return false;
-		return NBT.get(item, nbt -> (String) nbt.getString("CustomItemID")).equals(itemID);
+		return NBT.get(item, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class)).equals(itemID);
 	}
 
 	public boolean isAirOrNull(ItemStack item) {
@@ -165,8 +162,8 @@ public class MoreArmorsMain extends JavaPlugin {
 	public void ArmorChecker() {
 		new BukkitRunnable() {
 			public void run() {
-//				armorSetAbilities.scanPlayers(getServer().getOnlinePlayers().toArray());
+				armorSetAbilities.scanPlayers(getServer().getOnlinePlayers().toArray());
 			}
-		}.runTaskTimer(this, 0, 5);
+		}.runTaskTimer(this, 0, 10);
 	}
 }
