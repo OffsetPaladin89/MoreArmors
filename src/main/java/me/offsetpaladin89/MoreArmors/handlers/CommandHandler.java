@@ -383,11 +383,6 @@ public record CommandHandler(MoreArmorsMain plugin) {
 		addItem(inventory, target, item.getItem(), amount % 64);
 
 		giveMessage(sender, target, item.getItem(), amount);
-        for (Iterator<Recipe> it = plugin.getServer().recipeIterator(); it.hasNext(); ) {
-            Recipe recipe = it.next();
-			if(recipe.getResult().hasItemMeta()) plugin.sendConsoleMessage(recipe.getResult().getItemMeta().getDisplayName());
-        }
-//		plugin.sendConsoleMessage("Recipe: " + plugin.getServer().getRecipe());
 	}
 
 	private void addItem(PlayerInventory inventory, Player target, ItemStack item, int stackSize) {

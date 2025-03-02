@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
+import org.checkerframework.checker.units.qual.Speed;
 
 public class RecipeHandler {
 
@@ -27,6 +28,8 @@ public class RecipeHandler {
         registerEmeraldArmor(config.getBoolean("emeraldarmor.crafting"));
         registerEndArmor(config.getBoolean("endarmor.crafting"));
         registerExperienceArmor(config.getBoolean("experiencearmor.crafting"));
+        registerMinerArmor(config.getBoolean("minerarmor.crafting"));
+        registerSpeedsterArmor(config.getBoolean("speedsterarmor.crafting"));
         registerTitanArmor(config.getBoolean("titanarmor.crafting"));
     }
 
@@ -424,6 +427,78 @@ public class RecipeHandler {
         chestplateRecipe.setIngredient('A', Material.IRON_BLOCK);
         leggingsRecipe.setIngredient('A', Material.IRON_BLOCK);
         bootsRecipe.setIngredient('A', Material.IRON_BLOCK);
+
+        plugin.getServer().addRecipe(helmetRecipe);
+        plugin.getServer().addRecipe(chestplateRecipe);
+        plugin.getServer().addRecipe(leggingsRecipe);
+        plugin.getServer().addRecipe(bootsRecipe);
+    }
+
+    private void registerMinerArmor(boolean register) {
+        if(!register) return;
+
+        CustomArmor helmetItem = new MinerArmor(SlotType.HELMET);
+        CustomArmor chestplateItem = new MinerArmor(SlotType.CHESTPLATE);
+        CustomArmor leggingsItem = new MinerArmor(SlotType.LEGGINGS);
+        CustomArmor bootsItem = new MinerArmor(SlotType.BOOTS);
+
+        NamespacedKey helmetKey = new NamespacedKey(plugin, "miner_helmet");
+        NamespacedKey chestplateKey = new NamespacedKey(plugin, "miner_chestplate");
+        NamespacedKey leggingsKey = new NamespacedKey(plugin, "miner_leggings");
+        NamespacedKey bootsKey = new NamespacedKey(plugin, "miner_boots");
+
+        ShapedRecipe helmetRecipe = new ShapedRecipe(helmetKey, helmetItem.getItem());
+        ShapedRecipe chestplateRecipe = new ShapedRecipe(chestplateKey, chestplateItem.getItem());
+        ShapedRecipe leggingsRecipe = new ShapedRecipe(leggingsKey, leggingsItem.getItem());
+        ShapedRecipe bootsRecipe = new ShapedRecipe(bootsKey, bootsItem.getItem());
+
+        helmetRecipe.shape("AAA", "A A");
+        chestplateRecipe.shape("A A", "AAA", "AAA");
+        leggingsRecipe.shape("AAA", "A A", "A A");
+        bootsRecipe.shape("A A", "A A");
+
+        RecipeChoice cobblestone = new RecipeChoice.ExactChoice(new Cobblestone.Cobblestone2().getItem());
+
+        helmetRecipe.setIngredient('A', cobblestone);
+        chestplateRecipe.setIngredient('A', cobblestone);
+        leggingsRecipe.setIngredient('A', cobblestone);
+        bootsRecipe.setIngredient('A', cobblestone);
+
+        plugin.getServer().addRecipe(helmetRecipe);
+        plugin.getServer().addRecipe(chestplateRecipe);
+        plugin.getServer().addRecipe(leggingsRecipe);
+        plugin.getServer().addRecipe(bootsRecipe);
+    }
+
+    private void registerSpeedsterArmor(boolean register) {
+        if(!register) return;
+
+        CustomArmor helmetItem = new SpeedsterArmor(SlotType.HELMET);
+        CustomArmor chestplateItem = new SpeedsterArmor(SlotType.CHESTPLATE);
+        CustomArmor leggingsItem = new SpeedsterArmor(SlotType.LEGGINGS);
+        CustomArmor bootsItem = new SpeedsterArmor(SlotType.BOOTS);
+
+        NamespacedKey helmetKey = new NamespacedKey(plugin, "speedster_helmet");
+        NamespacedKey chestplateKey = new NamespacedKey(plugin, "speedster_chestplate");
+        NamespacedKey leggingsKey = new NamespacedKey(plugin, "speedster_leggings");
+        NamespacedKey bootsKey = new NamespacedKey(plugin, "speedster_boots");
+
+        ShapedRecipe helmetRecipe = new ShapedRecipe(helmetKey, helmetItem.getItem());
+        ShapedRecipe chestplateRecipe = new ShapedRecipe(chestplateKey, chestplateItem.getItem());
+        ShapedRecipe leggingsRecipe = new ShapedRecipe(leggingsKey, leggingsItem.getItem());
+        ShapedRecipe bootsRecipe = new ShapedRecipe(bootsKey, bootsItem.getItem());
+
+        helmetRecipe.shape("AAA", "A A");
+        chestplateRecipe.shape("A A", "AAA", "AAA");
+        leggingsRecipe.shape("AAA", "A A", "A A");
+        bootsRecipe.shape("A A", "A A");
+
+        RecipeChoice sugarCane = new RecipeChoice.ExactChoice(new SugarCane.SugarCane0().getItem());
+
+        helmetRecipe.setIngredient('A', sugarCane);
+        chestplateRecipe.setIngredient('A', sugarCane);
+        leggingsRecipe.setIngredient('A', sugarCane);
+        bootsRecipe.setIngredient('A', sugarCane);
 
         plugin.getServer().addRecipe(helmetRecipe);
         plugin.getServer().addRecipe(chestplateRecipe);
