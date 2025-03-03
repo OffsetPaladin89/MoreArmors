@@ -1,6 +1,7 @@
 package me.offsetpaladin89.MoreArmors.handlers;
 
 import com.cryptomorin.xseries.XSound;
+import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
@@ -33,16 +34,13 @@ public class DamageHandler implements Listener {
 	@EventHandler
 	public void DamageEntity(EntityDamageByEntityEvent event) {
 		FileConfiguration config = plugin.configHandler.getConfig("config");
-		if(event.getDamager() instanceof Player && event.getEntity() instanceof LivingEntity) {
-			Player player = (Player) event.getDamager();
+		if(event.getDamager() instanceof Player player && event.getEntity() instanceof LivingEntity) {
             event.setDamage(event.getDamage() + destroyerDamage(player));
             event.setDamage(event.getDamage() * netherDamage(player, player.getWorld().getEnvironment()) * seaGreedDamage(player) * endDamage(player, player.getWorld().getEnvironment()));
             if(config.getBoolean("damageindicators")) plugin.hologramHandler.createDamageHologram(player, player.getLocation(), (LivingEntity) event.getEntity(), 20L, event.getDamage());
 		}
-		if(event.getDamager() instanceof Arrow && event.getEntity() instanceof LivingEntity) {
-			Arrow damager = (Arrow) event.getDamager();
-			if(damager.getShooter() instanceof Player) {
-				Player player = (Player) damager.getShooter();
+		if(event.getDamager() instanceof Arrow damager && event.getEntity() instanceof LivingEntity) {
+			if(damager.getShooter() instanceof Player player) {
                 event.setDamage(event.getDamage() + destroyerDamage(player));
                 event.setDamage(event.getDamage() * netherDamage(player, player.getWorld().getEnvironment()) * seaGreedDamage(player) * endDamage(player, player.getWorld().getEnvironment()));
 				if(config.getBoolean("damageindicators")) plugin.hologramHandler.createDamageHologram(player, damager.getLocation(), (LivingEntity) event.getEntity(), 20L, event.getDamage());
@@ -53,10 +51,12 @@ public class DamageHandler implements Listener {
 	public Float destroyerDamage(Player p) {
 		if(!plugin.configHandler.getConfig("config").getBoolean("destroyerarmor.enabled")) return 0f;
 		PlayerInventory inv = p.getInventory();
-		return (plugin.matchingCustomItem(inv.getHelmet(), ArmorType.DESTROYER) ? (new NBTItem(inv.getHelmet()).getInteger("KillAmount") / 100 > 10 ? 10f : new NBTItem(inv.getHelmet()).getInteger("KillAmount") / 100) : 0f) +
-				(plugin.matchingCustomItem(inv.getChestplate(), ArmorType.DESTROYER) ? (new NBTItem(inv.getChestplate()).getInteger("KillAmount") / 100 > 10 ? 10f : new NBTItem(inv.getChestplate()).getInteger("KillAmount") / 100) : 0f) +
-				(plugin.matchingCustomItem(inv.getLeggings(), ArmorType.DESTROYER) ? (new NBTItem(inv.getLeggings()).getInteger("KillAmount") / 100 > 10 ? 10f : new NBTItem(inv.getLeggings()).getInteger("KillAmount") / 100) : 0f) +
-				(plugin.matchingCustomItem(inv.getBoots(), ArmorType.DESTROYER) ? (new NBTItem(inv.getBoots()).getInteger("KillAmount") / 100 > 10 ? 10f : new NBTItem(inv.getBoots()).getInteger("KillAmount") / 100) : 0f);
+		int helmetBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
+		int chestplateBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
+		int leggingsBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
+		int bootsBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
+
+		return (float) (helmetBonus + chestplateBonus + leggingsBonus + bootsBonus);
 	}
 
     public Float netherDamage(Player p, Environment env) {

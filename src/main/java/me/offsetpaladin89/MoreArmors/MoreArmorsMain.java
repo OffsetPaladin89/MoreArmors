@@ -42,8 +42,6 @@ public class MoreArmorsMain extends JavaPlugin {
 
 		new NamespacedKey(this, "morearmors");
 
-		new MainListener(this);
-		new MoreArmorsListener(this);
 		new CraftHandler(this);
 		new DamageHandler(this);
 		new CommandCompleter(this);
@@ -58,6 +56,8 @@ public class MoreArmorsMain extends JavaPlugin {
 		ArmorChecker();
 		registerConfig();
 
+		new MainListener(this);
+		new MoreArmorsListener(this);
 		new RecipeHandler(this);
 		inventoryHandler = new InventoryHandler(this);
 	}
@@ -114,17 +114,19 @@ public class MoreArmorsMain extends JavaPlugin {
 
 		if(isAirOrNull(helmet) || isAirOrNull(chestplate) || isAirOrNull(leggings) || isAirOrNull(boots)) return false;
 
-        boolean hasHelmet = NBT.get(helmet, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class)).equals(tag);
-		boolean hasChestplate = NBT.get(chestplate, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class)).equals(tag);
-		boolean hasLeggings = NBT.get(leggings, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class)).equals(tag);
-		boolean hasBoots = NBT.get(boots, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class)).equals(tag);
+        boolean hasHelmet = matchingCustomItem(helmet, tag);
+		boolean hasChestplate = matchingCustomItem(chestplate, tag);
+		boolean hasLeggings = matchingCustomItem(leggings, tag);
+		boolean hasBoots = matchingCustomItem(boots, tag);
 
 		return hasHelmet && hasChestplate && hasLeggings && hasBoots;
 	}
 
 	public boolean matchingCustomItem(ItemStack item, ArmorType itemID) {
 		if(isAirOrNull(item)) return false;
-		return NBT.get(item, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class)).equals(itemID);
+		ArmorType type = NBT.get(item, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class));
+		if(type == null) return false;
+		return type.equals(itemID);
 	}
 
 	public boolean isAirOrNull(ItemStack item) {

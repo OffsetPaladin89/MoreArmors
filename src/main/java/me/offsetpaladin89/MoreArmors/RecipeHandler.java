@@ -31,6 +31,7 @@ public class RecipeHandler {
         registerNetherArmor(config.getBoolean("netherarmor.crafting"));
         registerSpeedsterArmor(config.getBoolean("speedsterarmor.crafting"));
         registerTitanArmor(config.getBoolean("titanarmor.crafting"));
+        registerDestroyerArmor(config.getBoolean("destroyerarmor.crafting"));
     }
 
     private void registerMaterialRecipes(FileConfiguration config) {
@@ -543,6 +544,55 @@ public class RecipeHandler {
 
         bootsRecipe.setIngredient('A', soulSand);
         bootsRecipe.setIngredient('B', Material.NETHER_STAR);
+
+        plugin.getServer().addRecipe(helmetRecipe);
+        plugin.getServer().addRecipe(chestplateRecipe);
+        plugin.getServer().addRecipe(leggingsRecipe);
+        plugin.getServer().addRecipe(bootsRecipe);
+    }
+
+    private void registerDestroyerArmor(boolean register) {
+        if(!register) return;
+
+        CustomArmor helmetItem = new DestroyerArmor(SlotType.HELMET);
+        CustomArmor chestplateItem = new DestroyerArmor(SlotType.CHESTPLATE);
+        CustomArmor leggingsItem = new DestroyerArmor(SlotType.LEGGINGS);
+        CustomArmor bootsItem = new DestroyerArmor(SlotType.BOOTS);
+
+        NamespacedKey helmetKey = new NamespacedKey(plugin, "destroyer_helmet");
+        NamespacedKey chestplateKey = new NamespacedKey(plugin, "destroyer_chestplate");
+        NamespacedKey leggingsKey = new NamespacedKey(plugin, "destroyer_leggings");
+        NamespacedKey bootsKey = new NamespacedKey(plugin, "destroyer_boots");
+
+        ShapedRecipe helmetRecipe = new ShapedRecipe(helmetKey, helmetItem.getItem());
+        ShapedRecipe chestplateRecipe = new ShapedRecipe(chestplateKey, chestplateItem.getItem());
+        ShapedRecipe leggingsRecipe = new ShapedRecipe(leggingsKey, leggingsItem.getItem());
+        ShapedRecipe bootsRecipe = new ShapedRecipe(bootsKey, bootsItem.getItem());
+
+        helmetRecipe.shape("AAA", "BCB");
+        chestplateRecipe.shape("BCB", "BAB", "AAA");
+        leggingsRecipe.shape("AAA", "BCB", "B B");
+        bootsRecipe.shape("BCB", "A A");
+
+        RecipeChoice ironBlock = new RecipeChoice.ExactChoice(new IronBlock.IronBlock1().getItem());
+        RecipeChoice machinePart = new RecipeChoice.ExactChoice(new MachinePart.MachinePart1().getItem());
+        RecipeChoice machineCore = new RecipeChoice.ExactChoice(new MachineCore().getItem());
+
+        helmetRecipe.setIngredient('A', ironBlock);
+        helmetRecipe.setIngredient('B', machinePart);
+        helmetRecipe.setIngredient('C', machineCore);
+
+        chestplateRecipe.setIngredient('A', ironBlock);
+        chestplateRecipe.setIngredient('B', machinePart);
+        chestplateRecipe.setIngredient('C', machineCore);
+
+        leggingsRecipe.setIngredient('A', ironBlock);
+        leggingsRecipe.setIngredient('B', machinePart);
+        leggingsRecipe.setIngredient('C', machineCore);
+
+        bootsRecipe.setIngredient('A', ironBlock);
+        bootsRecipe.setIngredient('B', machinePart);
+        bootsRecipe.setIngredient('C', machineCore);
 
         plugin.getServer().addRecipe(helmetRecipe);
         plugin.getServer().addRecipe(chestplateRecipe);

@@ -335,6 +335,7 @@ public record CommandHandler(MoreArmorsMain plugin) {
 		PlayerInventory inventory = target.getInventory();
 
 		CustomArmor item = switch (armorType) {
+			case DESTROYER -> new DestroyerArmor(slotType);
 			case EMERALD -> new EmeraldArmor(slotType);
 			case END -> new EndArmor(slotType);
 			case EXPERIENCE -> new ExperienceArmor(slotType);

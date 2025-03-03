@@ -11,6 +11,8 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import static me.offsetpaladin89.MoreArmors.enums.SlotType.HELMET;
+
 public class EndArmor extends CustomArmor {
 
     private static final Color LEATHER_COLOR = Color.PURPLE;
@@ -50,7 +52,7 @@ public class EndArmor extends CustomArmor {
     public void updateItem() {
         this.armorID = ArmorType.END;
 
-        if(this.item.getType().equals(Material.PLAYER_HEAD)) assignSkull(item);
+        if(slot.equals(HELMET)) assignSkull(item);
         else setLeatherColor(LEATHER_COLOR);
         setLore();
 

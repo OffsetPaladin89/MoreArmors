@@ -30,12 +30,12 @@ public class EmeraldArmor extends CustomArmor {
 
     public EmeraldArmor(SlotType slot) {
         super(slot);
-        this.item = getBaseItem();
-        this.rarity = getDefaultRarity();
-        this.displayName = getFormattedName(getDefaultName());
-        this.emeraldCount = 0;
-        this.armor = getDefaultArmor();
-        this.armorToughness = getDefaultArmorToughness();
+        item = getBaseItem();
+        rarity = getDefaultRarity();
+        displayName = getFormattedName(getDefaultName());
+        emeraldCount = 0;
+        armor = getDefaultArmor();
+        armorToughness = getDefaultArmorToughness();
 
         createItem();
     }

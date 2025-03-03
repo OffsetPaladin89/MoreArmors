@@ -2,13 +2,12 @@ package me.offsetpaladin89.MoreArmors.listeners;
 
 import com.cryptomorin.xseries.XSound;
 import de.tr7zw.changeme.nbtapi.NBT;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
+import me.offsetpaladin89.MoreArmors.armors.DestroyerArmor;
 import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import org.bukkit.*;
 import org.bukkit.World.Environment;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -42,27 +41,28 @@ public class MoreArmorsListener implements Listener {
 
 	private final MoreArmorsMain plugin;
 
-	private ArrayList<UUID> cooldowns = new ArrayList<>();
+	private final FileConfiguration config;
+
+	public final ArrayList<UUID> cooldowns = new ArrayList<>();
 
 	List<Player> teleportCooldown = new ArrayList<>();
 
 	public MoreArmorsListener(MoreArmorsMain plugin) {
 		this.plugin = plugin;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		config = plugin.configHandler.getConfig("config");
 	}
 
 	@EventHandler
 	public void DamageEntity(EntityDamageByEntityEvent event) {
-		if (event.getEntity() instanceof Player) {
-			Player player = (Player) event.getEntity();
-			PlayerInventory inventory = player.getInventory();
-			if (plugin.isAirOrNull(inventory.getChestplate())) return;
-			NBTItem nbtItem = new NBTItem(inventory.getChestplate());
-			if (nbtItem.getString("CustomItemID").equals("destroyer")) {
+		if (event.getEntity() instanceof Player player) {
+			PlayerInventory inv = player.getInventory();
+			if (plugin.isAirOrNull(inv.getChestplate())) return;
+			if(plugin.matchingCustomItem(inv.getChestplate(), ArmorType.DESTROYER)) {
 				Random random = new Random();
 				if (random.nextInt(4) == 0) {
 					event.setDamage(0D);
-					player.playSound(player.getLocation(), XSound.ENTITY_PLAYER_ATTACK_CRIT.parseSound(), 0.8f, 1f);
+					player.playSound(player.getLocation(), XSound.ENTITY_PLAYER_ATTACK_CRIT.get(), 0.8f, 1f);
 				}
 			}
 		}
@@ -71,16 +71,18 @@ public class MoreArmorsListener implements Listener {
 	@EventHandler
 	public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
 		Player player = event.getPlayer();
-		if (player.getGameMode().equals(GameMode.SPECTATOR) || player.getGameMode().equals(GameMode.CREATIVE) || !plugin.configHandler.getConfig("config").getBoolean("destroyerarmor.enabled")) return;
 
-		PlayerInventory inventory = player.getInventory();
-		if (plugin.isAirOrNull(inventory.getBoots())) return;
-		NBTItem nbtItem = new NBTItem(inventory.getBoots());
-		if (nbtItem.getString("CustomItemID").equals("destroyer")) {
+		if(!config.getBoolean("destroyerarmor.enabled")) return;
+		if(player.getGameMode().equals(GameMode.SPECTATOR) || player.getGameMode().equals(GameMode.CREATIVE)) return;
+
+		PlayerInventory inv = player.getInventory();
+		if (plugin.isAirOrNull(inv.getBoots())) return;
+
+		if(plugin.matchingCustomItem(inv.getBoots(), ArmorType.DESTROYER)) {
 			event.setCancelled(true);
 			player.setFlying(false);
 			player.setAllowFlight(false);
-			player.playSound(player.getLocation(), XSound.ENTITY_WITHER_BREAK_BLOCK.parseSound(), 0.8f, 1f);
+			player.playSound(player.getLocation(), XSound.ENTITY_WITHER_BREAK_BLOCK.get(), 0.8f, 1f);
 			player.setVelocity(new Vector(player.getLocation().getDirection().getX(), 0, player.getLocation().getDirection().getZ()).normalize().multiply(1.2));
 			player.setFallDistance(0);
 			player.getLocation().getWorld().createExplosion(player.getLocation(), 5, false, false, player);
@@ -89,26 +91,23 @@ public class MoreArmorsListener implements Listener {
 
 	@EventHandler
 	public void onPlayerExplode(EntityExplodeEvent event) {
-		if (event.getEntity() instanceof Player && plugin.configHandler.getConfig("config").getBoolean("destroyerarmor.enabled")) {
-			Player player = (Player) event.getEntity();
-			PlayerInventory inventory = player.getInventory();
-			if (plugin.isAirOrNull(inventory.getBoots())) {return;}
-			NBTItem nbtItem = new NBTItem(inventory.getBoots());
-			if (nbtItem.getString("CustomItemID").equals("destroyer")) {event.setCancelled(true);}
+		if(config.getBoolean("destroyerarmor.enabled")) {
+			if(event.getEntity() instanceof Player player) {
+				PlayerInventory inv = player.getInventory();
+				if(plugin.isAirOrNull(inv.getBoots())) return;
+				if(plugin.matchingCustomItem(inv.getBoots(), ArmorType.DESTROYER)) event.setCancelled(true);
+			}
 		}
 	}
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
-
-		FileConfiguration config = plugin.configHandler.getConfig("config");
-
 		Player player = event.getPlayer();
 		PlayerInventory inventory = player.getInventory();
 
 		if (plugin.IsFullCustomSet(ArmorType.EXPERIENCE, player.getInventory()) && config.getBoolean("experiencearmor.enabled")) {event.setExpToDrop(event.getExpToDrop() * 2);}
 		if (plugin.IsFullCustomSet(ArmorType.MINER, player.getInventory()) && config.getBoolean("minerarmor.enabled")) {
-			if (player.hasPotionEffect(PotionEffectType.HASTE)) {if (player.getPotionEffect(PotionEffectType.HASTE).getAmplifier() == 1) {player.removePotionEffect(PotionEffectType.HASTE);}}
+			if (player.hasPotionEffect(PotionEffectType.HASTE) && player.getPotionEffect(PotionEffectType.HASTE).getAmplifier() == 1) player.removePotionEffect(PotionEffectType.HASTE);
 			player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 100, 1));
 		}
 
@@ -159,33 +158,35 @@ public class MoreArmorsListener implements Listener {
 
 		FileConfiguration config = plugin.configHandler.getConfig("config");
 
-		Player p = e.getPlayer();
-		PlayerInventory inv = p.getInventory();
-		if (plugin.IsFullCustomSet(ArmorType.SEA_GREED, p.getInventory()) && config.getBoolean("seagreedarmor.enabled")) {
-			p.setWalkSpeed(0.2F);
-			if (p.isSwimming()) {
-				Vector dir = p.getLocation().getDirection().normalize().multiply(1.4D); // 3 - 1.6
+		Player player = e.getPlayer();
+		PlayerInventory inv = player.getInventory();
+
+		if (plugin.IsFullCustomSet(ArmorType.SEA_GREED, player.getInventory()) && config.getBoolean("seagreedarmor.enabled")) {
+			player.setWalkSpeed(0.2F);
+			if (player.isSwimming()) {
+				Vector dir = player.getLocation().getDirection().normalize().multiply(1.4D); // 3 - 1.6
 				Vector vec = new Vector(dir.getX(), dir.getY(), dir.getZ());
-				p.setVelocity(vec);
+				player.setVelocity(vec);
 			}
-		} else {
-			if (plugin.isAirOrNull(inv.getBoots())) return;
-			NBTItem nbt = new NBTItem(inv.getBoots());
-			if (p.getGameMode().equals(GameMode.ADVENTURE) || p.getGameMode().equals(GameMode.SURVIVAL)) {
-				if (nbt.getString("CustomItemID").equals("destroyer") && config.getBoolean("destroyerarmor.enabled")) {
-					if (!cooldowns.contains(p.getUniqueId())) {
-						p.setAllowFlight(true);
-						cooldowns.add(p.getUniqueId());
-						new BukkitRunnable() {
-							public void run() {
-								p.setAllowFlight(false);
-								p.setFlying(false);
-								cooldowns.remove(p.getUniqueId());
-							}
-						}.runTaskLater(plugin, 20);
-					}
+		}
+
+		if(plugin.isAirOrNull(inv.getBoots())) return;
+		if(!config.getBoolean("destroyerarmor.enabled")) return;
+		if(player.getGameMode().equals(GameMode.SPECTATOR) || player.getGameMode().equals(GameMode.CREATIVE)) return;
+
+		if(plugin.matchingCustomItem(inv.getBoots(), ArmorType.DESTROYER)) {
+
+			if(cooldowns.contains(player.getUniqueId())) return;
+
+			player.setAllowFlight(true);
+			cooldowns.add(player.getUniqueId());
+			new BukkitRunnable() {
+				public void run() {
+					player.setAllowFlight(false);
+					player.setFlying(false);
+					cooldowns.remove(player.getUniqueId());
 				}
-			}
+			}.runTaskLater(plugin, 20);
 		}
 	}
 
@@ -199,7 +200,7 @@ public class MoreArmorsListener implements Listener {
 			if (event.getEntity().getKiller() != null) {
 				Player killer = event.getEntity().getKiller();
 				PlayerInventory inventory = killer.getInventory();
-				if (plugin.IsFullCustomSet(ArmorType.EXPERIENCE, inventory) && config.getBoolean("experiencearmor.enabled")) {event.setDroppedExp(event.getDroppedExp() * 2);}
+				if (plugin.IsFullCustomSet(ArmorType.EXPERIENCE, inventory) && config.getBoolean("experiencearmor.enabled")) event.setDroppedExp(event.getDroppedExp() * 2);
 				if (plugin.IsFullCustomSet(ArmorType.TITAN, inventory) && config.getBoolean("titanarmor.enabled")) {
 					if (killer.hasPotionEffect(PotionEffectType.RESISTANCE)) {if (killer.getPotionEffect(PotionEffectType.RESISTANCE).getAmplifier() == 0) {killer.removePotionEffect(PotionEffectType.RESISTANCE);}}
 					killer.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 200, 0, false, false));
@@ -215,13 +216,16 @@ public class MoreArmorsListener implements Listener {
 				}
 				for (int i = 0; i < inventory.getSize(); i++) {
 					ItemStack currentItem = inventory.getItem(i);
-					if (!plugin.isAirOrNull(currentItem)) {
-						NBTItem nbtItem = new NBTItem(currentItem);
-						if (nbtItem.getString("CustomItemID").equals("destroyer") && config.getBoolean("destroyerarmor.enabled")) {
-							nbtItem.setInteger("KillAmount", nbtItem.getInteger("KillAmount") + 1);
-							currentItem = nbtItem.getItem();
-//							inventory.setItem(i, plugin.armorConstructor.createDestroyerArmor(currentItem));
-						}
+					if (plugin.isAirOrNull(currentItem)) continue;
+					if(plugin.matchingCustomItem(currentItem, ArmorType.DESTROYER)) {
+						DestroyerArmor destroyerArmor = new DestroyerArmor(currentItem);
+
+						destroyerArmor.createItemFromNBT();
+						destroyerArmor.increaseKillCount(1);
+
+						destroyerArmor.updateItem();
+
+						inventory.setItem(i, destroyerArmor.getItem());
 					}
 				}
 			}
