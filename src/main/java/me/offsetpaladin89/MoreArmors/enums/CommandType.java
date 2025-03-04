@@ -7,13 +7,11 @@ public enum CommandType {
     GIVE, EDIT, RELOAD, INFO, VIEWRECIPES, INVALID;
 
     public static CommandType commandType(String s) {
-        CommandType commandType;
         try {
-            commandType = CommandType.valueOf(s.toUpperCase());
+            return CommandType.valueOf(s.toUpperCase());
         } catch (IllegalArgumentException e) {
-            commandType = INVALID;
+            return INVALID;
         }
-        return commandType;
     }
 
     public static List<String> allCommandTypes() {

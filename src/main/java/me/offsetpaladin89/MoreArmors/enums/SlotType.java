@@ -22,13 +22,11 @@ public enum SlotType {
     }
 
     public static SlotType slotType(String s) {
-        SlotType slotType;
         try {
-            slotType = SlotType.valueOf(s.toUpperCase());
+            return SlotType.valueOf(s.toUpperCase());
         } catch (IllegalArgumentException e) {
-            slotType = INVALID;
+            return INVALID;
         }
-        return slotType;
     }
 
     public static List<String> allSlotTypes() {

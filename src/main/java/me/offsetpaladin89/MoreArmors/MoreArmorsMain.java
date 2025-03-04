@@ -5,6 +5,7 @@ import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
 import me.offsetpaladin89.MoreArmors.commands.Commands;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
+import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.handlers.*;
 import me.offsetpaladin89.MoreArmors.listeners.MainListener;
 import me.offsetpaladin89.MoreArmors.listeners.MoreArmorsListener;
@@ -55,7 +56,8 @@ public class MoreArmorsMain extends JavaPlugin {
 	public void reloadConfig(CommandSender s) {
 		registerConfig();
 		getServer().resetRecipes();
-		sendColoredMessage(s, commands.messages.prefix() + " &aSuccessfully reloaded config!");
+		new RecipeHandler(this);
+		sendColoredMessage(s, commands.prefix() + " &aSuccessfully reloaded config!");
 	}
 
 	public void registerConfig() {
@@ -90,11 +92,6 @@ public class MoreArmorsMain extends JavaPlugin {
 		s.sendMessage(colorString(m));
 	}
 
-	public ShapedRecipe shapedRecipe(String key, ItemStack i) {
-		return new ShapedRecipe(new NamespacedKey(this, key), i);
-	}
-
-	// Checks if the user is wearing a full set of custom armor
 	public boolean IsFullCustomSet(ArmorType tag, PlayerInventory inventory) {
 		ItemStack helmet = inventory.getHelmet();
 		ItemStack chestplate = inventory.getChestplate();
@@ -109,6 +106,12 @@ public class MoreArmorsMain extends JavaPlugin {
 		boolean hasBoots = matchingCustomItem(boots, tag);
 
 		return hasHelmet && hasChestplate && hasLeggings && hasBoots;
+	}
+
+	public boolean isCustomItem(ItemStack item) {
+		boolean isMaterial = NBT.get(item, nbt -> nbt.getEnum("MaterialID", MaterialType.class) != null);
+		boolean isArmor = NBT.get(item, nbt -> nbt.getEnum("ArmorID", ArmorType.class) != null);
+		return isMaterial || isArmor;
 	}
 
 	public boolean matchingCustomItem(ItemStack item, ArmorType itemID) {

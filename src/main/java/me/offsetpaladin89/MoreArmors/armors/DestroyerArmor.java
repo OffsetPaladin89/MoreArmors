@@ -104,10 +104,13 @@ public class DestroyerArmor extends CustomArmor {
         addNBT();
     }
 
+    public void setKillCount(int killCount) {
+        this.killCount = killCount;
+    }
+
     public void increaseKillCount(int killCount) {
         this.killCount += killCount;
     }
-
 
     private int getDefaultArmor() {
         return switch (slot) {

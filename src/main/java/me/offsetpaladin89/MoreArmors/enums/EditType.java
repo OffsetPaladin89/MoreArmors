@@ -7,13 +7,11 @@ public enum EditType {
     EMERALD_COUNT, KILL_COUNT, INVALID;
 
     public static EditType editType(String s) {
-        EditType editType;
         try {
-            editType = EditType.valueOf(s.toUpperCase());
+            return EditType.valueOf(s.toUpperCase());
         } catch (IllegalArgumentException e) {
-            editType = INVALID;
+            return INVALID;
         }
-        return editType;
     }
 
     public static List<String> allEditTypes() {

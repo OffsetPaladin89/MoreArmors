@@ -17,11 +17,10 @@ public enum MaterialType {
     public static MaterialType materialType(String s) {
         MaterialType materialType;
         try {
-            materialType = MaterialType.valueOf(s.toUpperCase());
+            return MaterialType.valueOf(s.toUpperCase());
         } catch (IllegalArgumentException e) {
-            materialType = INVALID;
+            return INVALID;
         }
-        return materialType;
     }
 
     public static List<String> allMaterialTypes() {

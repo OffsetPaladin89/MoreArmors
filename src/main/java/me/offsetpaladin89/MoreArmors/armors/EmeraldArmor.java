@@ -82,10 +82,6 @@ public class EmeraldArmor extends CustomArmor {
         this.emeraldCount = emeraldCount;
     }
 
-    public int getEmeraldCount() {
-        return this.emeraldCount;
-    }
-
     public void increaseEmeraldCount(int emeraldCount) {
         this.emeraldCount += emeraldCount;
     }

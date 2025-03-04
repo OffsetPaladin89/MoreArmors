@@ -7,13 +7,11 @@ public enum GiveType {
     ARMOR, MATERIAL, INVALID;
 
     public static GiveType giveType(String s) {
-        GiveType giveType;
         try {
-            giveType = GiveType.valueOf(s.toUpperCase());
+            return GiveType.valueOf(s.toUpperCase());
         } catch (IllegalArgumentException e) {
-            giveType = INVALID;
+            return INVALID;
         }
-        return giveType;
     }
 
     public static List<String> allGiveTypes() {

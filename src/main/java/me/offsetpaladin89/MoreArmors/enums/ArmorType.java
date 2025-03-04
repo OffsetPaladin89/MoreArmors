@@ -1,5 +1,7 @@
 package me.offsetpaladin89.MoreArmors.enums;
 
+import me.offsetpaladin89.MoreArmors.armors.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,13 +9,26 @@ public enum ArmorType {
     EMERALD, END, EXPERIENCE, MINER, NETHER, SEA_GREED, SPEEDSTER, TITAN, DESTROYER, INVALID;
 
     public static ArmorType armorType(String s) {
-        ArmorType armorType;
         try {
-            armorType = ArmorType.valueOf(s.toUpperCase());
+            return ArmorType.valueOf(s.toUpperCase());
         } catch (IllegalArgumentException e) {
-            armorType = INVALID;
+            return INVALID;
         }
-        return armorType;
+    }
+
+    public static CustomArmor armorFromType(ArmorType type, SlotType slot) {
+        return switch(type) {
+            case EMERALD -> new EmeraldArmor(slot);
+            case END -> new EndArmor(slot);
+            case EXPERIENCE -> new ExperienceArmor(slot);
+            case MINER -> new MinerArmor(slot);
+            case NETHER -> new NetherArmor(slot);
+            case SEA_GREED -> new SeaGreedArmor(slot);
+            case SPEEDSTER -> new SpeedsterArmor(slot);
+            case TITAN -> new TitanArmor(slot);
+            case DESTROYER -> new DestroyerArmor(slot);
+            case INVALID -> null;
+        };
     }
 
     public static List<String> allArmorTypes() {

@@ -114,16 +114,4 @@ public class CustomArmor {
     protected String getFormattedName(String displayName) {
         return MoreArmorsMain.colorString(String.format("%s%s &b(+%d)", Rarity.getColorRarity(rarity), displayName, upgradeTier));
     }
-
-    public void setRarity(Rarity rarity) {
-        this.rarity = rarity;
-    }
-
-    public void setArmor(int armor) {
-        this.armor = armor;
-    }
-
-    public void setArmorToughness(int armorToughness) {
-        this.armorToughness = armorToughness;
-    }
 }

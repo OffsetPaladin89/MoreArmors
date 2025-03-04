@@ -20,9 +20,8 @@ public class ArmorSetAbilityHandler {
 
 	public void scanPlayers(Object[] players) {
 		for (Object obj : players) {
-			if (obj instanceof Player) {
-				Player p = (Player) obj;
-				PlayerInventory inv = p.getInventory();
+			if (obj instanceof Player p) {
+                PlayerInventory inv = p.getInventory();
 				World w = p.getLocation().getWorld();
 
 				if (plugin.IsFullCustomSet(ArmorType.TITAN, inv)) p.getAttribute(Attribute.SCALE).setBaseValue(1.5);
