@@ -112,14 +112,19 @@ public class MoreArmorsListener implements Listener {
 		}
 
 		if (player.isInWater()) {
-			if (!inventory.getItemInMainHand().getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)) {
-				Block b = event.getBlock();
-				Random r = new Random();
-				int m = (int) Math.floor(oreMultiplier(player)) + (r.nextDouble() <= oreMultiplier(player) % 1 ? 1 : 0);
-				if (b.getType().toString().endsWith("_ORE")) {
-					for (ItemStack i : b.getDrops()) {
-						b.getWorld().dropItemNaturally(b.getLocation(), new ItemStack(i.getType(), i.getAmount() * m));
-					}
+			if(!inventory.getItemInMainHand().hasItemMeta()) return;
+			if (inventory.getItemInMainHand().getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)) return;
+			Block b = event.getBlock();
+			Random r = new Random();
+
+			float oreMulti = oreMultiplier(player);
+			int dropAmount = (int) oreMulti;
+
+			if(oreMulti % 1 != 0 && r.nextDouble() <= oreMulti % 1) dropAmount++;
+
+			if (b.getType().toString().endsWith("_ORE")) {
+				for (ItemStack i : b.getDrops()) {
+					b.getWorld().dropItemNaturally(b.getLocation(), new ItemStack(i.getType(), i.getAmount() * dropAmount));
 				}
 			}
 		}
@@ -150,14 +155,19 @@ public class MoreArmorsListener implements Listener {
 
 	private Float oreMultiplier(Player p) {
 		PlayerInventory inventory = p.getInventory();
-		return ((plugin.matchingCustomItem(inventory.getHelmet(), ArmorType.SEA_GREED) && plugin.configHandler.getConfig("config").getBoolean("seagreedarmor.enabled") ? 0.5f : 0f)) + ((plugin.matchingCustomItem(inventory.getChestplate(), ArmorType.SEA_GREED) ? 0.5f : 0f)) + ((plugin.matchingCustomItem(inventory.getLeggings(), ArmorType.SEA_GREED) ? 0.5f : 0f)) + ((plugin.matchingCustomItem(inventory.getBoots(), ArmorType.SEA_GREED) ? 0.5f : 0f));
+		float oreMulti = 0f;
+		if(!config.getBoolean("seagreedarmor.enabled")) return oreMulti;
+
+		if(plugin.matchingCustomItem(inventory.getHelmet(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
+		if(plugin.matchingCustomItem(inventory.getChestplate(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
+		if(plugin.matchingCustomItem(inventory.getLeggings(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
+		if(plugin.matchingCustomItem(inventory.getBoots(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
+
+		return oreMulti;
 	}
 
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e) {
-
-		FileConfiguration config = plugin.configHandler.getConfig("config");
-
 		Player player = e.getPlayer();
 		PlayerInventory inv = player.getInventory();
 
@@ -196,66 +206,61 @@ public class MoreArmorsListener implements Listener {
 		FileConfiguration config = plugin.configHandler.getConfig("config");
 
 		Entity entity = event.getEntity();
-		if (!(entity instanceof Player)) {
-			if (event.getEntity().getKiller() != null) {
-				Player killer = event.getEntity().getKiller();
-				PlayerInventory inventory = killer.getInventory();
-				if (plugin.IsFullCustomSet(ArmorType.EXPERIENCE, inventory) && config.getBoolean("experiencearmor.enabled")) event.setDroppedExp(event.getDroppedExp() * 2);
-				if (plugin.IsFullCustomSet(ArmorType.TITAN, inventory) && config.getBoolean("titanarmor.enabled")) {
-					if (killer.hasPotionEffect(PotionEffectType.RESISTANCE)) {if (killer.getPotionEffect(PotionEffectType.RESISTANCE).getAmplifier() == 0) {killer.removePotionEffect(PotionEffectType.RESISTANCE);}}
-					killer.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 200, 0, false, false));
-				}
-				if (plugin.IsFullCustomSet(ArmorType.SEA_GREED, inventory) && config.getBoolean("seagreedarmor.enabled")) {
-					Random r = new Random();
-					if (entity.getType().equals(EntityType.ELDER_GUARDIAN) && r.nextDouble() <= 0.25d) {
-						killer.sendTitle(MoreArmorsMain.colorString("&c&l&kzzz &r&4&lBLESSING OF THE SEA GOD &c&l&kzzz"), "", -1, -1, -1);
-						killer.playSound(killer, Sound.BLOCK_END_PORTAL_SPAWN, SoundCategory.MASTER, 1, 1.4f);
-						for (int i = 0; i < 3; i++) {killer.getWorld().strikeLightningEffect(killer.getLocation().subtract((r.nextInt(0, 280) - 140f) / 100f, 1, (r.nextInt(0, 280) - 140f) / 100f));}
-						seaGreedEffects(killer);
-					}
-				}
-				for (int i = 0; i < inventory.getSize(); i++) {
-					ItemStack currentItem = inventory.getItem(i);
-					if (plugin.isAirOrNull(currentItem)) continue;
-					if(plugin.matchingCustomItem(currentItem, ArmorType.DESTROYER)) {
-						DestroyerArmor destroyerArmor = new DestroyerArmor(currentItem);
+		if (entity instanceof Player) return;
+		if (!(event.getEntity().getKiller() instanceof Player killer)) return;
 
-						destroyerArmor.createItemFromNBT();
-						destroyerArmor.increaseKillCount(1);
+		PlayerInventory inventory = killer.getInventory();
 
-						destroyerArmor.updateItem();
+		if (plugin.IsFullCustomSet(ArmorType.EXPERIENCE, inventory) && config.getBoolean("experiencearmor.enabled")) event.setDroppedExp(event.getDroppedExp() * 2);
 
-						inventory.setItem(i, destroyerArmor.getItem());
-					}
-				}
+		if (plugin.IsFullCustomSet(ArmorType.TITAN, inventory) && config.getBoolean("titanarmor.enabled")) {
+			if (killer.hasPotionEffect(PotionEffectType.RESISTANCE) && killer.getPotionEffect(PotionEffectType.RESISTANCE).getAmplifier() == 0) killer.removePotionEffect(PotionEffectType.RESISTANCE);
+			killer.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 200, 0, false, false));
+		}
+
+		if (plugin.IsFullCustomSet(ArmorType.SEA_GREED, inventory) && config.getBoolean("seagreedarmor.enabled")) {
+			Random r = new Random();
+			if (entity.getType().equals(EntityType.ELDER_GUARDIAN) && r.nextDouble() <= 0.25d) {
+				killer.sendTitle(MoreArmorsMain.colorString("&c&l&kzzz &r&4&lBLESSING OF THE SEA GOD &c&l&kzzz"), "", -1, -1, -1);
+				killer.playSound(killer, Sound.BLOCK_END_PORTAL_SPAWN, SoundCategory.MASTER, 1, 1.4f);
+				for (int i = 0; i < 3; i++) killer.getWorld().strikeLightningEffect(killer.getLocation().subtract((r.nextInt(0, 280) - 140f) / 100f, 1, (r.nextInt(0, 280) - 140f) / 100f));
+				seaGreedEffects(killer);
+			}
+		}
+
+		for (int i = 0; i < inventory.getSize(); i++) {
+			ItemStack currentItem = inventory.getItem(i);
+			if (plugin.isAirOrNull(currentItem)) continue;
+			if(plugin.matchingCustomItem(currentItem, ArmorType.DESTROYER)) {
+				DestroyerArmor destroyerArmor = new DestroyerArmor(currentItem);
+
+				destroyerArmor.createItemFromNBT();
+				destroyerArmor.increaseKillCount(1);
+
+				destroyerArmor.updateItem();
+
+				inventory.setItem(i, destroyerArmor.getItem());
 			}
 		}
 	}
 
 	public void seaGreedEffects(Player player) {
-		giveItem(new ItemStack(Material.DIAMOND_BLOCK, 20), player);
-		giveItem(new ItemStack(Material.GOLD_BLOCK, 100), player);
+		plugin.addItem(player.getInventory(), player, new ItemStack(Material.DIAMOND_BLOCK), 25);
+		plugin.addItem(player.getInventory(), player, new ItemStack(Material.GOLD_BLOCK), 100);
+
 		player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 72000, 2, false, false));
 		player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 72000, 1, false, false));
 		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 72000, 1, false, false));
 		player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 72000, 1, false, false));
 	}
 
-	public void giveItem(ItemStack item, Player player) {
-		PlayerInventory inventory = player.getInventory();
-		if (inventory.firstEmpty() == -1) {
-			player.getWorld().dropItem(player.getLocation().add(0.0D, 0.5D, 0.0D), item);
-		} else {inventory.addItem(item);}
-	}
-
 	@EventHandler
 	public void onEntityDamage(EntityDamageEvent event) {
-		if (event.getEntity() instanceof Player player) {
-			PlayerInventory inventory = player.getInventory();
-			if (plugin.IsFullCustomSet(ArmorType.SPEEDSTER, inventory) && plugin.configHandler.getConfig("config").getBoolean("speedsterarmor.enabled")) {
-				if (player.hasPotionEffect(PotionEffectType.SPEED)) {if (player.getPotionEffect(PotionEffectType.SPEED).getAmplifier() == 1) {player.removePotionEffect(PotionEffectType.SPEED);}}
-				player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
-			}
+		if (!(event.getEntity() instanceof Player player)) return;
+		PlayerInventory inventory = player.getInventory();
+		if (plugin.IsFullCustomSet(ArmorType.SPEEDSTER, inventory) && plugin.configHandler.getConfig("config").getBoolean("speedsterarmor.enabled")) {
+			if (player.hasPotionEffect(PotionEffectType.SPEED) && player.getPotionEffect(PotionEffectType.SPEED).getAmplifier() == 1) player.removePotionEffect(PotionEffectType.SPEED);
+			player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
 		}
 	}
 
@@ -265,22 +270,24 @@ public class MoreArmorsListener implements Listener {
 		PlayerInventory inventory = player.getInventory();
 		if (event.getAction().equals(Action.LEFT_CLICK_AIR) && player.isSneaking()) {
 			if (plugin.IsFullCustomSet(ArmorType.END, inventory) && player.getWorld().getEnvironment().equals(Environment.THE_END) && plugin.configHandler.getConfig("config").getBoolean("endarmor.enabled")) {
-				if (!(teleportCooldown.contains(player))) {
-					Block block = player.getTargetBlock(null, 10);
-					Location playerlocation = player.getLocation();
-					World world = block.getWorld();
-					double teleportX = block.getX();
-					double teleportY = block.getY() + 1;
-					double teleportZ = block.getZ();
-					float teleportYaw = playerlocation.getYaw();
-					float teleportPitch = playerlocation.getPitch();
-					Location teleportlocation = new Location(world, teleportX, teleportY, teleportZ, teleportYaw, teleportPitch);
-					player.teleport(teleportlocation);
-					teleportCooldown.add(player);
-					player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 5, 5);
-					//Teleport Cooldown
-					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> teleportCooldown.remove(player), 20L);
-				}
+				if(cooldowns.contains(player.getUniqueId())) return;
+				Block block = player.getTargetBlock(null, 10);
+				Location playerlocation = player.getLocation();
+				World world = block.getWorld();
+				double teleportX = block.getX();
+				double teleportY = block.getY() + 1;
+				double teleportZ = block.getZ();
+				float teleportYaw = playerlocation.getYaw();
+				float teleportPitch = playerlocation.getPitch();
+				Location teleportlocation = new Location(world, teleportX, teleportY, teleportZ, teleportYaw, teleportPitch);
+				player.teleport(teleportlocation);
+				player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 5, 5);
+				cooldowns.add(player.getUniqueId());
+				new BukkitRunnable() {
+					public void run() {
+						cooldowns.remove(player.getUniqueId());
+					}
+				}.runTaskLater(plugin, 20);
 			}
 		}
 	}

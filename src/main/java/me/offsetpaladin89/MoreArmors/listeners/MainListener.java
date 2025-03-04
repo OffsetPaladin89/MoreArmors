@@ -12,8 +12,11 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import static org.bukkit.event.inventory.InventoryType.*;
@@ -75,6 +78,27 @@ public class MainListener implements Listener {
 					}
 				}
 			}
+		}
+	}
+
+	private boolean isCustomItem(ItemStack item) {
+		boolean isMaterial = NBT.get(item, nbt -> nbt.getEnum("MaterialID", MaterialType.class) != null);
+		boolean isArmor = NBT.get(item, nbt -> nbt.getEnum("ArmorID", ArmorType.class) != null);
+		return isMaterial || isArmor;
+	}
+
+	@EventHandler
+	public void preCraftEvent(PrepareItemCraftEvent event) {
+		CraftingInventory inventory = event.getInventory();
+		ItemStack result = inventory.getResult();
+
+		if (plugin.isAirOrNull(result)) return;
+		ItemStack[] craftingMatrix = inventory.getMatrix();
+
+		if (isCustomItem(result)) return;
+		for (ItemStack item : craftingMatrix) {
+			if (plugin.isAirOrNull(item)) continue;
+			if (isCustomItem(item)) inventory.setResult(null);
 		}
 	}
 

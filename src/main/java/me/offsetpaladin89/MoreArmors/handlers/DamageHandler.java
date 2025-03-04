@@ -1,26 +1,19 @@
 package me.offsetpaladin89.MoreArmors.handlers;
 
-import com.cryptomorin.xseries.XSound;
 import de.tr7zw.changeme.nbtapi.NBT;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import org.bukkit.World.Environment;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.WitherSkull;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.ExplosionPrimeEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.metadata.FixedMetadataValue;
+
+import static org.bukkit.World.Environment.*;
 
 public class DamageHandler implements Listener {
 
@@ -39,6 +32,13 @@ public class DamageHandler implements Listener {
             event.setDamage(event.getDamage() * netherDamage(player, player.getWorld().getEnvironment()) * seaGreedDamage(player) * endDamage(player, player.getWorld().getEnvironment()));
             if(config.getBoolean("damageindicators")) plugin.hologramHandler.createDamageHologram(player, player.getLocation(), (LivingEntity) event.getEntity(), 20L, event.getDamage());
 		}
+
+		if(event.getEntity() instanceof Player player) {
+			Environment env = player.getWorld().getEnvironment();
+			if(plugin.IsFullCustomSet(ArmorType.NETHER, player.getInventory()) && env.equals(NETHER)) event.setDamage(event.getDamage() * 0.5);
+			if(plugin.IsFullCustomSet(ArmorType.END, player.getInventory()) && env.equals(THE_END)) event.setDamage(event.getDamage() * 0.5);
+		}
+
 		if(event.getDamager() instanceof Arrow damager && event.getEntity() instanceof LivingEntity) {
 			if(damager.getShooter() instanceof Player player) {
                 event.setDamage(event.getDamage() + destroyerDamage(player));
@@ -61,7 +61,7 @@ public class DamageHandler implements Listener {
 
     public Float netherDamage(Player p, Environment env) {
         PlayerInventory inventory = p.getInventory();
-        return env.equals(Environment.NETHER) && plugin.configHandler.getConfig("config").getBoolean("netherarmor.enabled") ? (plugin.IsFullCustomSet(ArmorType.NETHER, inventory) ? 1f : 0f) +
+        return env.equals(NETHER) && plugin.configHandler.getConfig("config").getBoolean("netherarmor.enabled") ? (plugin.IsFullCustomSet(ArmorType.NETHER, inventory) ? 1f : 0f) +
                 (plugin.matchingCustomItem(inventory.getHelmet(), ArmorType.NETHER) ? 0.1f : 0f) +
                 (plugin.matchingCustomItem(inventory.getChestplate(), ArmorType.NETHER) ? 0.1f : 0f) +
                 (plugin.matchingCustomItem(inventory.getLeggings(), ArmorType.NETHER) ? 0.1f : 0f) +

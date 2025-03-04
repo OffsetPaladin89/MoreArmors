@@ -7,9 +7,10 @@ import me.offsetpaladin89.MoreArmors.materials.*;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
+
+import static me.offsetpaladin89.MoreArmors.enums.MaterialType.INVALID;
 
 public class RecipeHandler {
 
@@ -24,117 +25,46 @@ public class RecipeHandler {
     }
 
     private void registerArmorRecipes(FileConfiguration config) {
+        registerDestroyerArmor(config.getBoolean("destroyerarmor.crafting"));
         registerEmeraldArmor(config.getBoolean("emeraldarmor.crafting"));
         registerEndArmor(config.getBoolean("endarmor.crafting"));
         registerExperienceArmor(config.getBoolean("experiencearmor.crafting"));
         registerMinerArmor(config.getBoolean("minerarmor.crafting"));
         registerNetherArmor(config.getBoolean("netherarmor.crafting"));
+        registerSeaGreedArmor(config.getBoolean("seagreedarmor.crafting"));
         registerSpeedsterArmor(config.getBoolean("speedsterarmor.crafting"));
         registerTitanArmor(config.getBoolean("titanarmor.crafting"));
-        registerDestroyerArmor(config.getBoolean("destroyerarmor.crafting"));
     }
 
     private void registerMaterialRecipes(FileConfiguration config) {
         if(!config.getBoolean("materials.crafting")) return;
 
-        blazeRod0();
-        blazeRod1();
-        cobblestone0();
-        cobblestone1();
-        cobblestone2();
-        diamondBlock0();
-        endstone0();
-        endstone1();
-        endstone2();
+        materialRecipe(MaterialType.values());
+
         energyCell();
-        eyeOfEnder0();
-        eyeOfEnder1();
-        goldBlock0();
-        ironBlock0();
-        ironBlock1();
         machineCore();
         machinePart0();
         machinePart1();
         netherCrown();
-        prismarine0();
-        redstoneBlock0();
-        soulSand0();
-        soulSand1();
         starDust();
-        sugarCane0();
     }
 
-    public void defaultMaterialRecipe(ItemStack result, ItemStack material, MaterialType materialType) {
-        NamespacedKey key = new NamespacedKey(plugin, materialType.toString().toLowerCase());
+    public void materialRecipe(MaterialType[] types) {
+        for(MaterialType type : types) materialRecipe(type);
+    }
 
-        ShapedRecipe recipe = new ShapedRecipe(key, result);
+    public void materialRecipe(MaterialType type) {
+        if(type == INVALID) return;
+
+        CustomMaterial material = MaterialType.materialFromType(type);
+        if(material.getPrev() == null) return;
+        NamespacedKey key = new NamespacedKey(plugin, material.getID());
+
+        ShapedRecipe recipe = new ShapedRecipe(key, material.getItem());
         recipe.shape("AAA", "AAA", "AAA");
-        recipe.setIngredient('A', new RecipeChoice.ExactChoice(material));
+        recipe.setIngredient('A', new RecipeChoice.ExactChoice(material.getPrev()));
 
         plugin.getServer().addRecipe(recipe);
-    }
-
-    private void blazeRod0() {
-        CustomMaterial item = new BlazeRod.BlazeRod0();
-        ItemStack material = new ItemStack(Material.BLAZE_ROD);
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
-    }
-
-    private void blazeRod1() {
-        CustomMaterial item = new BlazeRod.BlazeRod1();
-        ItemStack material = new BlazeRod.BlazeRod0().getItem();
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
-    }
-
-    private void cobblestone0() {
-        CustomMaterial item = new Cobblestone.Cobblestone0();
-        ItemStack material = new ItemStack(Material.COBBLESTONE);
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
-    }
-
-    private void cobblestone1() {
-        CustomMaterial item = new Cobblestone.Cobblestone1();
-        ItemStack material = new Cobblestone.Cobblestone0().getItem();
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
-    }
-
-    private void cobblestone2() {
-        CustomMaterial item = new Cobblestone.Cobblestone2();
-        ItemStack material = new Cobblestone.Cobblestone1().getItem();
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
-    }
-
-    private void diamondBlock0() {
-        CustomMaterial item = new DiamondBlock.DiamondBlock0();
-        ItemStack material = new ItemStack(Material.DIAMOND_BLOCK);
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
-    }
-
-    private void endstone0() {
-        CustomMaterial item = new Endstone.Endstone0();
-        ItemStack material = new ItemStack(Material.END_STONE);
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
-    }
-
-    private void endstone1() {
-        CustomMaterial item = new Endstone.Endstone1();
-        ItemStack material = new Endstone.Endstone0().getItem();
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
-    }
-
-    private void endstone2() {
-        CustomMaterial item = new Endstone.Endstone2();
-        ItemStack material = new Endstone.Endstone1().getItem();
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
     }
 
     private void energyCell() {
@@ -150,49 +80,14 @@ public class RecipeHandler {
         plugin.getServer().addRecipe(recipe);
     }
 
-    private void eyeOfEnder0() {
-        CustomMaterial item = new EyeOfEnder.EyeOfEnder0();
-        ItemStack material = new ItemStack(Material.ENDER_EYE);
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
-    }
-
-    private void eyeOfEnder1() {
-        CustomMaterial item = new EyeOfEnder.EyeOfEnder1();
-        ItemStack material = new EyeOfEnder.EyeOfEnder0().getItem();
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
-    }
-
-    private void goldBlock0() {
-        CustomMaterial item = new GoldBlock.GoldBlock0();
-        ItemStack material = new ItemStack(Material.GOLD_BLOCK);
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
-    }
-
-    private void ironBlock0() {
-        CustomMaterial item = new IronBlock.IronBlock0();
-        ItemStack material = new ItemStack(Material.IRON_BLOCK);
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
-    }
-
-    private void ironBlock1() {
-        CustomMaterial item = new IronBlock.IronBlock1();
-        ItemStack material = new IronBlock.IronBlock0().getItem();
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
-    }
-
     private void machineCore() {
         CustomMaterial item = new MachineCore();
 
         NamespacedKey key = new NamespacedKey(plugin, item.getType().toString().toLowerCase());
 
         ShapedRecipe recipe = new ShapedRecipe(key, item.getItem());
-        recipe.shape("ABA", "ACA", " A ");
-        recipe.setIngredient('A', new RecipeChoice.ExactChoice(new IronBlock.IronBlock1().getItem()));
+        recipe.shape(" B ", " C ", "AAA");
+        recipe.setIngredient('A', new RecipeChoice.ExactChoice(new IronBlock.IronBlock2().getItem()));
         recipe.setIngredient('B', new RecipeChoice.ExactChoice(new MachinePart.MachinePart1().getItem()));
         recipe.setIngredient('C', new RecipeChoice.ExactChoice(new EnergyCell().getItem()));
 
@@ -238,34 +133,6 @@ public class RecipeHandler {
         plugin.getServer().addRecipe(recipe);
     }
 
-    private void prismarine0() {
-        CustomMaterial item = new Prismarine.Prismarine0();
-        ItemStack material = new ItemStack(Material.PRISMARINE);
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
-    }
-
-    private void redstoneBlock0() {
-        CustomMaterial item = new RedstoneBlock.RedstoneBlock0();
-        ItemStack material = new ItemStack(Material.REDSTONE_BLOCK);
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
-    }
-
-    private void soulSand0() {
-        CustomMaterial item = new SoulSand.SoulSand0();
-        ItemStack material = new ItemStack(Material.SOUL_SAND);
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
-    }
-
-    private void soulSand1() {
-        CustomMaterial item = new SoulSand.SoulSand1();
-        ItemStack material = new SoulSand.SoulSand0().getItem();
-
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
-    }
-
     private void starDust() {
         CustomMaterial item = new StarDust();
         item.setAmount(8);
@@ -282,11 +149,53 @@ public class RecipeHandler {
         plugin.getServer().addRecipe(recipe);
     }
 
-    private void sugarCane0() {
-        CustomMaterial item = new SugarCane.SugarCane0();
-        ItemStack material = new ItemStack(Material.SUGAR_CANE);
+    private void registerDestroyerArmor(boolean register) {
+        if(!register) return;
 
-        defaultMaterialRecipe(item.getItem(), material, item.getType());
+        CustomArmor helmetItem = new DestroyerArmor(SlotType.HELMET);
+        CustomArmor chestplateItem = new DestroyerArmor(SlotType.CHESTPLATE);
+        CustomArmor leggingsItem = new DestroyerArmor(SlotType.LEGGINGS);
+        CustomArmor bootsItem = new DestroyerArmor(SlotType.BOOTS);
+
+        NamespacedKey helmetKey = new NamespacedKey(plugin, "destroyer_helmet");
+        NamespacedKey chestplateKey = new NamespacedKey(plugin, "destroyer_chestplate");
+        NamespacedKey leggingsKey = new NamespacedKey(plugin, "destroyer_leggings");
+        NamespacedKey bootsKey = new NamespacedKey(plugin, "destroyer_boots");
+
+        ShapedRecipe helmetRecipe = new ShapedRecipe(helmetKey, helmetItem.getItem());
+        ShapedRecipe chestplateRecipe = new ShapedRecipe(chestplateKey, chestplateItem.getItem());
+        ShapedRecipe leggingsRecipe = new ShapedRecipe(leggingsKey, leggingsItem.getItem());
+        ShapedRecipe bootsRecipe = new ShapedRecipe(bootsKey, bootsItem.getItem());
+
+        helmetRecipe.shape("AAA", "BCB");
+        chestplateRecipe.shape("BCB", "BAB", "AAA");
+        leggingsRecipe.shape("AAA", "BCB", "B B");
+        bootsRecipe.shape("BCB", "A A");
+
+        RecipeChoice ironBlock = new RecipeChoice.ExactChoice(new IronBlock.IronBlock1().getItem());
+        RecipeChoice machinePart = new RecipeChoice.ExactChoice(new MachinePart.MachinePart1().getItem());
+        RecipeChoice machineCore = new RecipeChoice.ExactChoice(new MachineCore().getItem());
+
+        helmetRecipe.setIngredient('A', ironBlock);
+        helmetRecipe.setIngredient('B', machinePart);
+        helmetRecipe.setIngredient('C', machineCore);
+
+        chestplateRecipe.setIngredient('A', ironBlock);
+        chestplateRecipe.setIngredient('B', machinePart);
+        chestplateRecipe.setIngredient('C', machineCore);
+
+        leggingsRecipe.setIngredient('A', ironBlock);
+        leggingsRecipe.setIngredient('B', machinePart);
+        leggingsRecipe.setIngredient('C', machineCore);
+
+        bootsRecipe.setIngredient('A', ironBlock);
+        bootsRecipe.setIngredient('B', machinePart);
+        bootsRecipe.setIngredient('C', machineCore);
+
+        plugin.getServer().addRecipe(helmetRecipe);
+        plugin.getServer().addRecipe(chestplateRecipe);
+        plugin.getServer().addRecipe(leggingsRecipe);
+        plugin.getServer().addRecipe(bootsRecipe);
     }
 
     private void registerEmeraldArmor(boolean register) {
@@ -401,40 +310,6 @@ public class RecipeHandler {
         plugin.getServer().addRecipe(bootsRecipe);
     }
 
-    private void registerTitanArmor(boolean register) {
-        if(!register) return;
-
-        CustomArmor helmetItem = new TitanArmor(SlotType.HELMET);
-        CustomArmor chestplateItem = new TitanArmor(SlotType.CHESTPLATE);
-        CustomArmor leggingsItem = new TitanArmor(SlotType.LEGGINGS);
-        CustomArmor bootsItem = new TitanArmor(SlotType.BOOTS);
-
-        NamespacedKey helmetKey = new NamespacedKey(plugin, "titan_helmet");
-        NamespacedKey chestplateKey = new NamespacedKey(plugin, "titan_chestplate");
-        NamespacedKey leggingsKey = new NamespacedKey(plugin, "titan_leggings");
-        NamespacedKey bootsKey = new NamespacedKey(plugin, "titan_boots");
-
-        ShapedRecipe helmetRecipe = new ShapedRecipe(helmetKey, helmetItem.getItem());
-        ShapedRecipe chestplateRecipe = new ShapedRecipe(chestplateKey, chestplateItem.getItem());
-        ShapedRecipe leggingsRecipe = new ShapedRecipe(leggingsKey, leggingsItem.getItem());
-        ShapedRecipe bootsRecipe = new ShapedRecipe(bootsKey, bootsItem.getItem());
-
-        helmetRecipe.shape("AAA", "A A");
-        chestplateRecipe.shape("A A", "AAA", "AAA");
-        leggingsRecipe.shape("AAA", "A A", "A A");
-        bootsRecipe.shape("A A", "A A");
-
-        helmetRecipe.setIngredient('A', Material.IRON_BLOCK);
-        chestplateRecipe.setIngredient('A', Material.IRON_BLOCK);
-        leggingsRecipe.setIngredient('A', Material.IRON_BLOCK);
-        bootsRecipe.setIngredient('A', Material.IRON_BLOCK);
-
-        plugin.getServer().addRecipe(helmetRecipe);
-        plugin.getServer().addRecipe(chestplateRecipe);
-        plugin.getServer().addRecipe(leggingsRecipe);
-        plugin.getServer().addRecipe(bootsRecipe);
-    }
-
     private void registerMinerArmor(boolean register) {
         if(!register) return;
 
@@ -464,42 +339,6 @@ public class RecipeHandler {
         chestplateRecipe.setIngredient('A', cobblestone);
         leggingsRecipe.setIngredient('A', cobblestone);
         bootsRecipe.setIngredient('A', cobblestone);
-
-        plugin.getServer().addRecipe(helmetRecipe);
-        plugin.getServer().addRecipe(chestplateRecipe);
-        plugin.getServer().addRecipe(leggingsRecipe);
-        plugin.getServer().addRecipe(bootsRecipe);
-    }
-
-    private void registerSpeedsterArmor(boolean register) {
-        if(!register) return;
-
-        CustomArmor helmetItem = new SpeedsterArmor(SlotType.HELMET);
-        CustomArmor chestplateItem = new SpeedsterArmor(SlotType.CHESTPLATE);
-        CustomArmor leggingsItem = new SpeedsterArmor(SlotType.LEGGINGS);
-        CustomArmor bootsItem = new SpeedsterArmor(SlotType.BOOTS);
-
-        NamespacedKey helmetKey = new NamespacedKey(plugin, "speedster_helmet");
-        NamespacedKey chestplateKey = new NamespacedKey(plugin, "speedster_chestplate");
-        NamespacedKey leggingsKey = new NamespacedKey(plugin, "speedster_leggings");
-        NamespacedKey bootsKey = new NamespacedKey(plugin, "speedster_boots");
-
-        ShapedRecipe helmetRecipe = new ShapedRecipe(helmetKey, helmetItem.getItem());
-        ShapedRecipe chestplateRecipe = new ShapedRecipe(chestplateKey, chestplateItem.getItem());
-        ShapedRecipe leggingsRecipe = new ShapedRecipe(leggingsKey, leggingsItem.getItem());
-        ShapedRecipe bootsRecipe = new ShapedRecipe(bootsKey, bootsItem.getItem());
-
-        helmetRecipe.shape("AAA", "A A");
-        chestplateRecipe.shape("A A", "AAA", "AAA");
-        leggingsRecipe.shape("AAA", "A A", "A A");
-        bootsRecipe.shape("A A", "A A");
-
-        RecipeChoice sugarCane = new RecipeChoice.ExactChoice(new SugarCane.SugarCane0().getItem());
-
-        helmetRecipe.setIngredient('A', sugarCane);
-        chestplateRecipe.setIngredient('A', sugarCane);
-        leggingsRecipe.setIngredient('A', sugarCane);
-        bootsRecipe.setIngredient('A', sugarCane);
 
         plugin.getServer().addRecipe(helmetRecipe);
         plugin.getServer().addRecipe(chestplateRecipe);
@@ -551,48 +390,120 @@ public class RecipeHandler {
         plugin.getServer().addRecipe(bootsRecipe);
     }
 
-    private void registerDestroyerArmor(boolean register) {
+    private void registerSeaGreedArmor(boolean register) {
         if(!register) return;
 
-        CustomArmor helmetItem = new DestroyerArmor(SlotType.HELMET);
-        CustomArmor chestplateItem = new DestroyerArmor(SlotType.CHESTPLATE);
-        CustomArmor leggingsItem = new DestroyerArmor(SlotType.LEGGINGS);
-        CustomArmor bootsItem = new DestroyerArmor(SlotType.BOOTS);
+        CustomArmor helmetItem = new SeaGreedArmor(SlotType.HELMET);
+        CustomArmor chestplateItem = new SeaGreedArmor(SlotType.CHESTPLATE);
+        CustomArmor leggingsItem = new SeaGreedArmor(SlotType.LEGGINGS);
+        CustomArmor bootsItem = new SeaGreedArmor(SlotType.BOOTS);
 
-        NamespacedKey helmetKey = new NamespacedKey(plugin, "destroyer_helmet");
-        NamespacedKey chestplateKey = new NamespacedKey(plugin, "destroyer_chestplate");
-        NamespacedKey leggingsKey = new NamespacedKey(plugin, "destroyer_leggings");
-        NamespacedKey bootsKey = new NamespacedKey(plugin, "destroyer_boots");
+        NamespacedKey helmetKey = new NamespacedKey(plugin, "sea_greed_helmet");
+        NamespacedKey chestplateKey = new NamespacedKey(plugin, "sea_greed_chestplate");
+        NamespacedKey leggingsKey = new NamespacedKey(plugin, "sea_greed_leggings");
+        NamespacedKey bootsKey = new NamespacedKey(plugin, "sea_greed_boots");
 
         ShapedRecipe helmetRecipe = new ShapedRecipe(helmetKey, helmetItem.getItem());
         ShapedRecipe chestplateRecipe = new ShapedRecipe(chestplateKey, chestplateItem.getItem());
         ShapedRecipe leggingsRecipe = new ShapedRecipe(leggingsKey, leggingsItem.getItem());
         ShapedRecipe bootsRecipe = new ShapedRecipe(bootsKey, bootsItem.getItem());
 
-        helmetRecipe.shape("AAA", "BCB");
-        chestplateRecipe.shape("BCB", "BAB", "AAA");
-        leggingsRecipe.shape("AAA", "BCB", "B B");
-        bootsRecipe.shape("BCB", "A A");
+        helmetRecipe.shape("AAA", "BDB");
+        chestplateRecipe.shape("CDC", "AAA", "BBB");
+        leggingsRecipe.shape("AAA", "BDB", "C C");
+        bootsRecipe.shape("ADA", "B B");
 
-        RecipeChoice ironBlock = new RecipeChoice.ExactChoice(new IronBlock.IronBlock1().getItem());
-        RecipeChoice machinePart = new RecipeChoice.ExactChoice(new MachinePart.MachinePart1().getItem());
-        RecipeChoice machineCore = new RecipeChoice.ExactChoice(new MachineCore().getItem());
+        RecipeChoice prismarine = new RecipeChoice.ExactChoice(new Prismarine.Prismarine1().getItem());
+        RecipeChoice goldBlock = new RecipeChoice.ExactChoice(new GoldBlock.GoldBlock1().getItem());
+        RecipeChoice diamondBlock = new RecipeChoice.ExactChoice(new DiamondBlock.DiamondBlock1().getItem());
 
-        helmetRecipe.setIngredient('A', ironBlock);
-        helmetRecipe.setIngredient('B', machinePart);
-        helmetRecipe.setIngredient('C', machineCore);
+        helmetRecipe.setIngredient('A', prismarine);
+        helmetRecipe.setIngredient('B', goldBlock);
+        helmetRecipe.setIngredient('D', Material.HEART_OF_THE_SEA);
 
-        chestplateRecipe.setIngredient('A', ironBlock);
-        chestplateRecipe.setIngredient('B', machinePart);
-        chestplateRecipe.setIngredient('C', machineCore);
+        chestplateRecipe.setIngredient('A', prismarine);
+        chestplateRecipe.setIngredient('B', goldBlock);
+        chestplateRecipe.setIngredient('C', diamondBlock);
+        chestplateRecipe.setIngredient('D', Material.HEART_OF_THE_SEA);
 
-        leggingsRecipe.setIngredient('A', ironBlock);
-        leggingsRecipe.setIngredient('B', machinePart);
-        leggingsRecipe.setIngredient('C', machineCore);
+        leggingsRecipe.setIngredient('A', prismarine);
+        leggingsRecipe.setIngredient('B', goldBlock);
+        leggingsRecipe.setIngredient('C', diamondBlock);
+        leggingsRecipe.setIngredient('D', Material.HEART_OF_THE_SEA);
 
-        bootsRecipe.setIngredient('A', ironBlock);
-        bootsRecipe.setIngredient('B', machinePart);
-        bootsRecipe.setIngredient('C', machineCore);
+        bootsRecipe.setIngredient('A', prismarine);
+        bootsRecipe.setIngredient('B', goldBlock);
+        bootsRecipe.setIngredient('D', Material.HEART_OF_THE_SEA);
+
+        plugin.getServer().addRecipe(helmetRecipe);
+        plugin.getServer().addRecipe(chestplateRecipe);
+        plugin.getServer().addRecipe(leggingsRecipe);
+        plugin.getServer().addRecipe(bootsRecipe);
+    }
+
+    private void registerSpeedsterArmor(boolean register) {
+        if(!register) return;
+
+        CustomArmor helmetItem = new SpeedsterArmor(SlotType.HELMET);
+        CustomArmor chestplateItem = new SpeedsterArmor(SlotType.CHESTPLATE);
+        CustomArmor leggingsItem = new SpeedsterArmor(SlotType.LEGGINGS);
+        CustomArmor bootsItem = new SpeedsterArmor(SlotType.BOOTS);
+
+        NamespacedKey helmetKey = new NamespacedKey(plugin, "speedster_helmet");
+        NamespacedKey chestplateKey = new NamespacedKey(plugin, "speedster_chestplate");
+        NamespacedKey leggingsKey = new NamespacedKey(plugin, "speedster_leggings");
+        NamespacedKey bootsKey = new NamespacedKey(plugin, "speedster_boots");
+
+        ShapedRecipe helmetRecipe = new ShapedRecipe(helmetKey, helmetItem.getItem());
+        ShapedRecipe chestplateRecipe = new ShapedRecipe(chestplateKey, chestplateItem.getItem());
+        ShapedRecipe leggingsRecipe = new ShapedRecipe(leggingsKey, leggingsItem.getItem());
+        ShapedRecipe bootsRecipe = new ShapedRecipe(bootsKey, bootsItem.getItem());
+
+        helmetRecipe.shape("AAA", "A A");
+        chestplateRecipe.shape("A A", "AAA", "AAA");
+        leggingsRecipe.shape("AAA", "A A", "A A");
+        bootsRecipe.shape("A A", "A A");
+
+        RecipeChoice sugarCane = new RecipeChoice.ExactChoice(new SugarCane.SugarCane0().getItem());
+
+        helmetRecipe.setIngredient('A', sugarCane);
+        chestplateRecipe.setIngredient('A', sugarCane);
+        leggingsRecipe.setIngredient('A', sugarCane);
+        bootsRecipe.setIngredient('A', sugarCane);
+
+        plugin.getServer().addRecipe(helmetRecipe);
+        plugin.getServer().addRecipe(chestplateRecipe);
+        plugin.getServer().addRecipe(leggingsRecipe);
+        plugin.getServer().addRecipe(bootsRecipe);
+    }
+
+    private void registerTitanArmor(boolean register) {
+        if(!register) return;
+
+        CustomArmor helmetItem = new TitanArmor(SlotType.HELMET);
+        CustomArmor chestplateItem = new TitanArmor(SlotType.CHESTPLATE);
+        CustomArmor leggingsItem = new TitanArmor(SlotType.LEGGINGS);
+        CustomArmor bootsItem = new TitanArmor(SlotType.BOOTS);
+
+        NamespacedKey helmetKey = new NamespacedKey(plugin, "titan_helmet");
+        NamespacedKey chestplateKey = new NamespacedKey(plugin, "titan_chestplate");
+        NamespacedKey leggingsKey = new NamespacedKey(plugin, "titan_leggings");
+        NamespacedKey bootsKey = new NamespacedKey(plugin, "titan_boots");
+
+        ShapedRecipe helmetRecipe = new ShapedRecipe(helmetKey, helmetItem.getItem());
+        ShapedRecipe chestplateRecipe = new ShapedRecipe(chestplateKey, chestplateItem.getItem());
+        ShapedRecipe leggingsRecipe = new ShapedRecipe(leggingsKey, leggingsItem.getItem());
+        ShapedRecipe bootsRecipe = new ShapedRecipe(bootsKey, bootsItem.getItem());
+
+        helmetRecipe.shape("AAA", "A A");
+        chestplateRecipe.shape("A A", "AAA", "AAA");
+        leggingsRecipe.shape("AAA", "A A", "A A");
+        bootsRecipe.shape("A A", "A A");
+
+        helmetRecipe.setIngredient('A', Material.IRON_BLOCK);
+        chestplateRecipe.setIngredient('A', Material.IRON_BLOCK);
+        leggingsRecipe.setIngredient('A', Material.IRON_BLOCK);
+        bootsRecipe.setIngredient('A', Material.IRON_BLOCK);
 
         plugin.getServer().addRecipe(helmetRecipe);
         plugin.getServer().addRecipe(chestplateRecipe);

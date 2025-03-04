@@ -16,6 +16,15 @@ public class CustomMaterial {
     protected int upgradeTier;
     protected String displayName = "Offset";
     protected MaterialType materialID;
+    protected ItemStack prevMaterial;
+
+    protected CustomMaterial(Rarity rarity, int upgradeTier, String displayName, MaterialType materialID, ItemStack prevMaterial) {
+        this.rarity = rarity;
+        this.upgradeTier = upgradeTier;
+        this.displayName = getFormattedName(displayName);
+        this.materialID = materialID;
+        this.prevMaterial = prevMaterial;
+    }
 
     protected CustomMaterial(Rarity rarity, int upgradeTier, String displayName, MaterialType materialID) {
         this.rarity = rarity;
@@ -67,6 +76,14 @@ public class CustomMaterial {
 
     public void setAmount(int amount) {
         item.setAmount(amount);
+    }
+
+    public String getID() {
+        return materialID.toString().toLowerCase();
+    }
+
+    public ItemStack getPrev() {
+        return prevMaterial;
     }
 
     protected void setDisplayName() {

@@ -2,14 +2,12 @@ package me.offsetpaladin89.MoreArmors;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
-import me.offsetpaladin89.MoreArmors.armors.ArmorsRecord;
 import me.offsetpaladin89.MoreArmors.commands.CommandCompleter;
 import me.offsetpaladin89.MoreArmors.commands.Commands;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.handlers.*;
 import me.offsetpaladin89.MoreArmors.listeners.MainListener;
 import me.offsetpaladin89.MoreArmors.listeners.MoreArmorsListener;
-import me.offsetpaladin89.MoreArmors.materials.Materials;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -28,11 +26,7 @@ import java.util.logging.Level;
 
 public class MoreArmorsMain extends JavaPlugin {
 
-	public Materials materials;
-
 	public HologramHandler hologramHandler;
-	public ArmorsRecord armorSets;
-	public ArmorConstructor armorConstructor;
 	public ArmorSetAbilityHandler armorSetAbilities;
 	public ConfigHandler configHandler;
 	public Commands commands;
@@ -42,17 +36,13 @@ public class MoreArmorsMain extends JavaPlugin {
 
 		new NamespacedKey(this, "morearmors");
 
-		new CraftHandler(this);
 		new DamageHandler(this);
 		new CommandCompleter(this);
 
 		commands = new Commands(this);
 		configHandler = new ConfigHandler(this);
 		hologramHandler = new HologramHandler(this);
-		armorSets = new ArmorsRecord(this);
-		armorConstructor = new ArmorConstructor(this);
 		armorSetAbilities = new ArmorSetAbilityHandler(this);
-		materials = new Materials(this);
 		ArmorChecker();
 		registerConfig();
 
@@ -65,7 +55,6 @@ public class MoreArmorsMain extends JavaPlugin {
 	public void reloadConfig(CommandSender s) {
 		registerConfig();
 		getServer().resetRecipes();
-		materials.RegisterMaterialsRecipes();
 		sendColoredMessage(s, commands.messages.prefix() + " &aSuccessfully reloaded config!");
 	}
 
@@ -167,5 +156,11 @@ public class MoreArmorsMain extends JavaPlugin {
 				armorSetAbilities.scanPlayers(getServer().getOnlinePlayers().toArray());
 			}
 		}.runTaskTimer(this, 0, 10);
+	}
+
+	public void addItem(PlayerInventory inventory, Player target, ItemStack item, int stackSize) {
+		item.setAmount(stackSize);
+		if (inventory.firstEmpty() == -1) target.getWorld().dropItem(target.getLocation().add(0.0D, 0.5D, 0.0D), item);
+		else inventory.addItem(item);
 	}
 }
