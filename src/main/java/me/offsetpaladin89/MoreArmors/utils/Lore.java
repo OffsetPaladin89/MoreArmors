@@ -1,4 +1,4 @@
-package me.offsetpaladin89.MoreArmors;
+package me.offsetpaladin89.MoreArmors.utils;
 
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import org.bukkit.ChatColor;

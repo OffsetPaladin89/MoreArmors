@@ -1,6 +1,6 @@
 package me.offsetpaladin89.MoreArmors.enums;
 
-import me.offsetpaladin89.MoreArmors.CustomMaterial;
+import me.offsetpaladin89.MoreArmors.materials.CustomMaterial;
 import me.offsetpaladin89.MoreArmors.materials.*;
 
 import java.util.ArrayList;
@@ -15,7 +15,6 @@ public enum MaterialType {
     STAR_DUST, SUGAR_CANE_0, INVALID;
 
     public static MaterialType materialType(String s) {
-        MaterialType materialType;
         try {
             return MaterialType.valueOf(s.toUpperCase());
         } catch (IllegalArgumentException e) {

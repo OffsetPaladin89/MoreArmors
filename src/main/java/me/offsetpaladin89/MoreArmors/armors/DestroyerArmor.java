@@ -1,7 +1,7 @@
 package me.offsetpaladin89.MoreArmors.armors;
 
 import de.tr7zw.changeme.nbtapi.NBT;
-import me.offsetpaladin89.MoreArmors.Lore;
+import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
@@ -43,6 +43,7 @@ public class DestroyerArmor extends CustomArmor {
         int currentStage = killCount / UPGRADE_THRESHOLD;
         int nextBonus = damageBonus + 1;
         int upgradeProgress = killCount % UPGRADE_THRESHOLD;
+        String integerLimit = killCount == Integer.MAX_VALUE ? "★" : "";
 
         ItemMeta itemMeta = item.getItemMeta();
 
@@ -70,7 +71,7 @@ public class DestroyerArmor extends CustomArmor {
         lore.addColoredLine("&7Kill mobs to increase your damage.");
         if(killCount >= MAX_KILL_COUNT) {
             lore.addColoredLine("&7Current Bonus (&a10&8/&a10&7): &e+10 Damage &a&lMAXED OUT");
-            lore.addColoredLine(String.format("&8%s Mobs Killed", MoreArmorsMain.formatNumber(killCount)));
+            lore.addColoredLine(String.format("&8%s Mobs Killed &6%s", MoreArmorsMain.formatNumber(killCount), integerLimit));
         }
         else {
             lore.addColoredLine(String.format("&7Current Bonus (&a%d&8/&a10&7): &e+%d Damage", currentStage, damageBonus));
@@ -109,6 +110,7 @@ public class DestroyerArmor extends CustomArmor {
     }
 
     public void increaseKillCount(int killCount) {
+        if(this.killCount == Integer.MAX_VALUE) return;
         this.killCount += killCount;
     }
 
@@ -155,7 +157,7 @@ public class DestroyerArmor extends CustomArmor {
         });
 
         slot = SlotType.matchType(item);
-        displayName = getFormattedName(item.getItemMeta().getDisplayName());
+        displayName = getFormattedName(getDefaultName());
     }
 
     private ItemStack getBaseItem() {

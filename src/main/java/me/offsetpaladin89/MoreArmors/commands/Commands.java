@@ -1,7 +1,7 @@
 package me.offsetpaladin89.MoreArmors.commands;
 
 import de.tr7zw.changeme.nbtapi.NBT;
-import me.offsetpaladin89.MoreArmors.CustomMaterial;
+import me.offsetpaladin89.MoreArmors.materials.CustomMaterial;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.armors.*;
 import me.offsetpaladin89.MoreArmors.enums.*;

@@ -24,7 +24,7 @@ public class HologramHandler {
 		HologramHandler.plugin = plugin;
 	}
 
-	public void createDamageHologram(Player p, Location playerLoc, LivingEntity e, String s, Long delay) throws Throwable {
+	public void createDamageHologram(Player p, Location playerLoc, LivingEntity e, String s, Long delay) {
 
 		Vector dir = playerLoc.getDirection().normalize();
 		Location spawnLoc = playerLoc.add(e.getLocation().toVector().subtract(playerLoc.toVector()).multiply(0.65));

@@ -1,7 +1,6 @@
 package me.offsetpaladin89.MoreArmors.armors;
 
-import de.tr7zw.changeme.nbtapi.NBT;
-import me.offsetpaladin89.MoreArmors.Lore;
+import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;

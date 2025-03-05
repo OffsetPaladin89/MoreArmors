@@ -1,7 +1,7 @@
 package me.offsetpaladin89.MoreArmors.armors;
 
 import de.tr7zw.changeme.nbtapi.NBT;
-import me.offsetpaladin89.MoreArmors.Lore;
+import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
@@ -40,17 +40,6 @@ public class EmeraldArmor extends CustomArmor {
         createItem();
     }
 
-    public EmeraldArmor(ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness, int emeraldCount) {
-        super(item, displayName, rarity, armor, armorToughness);
-
-        this.emeraldCount = emeraldCount;
-
-        createItem();
-
-        baseNBT();
-        addNBT();
-    }
-
     public void createItemFromNBT() {
         NBT.get(item, nbt -> {
             rarity = nbt.getEnum("Rarity", Rarity.class);
@@ -61,7 +50,7 @@ public class EmeraldArmor extends CustomArmor {
         });
 
         slot = SlotType.matchType(item);
-        displayName = getFormattedName(item.getItemMeta().getDisplayName());
+        displayName = getFormattedName(getDefaultName());
     }
 
     public void updateItem() {
@@ -83,6 +72,7 @@ public class EmeraldArmor extends CustomArmor {
     }
 
     public void increaseEmeraldCount(int emeraldCount) {
+        if(this.emeraldCount == Integer.MAX_VALUE) return;
         this.emeraldCount += emeraldCount;
     }
 
@@ -134,6 +124,7 @@ public class EmeraldArmor extends CustomArmor {
         int currentStage = emeraldCount / UPGRADE_THRESHOLD;
         int nextBonus = healthBoost + 2;
         int upgradeProgress = emeraldCount % UPGRADE_THRESHOLD;
+        String integerLimit = emeraldCount == Integer.MAX_VALUE ? "★" : "";
 
         ItemMeta itemMeta = item.getItemMeta();
 
@@ -142,7 +133,7 @@ public class EmeraldArmor extends CustomArmor {
         lore.addColoredLine("&7Mine emeralds to increase your max health.");
         if(emeraldCount >= MAX_EMERALD_COUNT) {
             lore.addColoredLine("&7Current Bonus (&a5&8/&a5&7): &e+10 Health &a&lMAXED OUT");
-            lore.addColoredLine(String.format("&8%s Emeralds Mined", MoreArmorsMain.formatNumber(emeraldCount)));
+            lore.addColoredLine(String.format("&8%s Emeralds Mined &6%s", MoreArmorsMain.formatNumber(emeraldCount), integerLimit));
         }
         else {
             lore.addColoredLine(String.format("&7Current Bonus (&a%d&8/&a5&7): &e+%d Health", currentStage, healthBoost));

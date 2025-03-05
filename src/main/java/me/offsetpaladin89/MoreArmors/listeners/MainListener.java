@@ -34,6 +34,7 @@ public class MainListener implements Listener {
 		PlayerInventory inv = p.getInventory();
 		if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) return;
 		ItemStack item = inv.getItemInMainHand();
+		if(plugin.isAirOrNull(item)) return;
 		MaterialType type = NBT.get(item, nbt -> (MaterialType) nbt.getEnum("MaterialID", MaterialType.class));
 		if(type == null) return;
 		if(type.equals(MaterialType.EYE_OF_ENDER_0) || type.equals(MaterialType.EYE_OF_ENDER_1)) event.setCancelled(true);

@@ -1,5 +1,6 @@
-package me.offsetpaladin89.MoreArmors;
+package me.offsetpaladin89.MoreArmors.handlers;
 
+import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.armors.*;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
@@ -16,7 +17,7 @@ public class RecipeHandler {
 
     private final MoreArmorsMain plugin;
 
-    RecipeHandler(MoreArmorsMain plugin) {
+    public RecipeHandler(MoreArmorsMain plugin) {
         this.plugin = plugin;
         FileConfiguration config = plugin.configHandler.getConfig("config");
 
@@ -25,19 +26,19 @@ public class RecipeHandler {
     }
 
     private void registerArmorRecipes(FileConfiguration config) {
-        registerDestroyerArmor(config.getBoolean("destroyerarmor.crafting"));
-        registerEmeraldArmor(config.getBoolean("emeraldarmor.crafting"));
-        registerEndArmor(config.getBoolean("endarmor.crafting"));
-        registerExperienceArmor(config.getBoolean("experiencearmor.crafting"));
-        registerMinerArmor(config.getBoolean("minerarmor.crafting"));
-        registerNetherArmor(config.getBoolean("netherarmor.crafting"));
-        registerSeaGreedArmor(config.getBoolean("seagreedarmor.crafting"));
-        registerSpeedsterArmor(config.getBoolean("speedsterarmor.crafting"));
-        registerTitanArmor(config.getBoolean("titanarmor.crafting"));
+        registerDestroyerArmor(config.getBoolean("destroyer_armor.craftable"));
+        registerEmeraldArmor(config.getBoolean("emerald_armor.craftable"));
+        registerEndArmor(config.getBoolean("end_armor.craftable"));
+        registerExperienceArmor(config.getBoolean("experience_armor.craftable"));
+        registerMinerArmor(config.getBoolean("miner_armor.craftable"));
+        registerNetherArmor(config.getBoolean("nether_armor.craftable"));
+        registerSeaGreedArmor(config.getBoolean("sea_greed_armor.craftable"));
+        registerSpeedsterArmor(config.getBoolean("speedster_armor.craftable"));
+        registerTitanArmor(config.getBoolean("titan_armor.craftable"));
     }
 
     private void registerMaterialRecipes(FileConfiguration config) {
-        if(!config.getBoolean("materials.crafting")) return;
+        if(!config.getBoolean("materials.craftable")) return;
 
         materialRecipe(MaterialType.values());
 

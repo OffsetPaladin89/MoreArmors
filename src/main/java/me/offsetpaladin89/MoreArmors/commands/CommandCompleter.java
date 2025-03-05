@@ -51,7 +51,7 @@ public class CommandCompleter implements TabCompleter {
 		else if (args[0].equalsIgnoreCase("edit") && sender.hasPermission("morearmors.edit")) {
 			if(args.length == 2) {
 				arguments.add("emerald_count");
-				arguments.add("kill_amount");
+				arguments.add("kill_count");
 			}
 		}
 		return returnVals(arguments, args);

@@ -17,19 +17,4 @@ public enum Rarity {
             default -> "&3";
         };
     }
-
-    public static Rarity getRarity(Integer rarity) {
-        return switch (rarity) {
-            case 1 -> COMMON;
-            case 2 -> UNCOMMON;
-            case 3 -> RARE;
-            case 4 -> EPIC;
-            case 5 -> LEGENDARY;
-            case 6 -> MYTHIC;
-            case 7 -> DIVINE;
-            case 8 -> SPECIAL;
-            case 9 -> ADMIN;
-            default -> DEVELOPER;
-        };
-    }
 }

@@ -1,4 +1,4 @@
-package me.offsetpaladin89.MoreArmors;
+package me.offsetpaladin89.MoreArmors.handlers;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
@@ -7,11 +7,11 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import com.github.stefvanschie.inventoryframework.pane.component.PagingButtons;
 import com.github.stefvanschie.inventoryframework.pane.util.Slot;
 import de.tr7zw.changeme.nbtapi.NBT;
+import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
@@ -58,6 +58,8 @@ public record InventoryHandler(MoreArmorsMain plugin) {
             Recipe recipe = recipeIterator.next();
 
             ItemStack result = recipe.getResult();
+
+            result.setAmount(1);
 
             if(plugin.isAirOrNull(result)) continue;
 
@@ -147,7 +149,7 @@ public record InventoryHandler(MoreArmorsMain plugin) {
 
         setBlackLeftArrow(item);
 
-        return new GuiItem(item, event -> viewRecipes((Player) event.getWhoClicked()));
+        return new GuiItem(item, event -> viewRecipes(event.getWhoClicked()));
     }
 
     private GuiItem getExitItem() {

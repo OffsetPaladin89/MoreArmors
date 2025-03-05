@@ -9,7 +9,6 @@ import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.handlers.*;
 import me.offsetpaladin89.MoreArmors.listeners.MainListener;
 import me.offsetpaladin89.MoreArmors.listeners.MoreArmorsListener;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -17,13 +16,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.NumberFormat;
 import java.util.*;
-import java.util.logging.Level;
 
 public class MoreArmorsMain extends JavaPlugin {
 
@@ -34,23 +31,26 @@ public class MoreArmorsMain extends JavaPlugin {
 	public InventoryHandler inventoryHandler;
 
 	public void onEnable() {
-
 		new NamespacedKey(this, "morearmors");
 
-		new DamageHandler(this);
-		new CommandCompleter(this);
-
-		commands = new Commands(this);
 		configHandler = new ConfigHandler(this);
-		hologramHandler = new HologramHandler(this);
-		armorSetAbilities = new ArmorSetAbilityHandler(this);
-		ArmorChecker();
-		registerConfig();
 
 		new MainListener(this);
 		new MoreArmorsListener(this);
+
+		commands = new Commands(this);
+		new CommandCompleter(this);
+
+		new DamageHandler(this);
+		hologramHandler = new HologramHandler(this);
+
+		armorSetAbilities = new ArmorSetAbilityHandler(this);
+		ArmorChecker();
+
 		new RecipeHandler(this);
 		inventoryHandler = new InventoryHandler(this);
+
+		registerConfig();
 	}
 
 	public void reloadConfig(CommandSender s) {
@@ -63,11 +63,10 @@ public class MoreArmorsMain extends JavaPlugin {
 	public void registerConfig() {
 		Map<String, Object> defaultValues = new HashMap<>();
 		defaultValues.put("damageindicators", true);
-		defaultValues.put("materials.crafting", true);
+		defaultValues.put("materials.craftable", true);
 		for (String s : ArmorType.allArmorTypes()) {
-			s += "armor";
-			defaultValues.put(s + ".enabled", true);
-			defaultValues.put(s + ".crafting", true);
+			defaultValues.put(String.format("%s_armor.enabled", s), true);
+			defaultValues.put(String.format("%s_armor.craftable", s), true);
 		}
 		configHandler.saveConfigDefaults("config", defaultValues);
 	}
@@ -76,16 +75,8 @@ public class MoreArmorsMain extends JavaPlugin {
 		return ChatColor.translateAlternateColorCodes('&', s);
 	}
 
-	public void sendConsoleMessage(String s) {
-		getServer().getConsoleSender().sendMessage(colorString(s));
-	}
-
-	public static void sendDebugMessage(String s) {
-		Bukkit.getLogger().log(Level.INFO, s);
-	}
-
-	public void sendPlayerMessage(Player p, String s) {
-		p.sendMessage(colorString(s));
+	public void sendConsoleMessage(String m) {
+		getServer().getConsoleSender().sendMessage(m);
 	}
 
 	public void sendColoredMessage(CommandSender s, String m) {

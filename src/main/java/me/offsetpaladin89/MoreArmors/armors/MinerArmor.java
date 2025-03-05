@@ -1,6 +1,6 @@
 package me.offsetpaladin89.MoreArmors.armors;
 
-import me.offsetpaladin89.MoreArmors.Lore;
+import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;

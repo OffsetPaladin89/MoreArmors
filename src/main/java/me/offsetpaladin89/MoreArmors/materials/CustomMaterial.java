@@ -1,6 +1,8 @@
-package me.offsetpaladin89.MoreArmors;
+package me.offsetpaladin89.MoreArmors.materials;
 
 import de.tr7zw.changeme.nbtapi.NBT;
+import me.offsetpaladin89.MoreArmors.utils.Lore;
+import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import org.bukkit.Material;

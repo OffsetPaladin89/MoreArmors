@@ -33,7 +33,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -44,8 +43,6 @@ public class MoreArmorsListener implements Listener {
 	private final FileConfiguration config;
 
 	public final ArrayList<UUID> cooldowns = new ArrayList<>();
-
-	List<Player> teleportCooldown = new ArrayList<>();
 
 	public MoreArmorsListener(MoreArmorsMain plugin) {
 		this.plugin = plugin;
@@ -72,7 +69,7 @@ public class MoreArmorsListener implements Listener {
 	public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
 		Player player = event.getPlayer();
 
-		if(!config.getBoolean("destroyerarmor.enabled")) return;
+		if(!config.getBoolean("destroyer_armor.enabled")) return;
 		if(player.getGameMode().equals(GameMode.SPECTATOR) || player.getGameMode().equals(GameMode.CREATIVE)) return;
 
 		PlayerInventory inv = player.getInventory();
@@ -91,12 +88,11 @@ public class MoreArmorsListener implements Listener {
 
 	@EventHandler
 	public void onPlayerExplode(EntityExplodeEvent event) {
-		if(config.getBoolean("destroyerarmor.enabled")) {
-			if(event.getEntity() instanceof Player player) {
-				PlayerInventory inv = player.getInventory();
-				if(plugin.isAirOrNull(inv.getBoots())) return;
-				if(plugin.matchingCustomItem(inv.getBoots(), ArmorType.DESTROYER)) event.setCancelled(true);
-			}
+		if(!config.getBoolean("destroyer_armor.enabled")) return;
+		if(event.getEntity() instanceof Player player) {
+			PlayerInventory inv = player.getInventory();
+			if(plugin.isAirOrNull(inv.getBoots())) return;
+			if(plugin.matchingCustomItem(inv.getBoots(), ArmorType.DESTROYER)) event.setCancelled(true);
 		}
 	}
 
@@ -105,65 +101,14 @@ public class MoreArmorsListener implements Listener {
 		Player player = event.getPlayer();
 		PlayerInventory inventory = player.getInventory();
 
-		if (plugin.IsFullCustomSet(ArmorType.EXPERIENCE, player.getInventory()) && config.getBoolean("experiencearmor.enabled")) {event.setExpToDrop(event.getExpToDrop() * 2);}
-		if (plugin.IsFullCustomSet(ArmorType.MINER, player.getInventory()) && config.getBoolean("minerarmor.enabled")) {
+		if (plugin.IsFullCustomSet(ArmorType.EXPERIENCE, player.getInventory()) && config.getBoolean("experience_armor.enabled")) event.setExpToDrop(event.getExpToDrop() * 2);
+		if (plugin.IsFullCustomSet(ArmorType.MINER, player.getInventory()) && config.getBoolean("miner_armor.enabled")) {
 			if (player.hasPotionEffect(PotionEffectType.HASTE) && player.getPotionEffect(PotionEffectType.HASTE).getAmplifier() == 1) player.removePotionEffect(PotionEffectType.HASTE);
 			player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 100, 1));
 		}
 
-		if (player.isInWater()) {
-			if(!inventory.getItemInMainHand().hasItemMeta()) return;
-			if (inventory.getItemInMainHand().getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)) return;
-			Block b = event.getBlock();
-			Random r = new Random();
-
-			float oreMulti = oreMultiplier(player);
-			int dropAmount = (int) oreMulti;
-
-			if(oreMulti % 1 != 0 && r.nextDouble() <= oreMulti % 1) dropAmount++;
-
-			if (b.getType().toString().endsWith("_ORE")) {
-				for (ItemStack i : b.getDrops()) {
-					b.getWorld().dropItemNaturally(b.getLocation(), new ItemStack(i.getType(), i.getAmount() * dropAmount));
-				}
-			}
-		}
-
-		for (int i = 0; i < inventory.getSize(); i++) {
-			ItemStack currentItem = inventory.getItem(i);
-			if(plugin.isAirOrNull(currentItem)) continue;
-
-			ArmorType armorType = NBT.get(currentItem, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class));
-
-			if(armorType == null) continue;
-
-			if(armorType.equals(ArmorType.EMERALD)) {
-				if(!config.getBoolean("emeraldarmor.enabled")) continue;
-				if(!(event.getBlock().getType().equals(Material.EMERALD_ORE) || event.getBlock().getType().equals(Material.DEEPSLATE_EMERALD_ORE))) continue;
-
-				EmeraldArmor emeraldArmor = new EmeraldArmor(currentItem);
-
-				emeraldArmor.createItemFromNBT();
-				emeraldArmor.increaseEmeraldCount(1);
-
-				emeraldArmor.updateItem();
-
-				inventory.setItem(i, emeraldArmor.getItem());
-			}
-		}
-	}
-
-	private Float oreMultiplier(Player p) {
-		PlayerInventory inventory = p.getInventory();
-		float oreMulti = 0f;
-		if(!config.getBoolean("seagreedarmor.enabled")) return oreMulti;
-
-		if(plugin.matchingCustomItem(inventory.getHelmet(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
-		if(plugin.matchingCustomItem(inventory.getChestplate(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
-		if(plugin.matchingCustomItem(inventory.getLeggings(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
-		if(plugin.matchingCustomItem(inventory.getBoots(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
-
-		return oreMulti;
+		seaGreedArmor(player, event.getBlock());
+		emeraldArmor(player, event.getBlock());
 	}
 
 	@EventHandler
@@ -171,7 +116,7 @@ public class MoreArmorsListener implements Listener {
 		Player player = e.getPlayer();
 		PlayerInventory inv = player.getInventory();
 
-		if (plugin.IsFullCustomSet(ArmorType.SEA_GREED, player.getInventory()) && config.getBoolean("seagreedarmor.enabled")) {
+		if (plugin.IsFullCustomSet(ArmorType.SEA_GREED, player.getInventory()) && config.getBoolean("sea_greed_armor.enabled")) {
 			player.setWalkSpeed(0.2F);
 			if (player.isSwimming()) {
 				Vector dir = player.getLocation().getDirection().normalize().multiply(1.4D); // 3 - 1.6
@@ -181,7 +126,7 @@ public class MoreArmorsListener implements Listener {
 		}
 
 		if(plugin.isAirOrNull(inv.getBoots())) return;
-		if(!config.getBoolean("destroyerarmor.enabled")) return;
+		if(!config.getBoolean("destroyer_armor.enabled")) return;
 		if(player.getGameMode().equals(GameMode.SPECTATOR) || player.getGameMode().equals(GameMode.CREATIVE)) return;
 
 		if(plugin.matchingCustomItem(inv.getBoots(), ArmorType.DESTROYER)) {
@@ -202,23 +147,20 @@ public class MoreArmorsListener implements Listener {
 
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
-
-		FileConfiguration config = plugin.configHandler.getConfig("config");
-
 		Entity entity = event.getEntity();
 		if (entity instanceof Player) return;
 		if (!(event.getEntity().getKiller() instanceof Player killer)) return;
 
 		PlayerInventory inventory = killer.getInventory();
 
-		if (plugin.IsFullCustomSet(ArmorType.EXPERIENCE, inventory) && config.getBoolean("experiencearmor.enabled")) event.setDroppedExp(event.getDroppedExp() * 2);
+		if (plugin.IsFullCustomSet(ArmorType.EXPERIENCE, inventory) && config.getBoolean("experience_armor.enabled")) event.setDroppedExp(event.getDroppedExp() * 2);
 
-		if (plugin.IsFullCustomSet(ArmorType.TITAN, inventory) && config.getBoolean("titanarmor.enabled")) {
+		if (plugin.IsFullCustomSet(ArmorType.TITAN, inventory) && config.getBoolean("titan_armor.enabled")) {
 			if (killer.hasPotionEffect(PotionEffectType.RESISTANCE) && killer.getPotionEffect(PotionEffectType.RESISTANCE).getAmplifier() == 0) killer.removePotionEffect(PotionEffectType.RESISTANCE);
 			killer.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 200, 0, false, false));
 		}
 
-		if (plugin.IsFullCustomSet(ArmorType.SEA_GREED, inventory) && config.getBoolean("seagreedarmor.enabled")) {
+		if (plugin.IsFullCustomSet(ArmorType.SEA_GREED, inventory) && config.getBoolean("sea_greed_armor.enabled")) {
 			Random r = new Random();
 			if (entity.getType().equals(EntityType.ELDER_GUARDIAN) && r.nextDouble() <= 0.25d) {
 				killer.sendTitle(MoreArmorsMain.colorString("&c&l&kzzz &r&4&lBLESSING OF THE SEA GOD &c&l&kzzz"), "", -1, -1, -1);
@@ -237,28 +179,18 @@ public class MoreArmorsListener implements Listener {
 				destroyerArmor.createItemFromNBT();
 				destroyerArmor.increaseKillCount(1);
 
-				destroyerArmor.updateItem();
+				destroyerArmor.createItem();
 
 				inventory.setItem(i, destroyerArmor.getItem());
 			}
 		}
 	}
 
-	public void seaGreedEffects(Player player) {
-		plugin.addItem(player.getInventory(), player, new ItemStack(Material.DIAMOND_BLOCK), 25);
-		plugin.addItem(player.getInventory(), player, new ItemStack(Material.GOLD_BLOCK), 100);
-
-		player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 72000, 2, false, false));
-		player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 72000, 1, false, false));
-		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 72000, 1, false, false));
-		player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 72000, 1, false, false));
-	}
-
 	@EventHandler
 	public void onEntityDamage(EntityDamageEvent event) {
 		if (!(event.getEntity() instanceof Player player)) return;
 		PlayerInventory inventory = player.getInventory();
-		if (plugin.IsFullCustomSet(ArmorType.SPEEDSTER, inventory) && plugin.configHandler.getConfig("config").getBoolean("speedsterarmor.enabled")) {
+		if (plugin.IsFullCustomSet(ArmorType.SPEEDSTER, inventory) && config.getBoolean("speedster_armor.enabled")) {
 			if (player.hasPotionEffect(PotionEffectType.SPEED) && player.getPotionEffect(PotionEffectType.SPEED).getAmplifier() == 1) player.removePotionEffect(PotionEffectType.SPEED);
 			player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
 		}
@@ -269,7 +201,7 @@ public class MoreArmorsListener implements Listener {
 		Player player = event.getPlayer();
 		PlayerInventory inventory = player.getInventory();
 		if (event.getAction().equals(Action.LEFT_CLICK_AIR) && player.isSneaking()) {
-			if (plugin.IsFullCustomSet(ArmorType.END, inventory) && player.getWorld().getEnvironment().equals(Environment.THE_END) && plugin.configHandler.getConfig("config").getBoolean("endarmor.enabled")) {
+			if (plugin.IsFullCustomSet(ArmorType.END, inventory) && player.getWorld().getEnvironment().equals(Environment.THE_END) && config.getBoolean("end_armor.enabled")) {
 				if(cooldowns.contains(player.getUniqueId())) return;
 				Block block = player.getTargetBlock(null, 10);
 				Location playerlocation = player.getLocation();
@@ -290,5 +222,64 @@ public class MoreArmorsListener implements Listener {
 				}.runTaskLater(plugin, 20);
 			}
 		}
+	}
+
+	private void emeraldArmor(Player p, Block b) {
+		if(!config.getBoolean("emerald_armor.enabled")) return;
+		PlayerInventory inv = p.getInventory();
+		for (int i = 0; i < inv.getSize(); i++) {
+			ItemStack currentItem = inv.getItem(i);
+			if(plugin.isAirOrNull(currentItem)) continue;
+
+			ArmorType armorType = NBT.get(currentItem, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class));
+
+			if(armorType == null) continue;
+
+			if(armorType.equals(ArmorType.EMERALD)) {
+				if(!b.getType().toString().endsWith("EMERALD_ORE")) continue;
+
+				EmeraldArmor emeraldArmor = new EmeraldArmor(currentItem);
+
+				emeraldArmor.createItemFromNBT();
+
+				emeraldArmor.increaseEmeraldCount(1);
+
+				emeraldArmor.createItem();
+
+				inv.setItem(i, emeraldArmor.getItem());
+			}
+		}
+	}
+
+	private void seaGreedArmor(Player p, Block b) {
+		PlayerInventory inv = p.getInventory();
+		if (!(p.isInWater() && inv.getItemInMainHand().hasItemMeta())) return;
+		if (inv.getItemInMainHand().getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)) return;
+		Random r = new Random();
+
+		float oreMulti = 0f;
+		if(!config.getBoolean("sea_greed_armor.enabled")) return;
+
+		if(plugin.matchingCustomItem(inv.getHelmet(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
+		if(plugin.matchingCustomItem(inv.getChestplate(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
+		if(plugin.matchingCustomItem(inv.getLeggings(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
+		if(plugin.matchingCustomItem(inv.getBoots(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
+
+		int dropAmount = (int) oreMulti;
+
+		if(oreMulti % 1 != 0 && r.nextDouble() <= oreMulti % 1) dropAmount++;
+
+		if (b.getType().toString().endsWith("_ORE")) return;
+		for (ItemStack i : b.getDrops()) b.getWorld().dropItemNaturally(b.getLocation(), new ItemStack(i.getType(), i.getAmount() * dropAmount));
+	}
+
+	private void seaGreedEffects(Player player) {
+		plugin.addItem(player.getInventory(), player, new ItemStack(Material.DIAMOND_BLOCK), 25);
+		plugin.addItem(player.getInventory(), player, new ItemStack(Material.GOLD_BLOCK), 100);
+
+		player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 72000, 2, false, false));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 72000, 1, false, false));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 72000, 1, false, false));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 72000, 1, false, false));
 	}
 }

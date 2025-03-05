@@ -41,14 +41,6 @@ public class CustomArmor {
         this.slot = slot;
     }
 
-    CustomArmor(ItemStack item, String displayName, Rarity rarity, int armor, int armorToughness) {
-        this.item = item;
-        this.displayName = MoreArmorsMain.colorString(Rarity.getColorRarity(rarity) + displayName);
-        this.rarity = rarity;
-        this.armor = armor;
-        this.armorToughness = armorToughness;
-    }
-
     public void createItem() {
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setDisplayName(displayName);

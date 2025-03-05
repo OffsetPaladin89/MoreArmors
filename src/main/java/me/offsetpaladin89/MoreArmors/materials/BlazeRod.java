@@ -1,10 +1,8 @@
 package me.offsetpaladin89.MoreArmors.materials;
 
-import me.offsetpaladin89.MoreArmors.CustomMaterial;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
 public class BlazeRod extends CustomMaterial {
