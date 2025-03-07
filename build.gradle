@@ -6,8 +6,8 @@ plugins {
 apply plugin: 'java'
 apply plugin: 'com.gradleup.shadow'
 
-group = 'me.offsetpaladin89'
-version = rootProject.version
+group = myGroup
+version = projectVersion
 
 repositories {
     mavenCentral()
@@ -30,6 +30,15 @@ shadowJar {
     relocate 'de.tr7zw.changeme.nbtapi', 'libs/nbt-api'
     relocate 'com.cryptomorin.xseries', 'libs/x-series'
     relocate 'com.github.stefvanschie.inventoryframework', 'libs/inventory-framework'
+}
+
+processResources {
+    filesMatching('plugin.yml') {
+        expand(name: projectName,
+                version: projectVersion,
+                group: myGroup
+        )
+    }
 }
 
 build { dependsOn shadowJar }

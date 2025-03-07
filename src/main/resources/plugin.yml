@@ -1,6 +1,6 @@
-name: MoreArmors
-version: 3.8.3
-main: me.offsetpaladin89.MoreArmors.MoreArmorsMain
+name: ${name}
+version: ${version}
+main: ${group}.${name}.MoreArmorsMain
 api-version: 1.13
 depend: [ProtocolLib]
 
@@ -8,6 +8,10 @@ commands:
   morearmors:
     description: MoreArmors Main Command
     aliases: [ma]
+    usage: /command
+  openplayerinventory:
+    description: Testing
+    aliases: [opi]
     usage: /command
 
 permissions:

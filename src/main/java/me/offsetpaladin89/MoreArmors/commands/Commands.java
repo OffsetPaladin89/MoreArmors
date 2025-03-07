@@ -33,6 +33,7 @@ public class Commands implements CommandExecutor {
 	public Commands(MoreArmorsMain plugin) {
 		this.plugin = plugin;
 		plugin.getServer().getPluginCommand("morearmors").setExecutor(this);
+		plugin.getServer().getPluginCommand("openplayerinventory").setExecutor(this);
 	}
 
 	@Override
@@ -66,6 +67,12 @@ public class Commands implements CommandExecutor {
 				case VIEWRECIPES -> viewRecipeCommand(sender, args);
 				case INVALID -> invalidArgument(sender, args[0]);
 			}
+		}
+		else if (cmd.getName().equalsIgnoreCase("openplayerinventory")) {
+			if(!(sender instanceof Player p)) return true;
+			PlayerInventory inv = p.getInventory();
+			inv.
+			p.openInventory(p.getInventory());
 		}
 		return true;
 	}
