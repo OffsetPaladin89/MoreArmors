@@ -70,8 +70,6 @@ public class Commands implements CommandExecutor {
 		}
 		else if (cmd.getName().equalsIgnoreCase("openplayerinventory")) {
 			if(!(sender instanceof Player p)) return true;
-			PlayerInventory inv = p.getInventory();
-			inv.
 			p.openInventory(p.getInventory());
 		}
 		return true;

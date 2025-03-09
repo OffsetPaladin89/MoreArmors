@@ -107,8 +107,8 @@ public class MoreArmorsListener implements Listener {
 			player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 100, 1));
 		}
 
-		seaGreedArmor(player, event.getBlock());
-		emeraldArmor(player, event.getBlock());
+		seaGreedArmorBlockMined(player, event.getBlock());
+		emeraldArmorBlockMined(player, event.getBlock());
 	}
 
 	@EventHandler
@@ -170,95 +170,85 @@ public class MoreArmorsListener implements Listener {
 			}
 		}
 
-		for (int i = 0; i < inventory.getSize(); i++) {
-			ItemStack currentItem = inventory.getItem(i);
-			if (plugin.isAirOrNull(currentItem)) continue;
-			if(plugin.matchingCustomItem(currentItem, ArmorType.DESTROYER)) {
-				DestroyerArmor destroyerArmor = new DestroyerArmor(currentItem);
-
-				destroyerArmor.createItemFromNBT();
-				destroyerArmor.increaseKillCount(1);
-
-				destroyerArmor.createItem();
-
-				inventory.setItem(i, destroyerArmor.getItem());
-			}
-		}
+		destroyerArmorEntityKill(inventory);
 	}
 
 	@EventHandler
 	public void onEntityDamage(EntityDamageEvent event) {
-		if (!(event.getEntity() instanceof Player player)) return;
-		PlayerInventory inventory = player.getInventory();
-		if (plugin.IsFullCustomSet(ArmorType.SPEEDSTER, inventory) && config.getBoolean("speedster_armor.enabled")) {
-			if (player.hasPotionEffect(PotionEffectType.SPEED) && player.getPotionEffect(PotionEffectType.SPEED).getAmplifier() == 1) player.removePotionEffect(PotionEffectType.SPEED);
-			player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
-		}
+		speedsterArmorDamageTaken(event.getEntity());
 	}
 
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		Player player = event.getPlayer();
-		PlayerInventory inventory = player.getInventory();
-		if (event.getAction().equals(Action.LEFT_CLICK_AIR) && player.isSneaking()) {
-			if (plugin.IsFullCustomSet(ArmorType.END, inventory) && player.getWorld().getEnvironment().equals(Environment.THE_END) && config.getBoolean("end_armor.enabled")) {
-				if(cooldowns.contains(player.getUniqueId())) return;
-				Block block = player.getTargetBlock(null, 10);
-				Location playerlocation = player.getLocation();
-				World world = block.getWorld();
-				double teleportX = block.getX();
-				double teleportY = block.getY() + 1;
-				double teleportZ = block.getZ();
-				float teleportYaw = playerlocation.getYaw();
-				float teleportPitch = playerlocation.getPitch();
-				Location teleportlocation = new Location(world, teleportX, teleportY, teleportZ, teleportYaw, teleportPitch);
-				player.teleport(teleportlocation);
-				player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 5, 5);
-				cooldowns.add(player.getUniqueId());
-				new BukkitRunnable() {
-					public void run() {
-						cooldowns.remove(player.getUniqueId());
-					}
-				}.runTaskLater(plugin, 20);
+		endArmorTeleport(event.getPlayer(), event.getAction());
+	}
+
+	private void seaGreedArmorEntityKill() {
 			}
+
+	private void destroyerArmorEntityKill(PlayerInventory inv) {
+		for (int i = 0; i < inv.getSize(); i++) {
+			ItemStack currentItem = inv.getItem(i);
+			if(plugin.isAirOrNull(currentItem) || !plugin.matchingCustomItem(currentItem, ArmorType.DESTROYER)) continue;
+			DestroyerArmor destroyerArmor = new DestroyerArmor(currentItem);
+
+			destroyerArmor.createItemFromNBT();
+			destroyerArmor.increaseKillCount(1);
+
+			destroyerArmor.createItem();
+
+			inv.setItem(i, destroyerArmor.getItem());
 		}
 	}
 
-	private void emeraldArmor(Player p, Block b) {
+	private void speedsterArmorDamageTaken(Entity e) {
+		if (!(e instanceof Player p)) return;
+		PlayerInventory inventory = p.getInventory();
+		if(!(config.getBoolean("speedster_armor.enabled") && plugin.IsFullCustomSet(ArmorType.SPEEDSTER, inventory))) return;
+		if(p.hasPotionEffect(PotionEffectType.SPEED) && p.getPotionEffect(PotionEffectType.SPEED).getAmplifier() == 1) p.removePotionEffect(PotionEffectType.SPEED);
+		p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
+	}
+
+	private void endArmorTeleport(Player p, Action a) {
+		PlayerInventory inv = p.getInventory();
+		if(!(a.equals(Action.LEFT_CLICK_AIR) && p.isSneaking() && config.getBoolean("end_armor.enabled") && plugin.IsFullCustomSet(ArmorType.END, inv) && p.getWorld().getEnvironment().equals(Environment.THE_END) && cooldowns.contains(p.getUniqueId()))) return;
+		Block b = p.getTargetBlock(null, 10);
+		Location pLoc = p.getLocation();
+		Location newLoc = new Location(b.getWorld(), b.getX(), b.getY() + 1, b.getZ(), pLoc.getYaw(), pLoc.getPitch());
+		p.playSound(newLoc, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 5);
+		cooldowns.add(p.getUniqueId());
+		new BukkitRunnable() {
+			public void run() {
+				cooldowns.remove(p.getUniqueId());
+			}
+		}.runTaskLater(plugin, 20);
+	}
+
+	private void emeraldArmorBlockMined(Player p, Block b) {
 		if(!config.getBoolean("emerald_armor.enabled")) return;
 		PlayerInventory inv = p.getInventory();
 		for (int i = 0; i < inv.getSize(); i++) {
 			ItemStack currentItem = inv.getItem(i);
-			if(plugin.isAirOrNull(currentItem)) continue;
+			if(plugin.isAirOrNull(currentItem) || !(plugin.matchingCustomItem(currentItem, ArmorType.EMERALD) && b.getType().toString().endsWith("EMERALD_ORE"))) continue;
 
-			ArmorType armorType = NBT.get(currentItem, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class));
+			EmeraldArmor emeraldArmor = new EmeraldArmor(currentItem);
 
-			if(armorType == null) continue;
+			emeraldArmor.createItemFromNBT();
 
-			if(armorType.equals(ArmorType.EMERALD)) {
-				if(!b.getType().toString().endsWith("EMERALD_ORE")) continue;
+			emeraldArmor.increaseEmeraldCount(1);
 
-				EmeraldArmor emeraldArmor = new EmeraldArmor(currentItem);
+			emeraldArmor.createItem();
 
-				emeraldArmor.createItemFromNBT();
-
-				emeraldArmor.increaseEmeraldCount(1);
-
-				emeraldArmor.createItem();
-
-				inv.setItem(i, emeraldArmor.getItem());
-			}
+			inv.setItem(i, emeraldArmor.getItem());
 		}
 	}
 
-	private void seaGreedArmor(Player p, Block b) {
+	private void seaGreedArmorBlockMined(Player p, Block b) {
 		PlayerInventory inv = p.getInventory();
-		if (!(p.isInWater() && inv.getItemInMainHand().hasItemMeta())) return;
-		if (inv.getItemInMainHand().getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)) return;
+		if (!(config.getBoolean("sea_greed_armor.enabled") && p.isInWater() && inv.getItemInMainHand().hasItemMeta()) || inv.getItemInMainHand().getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)) return;
 		Random r = new Random();
 
 		float oreMulti = 0f;
-		if(!config.getBoolean("sea_greed_armor.enabled")) return;
 
 		if(plugin.matchingCustomItem(inv.getHelmet(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
 		if(plugin.matchingCustomItem(inv.getChestplate(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
