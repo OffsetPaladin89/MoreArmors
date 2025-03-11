@@ -24,4 +24,9 @@ public enum Rarity {
         for(Rarity rarity : values()) if(rarity.ordinal() == id) return rarity;
         return DEVELOPER;
     }
+
+    public static Rarity getRarity(Rarity baseRarity, int tier) {
+        if(baseRarity.ordinal() + tier / 5 <= 6) getRarity(baseRarity.ordinal() + tier / 5);
+        return Rarity.DIVINE;
+    }
 }

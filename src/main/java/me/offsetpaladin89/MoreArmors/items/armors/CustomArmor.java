@@ -44,6 +44,14 @@ public class CustomArmor extends CustomItem {
         updateItem();
     }
 
+    public void setTier(int tier) {
+        this.tier = tier;
+    }
+
+    public void increaseTier() {
+        tier++;
+    }
+
     protected void updateItem() {
 
     }
@@ -88,7 +96,7 @@ public class CustomArmor extends CustomItem {
             nbt.setEnum("Rarity", rarity);
             nbt.setInteger("Armor", armor);
             nbt.setInteger("ArmorToughness", armorToughness);
-            nbt.setInteger("UpgradeTier", tier);
+            nbt.setInteger("Tier", tier);
             if(item.getType().equals(Material.PLAYER_HEAD)) nbt.setUUID("UUID", UUID.randomUUID());
             nbt.setEnum("ArmorID", armorID);
         });

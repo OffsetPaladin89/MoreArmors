@@ -15,11 +15,12 @@ import static me.offsetpaladin89.MoreArmors.enums.SlotType.HELMET;
 public class EndArmor extends CustomArmor {
 
     private static final Color LEATHER_COLOR = Color.PURPLE;
+    private static final Rarity BASE_RARITY = Rarity.LEGENDARY;
 
     public EndArmor(SlotType slot) {
         super(slot);
         this.item = getBaseItem();
-        this.rarity = getDefaultRarity();
+        this.rarity = Rarity.getRarity(BASE_RARITY, tier);
         this.displayName = getFormattedName(getDefaultName());
         this.armor = getDefaultArmor();
         this.armorToughness = getDefaultArmorToughness();
@@ -86,13 +87,6 @@ public class EndArmor extends CustomArmor {
             case LEGGINGS -> "End Leggings";
             case BOOTS -> "End Boots";
             default -> null;
-        };
-    }
-
-    private Rarity getDefaultRarity() {
-        return switch (slot) {
-            case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> Rarity.LEGENDARY;
-            default -> Rarity.DEVELOPER;
         };
     }
 

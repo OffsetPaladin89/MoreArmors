@@ -19,6 +19,7 @@ public class DestroyerArmor extends CustomArmor {
     private int damageBonus = 0;
 
     private static final Color LEATHER_COLOR = Color.fromRGB(228, 232, 235);
+    private static final Rarity BASE_RARITY = Rarity.DIVINE;
 
     private static final int UPGRADE_THRESHOLD = 100;
     private static final int MAX_KILL_COUNT = 1000;
@@ -30,7 +31,7 @@ public class DestroyerArmor extends CustomArmor {
     public DestroyerArmor(SlotType slot) {
         super(slot);
         item = getBaseItem();
-        rarity = getDefaultRarity();
+        rarity = Rarity.getRarity(BASE_RARITY, tier);
         displayName = getFormattedName(getDefaultName());
         armor = getDefaultArmor();
         armorToughness = getDefaultArmorToughness();
@@ -137,13 +138,6 @@ public class DestroyerArmor extends CustomArmor {
             case LEGGINGS -> "Destroyer Leggings";
             case BOOTS -> "Destroyer Boots";
             default -> null;
-        };
-    }
-
-    private Rarity getDefaultRarity() {
-        return switch (slot) {
-            case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> Rarity.DIVINE;
-            default -> Rarity.DEVELOPER;
         };
     }
 

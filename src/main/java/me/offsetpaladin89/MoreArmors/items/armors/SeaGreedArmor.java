@@ -18,11 +18,12 @@ import static me.offsetpaladin89.MoreArmors.enums.SlotType.HELMET;
 public class SeaGreedArmor extends CustomArmor {
 
     private static final Color LEATHER_COLOR = Color.fromRGB(130, 140, 100);
+    private static final Rarity BASE_RARITY = Rarity.MYTHIC;
 
     public SeaGreedArmor(SlotType slot) {
         super(slot);
         this.item = getBaseItem();
-        this.rarity = getDefaultRarity();
+        this.rarity = Rarity.getRarity(BASE_RARITY, tier);
         this.displayName = getFormattedName(getDefaultName());
         this.armor = getDefaultArmor();
         this.armorToughness = getDefaultArmorToughness();
@@ -105,13 +106,6 @@ public class SeaGreedArmor extends CustomArmor {
         attributeModifiers.put(Attribute.SUBMERGED_MINING_SPEED, attribute);
 
         setAttributes();
-    }
-
-    private Rarity getDefaultRarity() {
-        return switch (slot) {
-            case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> Rarity.MYTHIC;
-            default -> Rarity.DEVELOPER;
-        };
     }
 
     private ItemStack getBaseItem() {

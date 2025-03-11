@@ -15,11 +15,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class MinerArmor extends CustomArmor {
 
     private static final Color LEATHER_COLOR = Color.GRAY;
+    private static final Rarity BASE_RARITY = Rarity.RARE;
 
     public MinerArmor(SlotType slot) {
         super(slot);
         this.item = getBaseItem();
-        this.rarity = getDefaultRarity();
+        this.rarity = Rarity.getRarity(BASE_RARITY, tier);
         this.displayName = getFormattedName(getDefaultName());
         this.armor = getDefaultArmor();
 
@@ -33,13 +34,6 @@ public class MinerArmor extends CustomArmor {
             case LEGGINGS -> new ItemStack(Material.LEATHER_LEGGINGS);
             case BOOTS -> new ItemStack(Material.LEATHER_BOOTS);
             default -> null;
-        };
-    }
-
-    private Rarity getDefaultRarity() {
-        return switch (slot) {
-            case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> Rarity.RARE;
-            default -> Rarity.DEVELOPER;
         };
     }
 

@@ -20,6 +20,7 @@ public class EmeraldArmor extends CustomArmor {
     private int healthBoost = 0;
 
     private static final Color LEATHER_COLOR = Color.LIME;
+    private static final Rarity BASE_RARITY = Rarity.EPIC;
 
     private static final int UPGRADE_THRESHOLD = 50;
     private static final int MAX_EMERALD_COUNT = 250;
@@ -31,7 +32,7 @@ public class EmeraldArmor extends CustomArmor {
     public EmeraldArmor(SlotType slot) {
         super(slot);
         item = getBaseItem();
-        rarity = getDefaultRarity();
+        rarity = Rarity.getRarity(BASE_RARITY, tier);
         displayName = getFormattedName(getDefaultName());
         emeraldCount = 0;
         armor = getDefaultArmor();
@@ -83,13 +84,6 @@ public class EmeraldArmor extends CustomArmor {
             case LEGGINGS -> new ItemStack(Material.LEATHER_LEGGINGS);
             case BOOTS -> new ItemStack(Material.LEATHER_BOOTS);
             default -> null;
-        };
-    }
-
-    private Rarity getDefaultRarity() {
-        return switch (slot) {
-            case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> Rarity.EPIC;
-            default -> Rarity.DEVELOPER;
         };
     }
 

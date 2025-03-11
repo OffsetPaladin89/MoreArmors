@@ -13,10 +13,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class TitanArmor extends CustomArmor {
 
+    private static final Rarity BASE_RARITY = Rarity.UNCOMMON;
+
     public TitanArmor(SlotType slot) {
         super(slot);
         this.item = getBaseItem();
-        this.rarity = getDefaultRarity();
+        this.rarity = Rarity.getRarity(BASE_RARITY, tier);
         this.displayName = getFormattedName(getDefaultName());
         this.armor = getDefaultArmor();
 
@@ -80,13 +82,6 @@ public class TitanArmor extends CustomArmor {
             case LEGGINGS -> "Titan Leggings";
             case BOOTS -> "Titan Boots";
             default -> null;
-        };
-    }
-
-    private Rarity getDefaultRarity() {
-        return switch (slot) {
-            case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> Rarity.UNCOMMON;
-            default -> Rarity.DEVELOPER;
         };
     }
 

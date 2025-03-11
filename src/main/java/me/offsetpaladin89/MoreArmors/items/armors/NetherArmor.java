@@ -15,11 +15,12 @@ import static me.offsetpaladin89.MoreArmors.enums.SlotType.HELMET;
 public class NetherArmor extends CustomArmor {
 
     private static final Color LEATHER_COLOR = Color.GRAY;
+    private static final Rarity BASE_RARITY = Rarity.LEGENDARY;
 
     public NetherArmor(SlotType slot) {
         super(slot);
         this.item = getBaseItem();
-        this.rarity = getDefaultRarity();
+        this.rarity = Rarity.getRarity(BASE_RARITY, tier);
         this.displayName = getFormattedName(getDefaultName());
         this.armor = getDefaultArmor();
         this.armorToughness = getDefaultArmorToughness();
@@ -85,13 +86,6 @@ public class NetherArmor extends CustomArmor {
             case LEGGINGS -> "Nether Leggings";
             case BOOTS -> "Nether Boots";
             default -> null;
-        };
-    }
-
-    private Rarity getDefaultRarity() {
-        return switch (slot) {
-            case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> Rarity.LEGENDARY;
-            default -> Rarity.DEVELOPER;
         };
     }
 

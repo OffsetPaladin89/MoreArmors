@@ -18,13 +18,18 @@ public class Lore {
     }
 
     public void addArmorRarity(Rarity rarity) {
-        lore.add("");
+        addEmpty();
         lore.add(colorString(String.format("%s&l%s", rarity.color, rarity)));
     }
 
     public void addMaterialRarity(Rarity rarity) {
-        lore.add("");
+        addEmpty();
         lore.add(colorString(String.format("%s&l%s MATERIAL", rarity.color, rarity)));
+    }
+
+    public void addItemRarity(Rarity rarity) {
+        addEmpty();
+        lore.add(colorString(String.format("%s&l%s ITEM", rarity.color, rarity)));
     }
 
     public void addEmpty() {
