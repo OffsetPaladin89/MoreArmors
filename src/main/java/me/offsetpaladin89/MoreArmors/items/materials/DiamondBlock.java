@@ -7,33 +7,23 @@ import org.bukkit.inventory.ItemStack;
 
 public class DiamondBlock extends CustomMaterial {
 
+    private static final Rarity BASE_RARITY = Rarity.EPIC;
     private static final String DEFAULT_NAME = "Diamond Block";
-    private static final Material MATERIAL = Material.DIAMOND_BLOCK;
+    private static final MaterialType MATERIAL_TYPE = MaterialType.DIAMOND_BLOCK;
 
-    DiamondBlock(Rarity rarity, int upgradeTier, MaterialType materialType, ItemStack prevMaterial) {
-        super(rarity, upgradeTier, DEFAULT_NAME, materialType, prevMaterial);
-        createItem(MATERIAL);
+    public DiamondBlock(int tier) {
+        super(BASE_RARITY, tier, DEFAULT_NAME, MATERIAL_TYPE);
+        this.previousItem = getPrevious(tier);
+        createItem(getBase());
     }
 
-    public static class DiamondBlock0 extends DiamondBlock {
-        private static final Rarity DEFAULT_RARITY = Rarity.EPIC;
-        private static final int UPGRADE_TIER = 0;
-        private static final MaterialType MATERIAL_TYPE = MaterialType.DIAMOND_BLOCK_0;
-        private static final ItemStack PREVIOUS_MATERIAL = new ItemStack(Material.DIAMOND_BLOCK);
-
-        public DiamondBlock0() {
-            super(DEFAULT_RARITY, UPGRADE_TIER, MATERIAL_TYPE, PREVIOUS_MATERIAL);
-        }
+    public static ItemStack getPrevious(int tier) {
+        if(tier == 0) return getBase();
+        if(tier <= MATERIAL_TYPE.maxTier) return new DiamondBlock(tier - 1).getItem();
+        return null;
     }
 
-    public static class DiamondBlock1 extends DiamondBlock {
-        private static final Rarity DEFAULT_RARITY = Rarity.LEGENDARY;
-        private static final int UPGRADE_TIER = 1;
-        private static final MaterialType MATERIAL_TYPE = MaterialType.DIAMOND_BLOCK_1;
-        private static final ItemStack PREVIOUS_MATERIAL = new DiamondBlock0().getItem();
-
-        public DiamondBlock1() {
-            super(DEFAULT_RARITY, UPGRADE_TIER, MATERIAL_TYPE, PREVIOUS_MATERIAL);
-        }
+    private static ItemStack getBase() {
+        return new ItemStack(Material.DIAMOND_BLOCK);
     }
 }

@@ -11,6 +11,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
+
+import static me.offsetpaladin89.MoreArmors.enums.MaterialType.materialType;
 
 public class CommandCompleter implements TabCompleter {
 
@@ -46,6 +49,7 @@ public class CommandCompleter implements TabCompleter {
 
 			if(args.length == 5) {
 				if (args[2].equalsIgnoreCase("armor")) arguments.addAll(SlotType.allSlotTypes());
+				else if(args[2].equalsIgnoreCase("material")) arguments.addAll(IntStream.rangeClosed(0, materialType(args[3]).maxTier).boxed().map(Object::toString).toList());
 			}
 		}
 		else if (args[0].equalsIgnoreCase("edit") && sender.hasPermission("morearmors.edit")) {

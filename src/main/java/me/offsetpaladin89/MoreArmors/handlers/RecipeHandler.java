@@ -1,17 +1,15 @@
 package me.offsetpaladin89.MoreArmors.handlers;
 
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import me.offsetpaladin89.MoreArmors.items.armors.*;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.items.armors.*;
 import me.offsetpaladin89.MoreArmors.items.materials.*;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
-
-import static me.offsetpaladin89.MoreArmors.enums.MaterialType.INVALID;
 
 public class RecipeHandler {
 
@@ -40,114 +38,14 @@ public class RecipeHandler {
     private void registerMaterialRecipes(FileConfiguration config) {
         if(!config.getBoolean("materials.craftable")) return;
 
-        materialRecipe(MaterialType.values());
+        for(MaterialType type : MaterialType.values()) CustomMaterial.getRecipe(type, plugin);
 
-        energyCell();
-        machineCore();
-        machinePart0();
-        machinePart1();
-        netherCrown();
-        starDust();
-    }
-
-    public void materialRecipe(MaterialType[] types) {
-        for(MaterialType type : types) materialRecipe(type);
-    }
-
-    public void materialRecipe(MaterialType type) {
-        if(type == INVALID) return;
-
-        CustomMaterial material = MaterialType.materialFromType(type);
-        if(material.getPrev() == null) return;
-        NamespacedKey key = new NamespacedKey(plugin, material.getID());
-
-        ShapedRecipe recipe = new ShapedRecipe(key, material.getItem());
-        recipe.shape("AAA", "AAA", "AAA");
-        recipe.setIngredient('A', new RecipeChoice.ExactChoice(material.getPrev()));
-
-        plugin.getServer().addRecipe(recipe);
-    }
-
-    private void energyCell() {
-        CustomMaterial item = new EnergyCell();
-
-        NamespacedKey key = new NamespacedKey(plugin, item.getType().toString().toLowerCase());
-
-        ShapedRecipe recipe = new ShapedRecipe(key, item.getItem());
-        recipe.shape("AAA", "ABA", "AAA");
-        recipe.setIngredient('A', new RecipeChoice.ExactChoice(new IronBlock.IronBlock0().getItem()));
-        recipe.setIngredient('B', new RecipeChoice.ExactChoice(new StarDust().getItem()));
-
-        plugin.getServer().addRecipe(recipe);
-    }
-
-    private void machineCore() {
-        CustomMaterial item = new MachineCore();
-
-        NamespacedKey key = new NamespacedKey(plugin, item.getType().toString().toLowerCase());
-
-        ShapedRecipe recipe = new ShapedRecipe(key, item.getItem());
-        recipe.shape(" B ", " C ", "AAA");
-        recipe.setIngredient('A', new RecipeChoice.ExactChoice(new IronBlock.IronBlock2().getItem()));
-        recipe.setIngredient('B', new RecipeChoice.ExactChoice(new MachinePart.MachinePart1().getItem()));
-        recipe.setIngredient('C', new RecipeChoice.ExactChoice(new EnergyCell().getItem()));
-
-        plugin.getServer().addRecipe(recipe);
-    }
-
-    private void machinePart0() {
-        CustomMaterial item = new MachinePart.MachinePart0();
-
-        NamespacedKey key = new NamespacedKey(plugin, item.getType().toString().toLowerCase());
-
-        ShapedRecipe recipe = new ShapedRecipe(key, item.getItem());
-        recipe.shape("AAA", "ABA", "AAA");
-        recipe.setIngredient('A', new RecipeChoice.ExactChoice(new IronBlock.IronBlock0().getItem()));
-        recipe.setIngredient('B', new RecipeChoice.ExactChoice(new RedstoneBlock.RedstoneBlock0().getItem()));
-
-        plugin.getServer().addRecipe(recipe);
-    }
-
-    private void machinePart1() {
-        CustomMaterial item = new MachinePart.MachinePart1();
-
-        NamespacedKey key = new NamespacedKey(plugin, item.getType().toString().toLowerCase());
-
-        ShapedRecipe recipe = new ShapedRecipe(key, item.getItem());
-        recipe.shape("AAA", "ABA", "AAA");
-        recipe.setIngredient('A', new RecipeChoice.ExactChoice(new IronBlock.IronBlock1().getItem()));
-        recipe.setIngredient('B', new RecipeChoice.ExactChoice(new MachinePart.MachinePart0().getItem()));
-
-        plugin.getServer().addRecipe(recipe);
-    }
-
-    private void netherCrown() {
-        CustomMaterial item = new NetherCrown();
-
-        NamespacedKey key = new NamespacedKey(plugin, item.getType().toString().toLowerCase());
-
-        ShapedRecipe recipe = new ShapedRecipe(key, item.getItem());
-        recipe.shape("AAA", "ABA", "AAA");
-        recipe.setIngredient('A', new RecipeChoice.ExactChoice(new BlazeRod.BlazeRod1().getItem()));
-        recipe.setIngredient('B', Material.NETHER_STAR);
-
-        plugin.getServer().addRecipe(recipe);
-    }
-
-    private void starDust() {
-        CustomMaterial item = new StarDust();
-        item.setAmount(8);
-
-        NamespacedKey key = new NamespacedKey(plugin, item.getType().toString().toLowerCase());
-
-        item.getItem().setAmount(8);
-
-        ShapedRecipe recipe = new ShapedRecipe(key, item.getItem());
-        recipe.shape("AAA", "ABA", "AAA");
-        recipe.setIngredient('A', new RecipeChoice.ExactChoice(new IronBlock.IronBlock0().getItem()));
-        recipe.setIngredient('B', Material.NETHER_STAR);
-
-        plugin.getServer().addRecipe(recipe);
+        EnergyCell.getRecipe(plugin);
+        MachineCore.getRecipe(plugin);
+        MachinePart.getRecipe(plugin, 0);
+        MachinePart.getRecipe(plugin, 1);
+        NetherCrown.getRecipe(plugin);
+        StarDust.getRecipe(plugin);
     }
 
     private void registerDestroyerArmor(boolean register) {
@@ -173,9 +71,9 @@ public class RecipeHandler {
         leggingsRecipe.shape("AAA", "BCB", "B B");
         bootsRecipe.shape("BCB", "A A");
 
-        RecipeChoice ironBlock = new RecipeChoice.ExactChoice(new IronBlock.IronBlock1().getItem());
-        RecipeChoice machinePart = new RecipeChoice.ExactChoice(new MachinePart.MachinePart1().getItem());
-        RecipeChoice machineCore = new RecipeChoice.ExactChoice(new MachineCore().getItem());
+        RecipeChoice ironBlock = new RecipeChoice.ExactChoice(new IronBlock(1).getItem());
+        RecipeChoice machinePart = new RecipeChoice.ExactChoice(new MachinePart(1).getItem());
+        RecipeChoice machineCore = new RecipeChoice.ExactChoice(new MachineCore(0).getItem());
 
         helmetRecipe.setIngredient('A', ironBlock);
         helmetRecipe.setIngredient('B', machinePart);
@@ -256,8 +154,8 @@ public class RecipeHandler {
         leggingsRecipe.shape("AAA", "ABA", "A A");
         bootsRecipe.shape("ABA", "A A");
 
-        RecipeChoice endStone = new RecipeChoice.ExactChoice(new Endstone.Endstone2().getItem());
-        RecipeChoice eyeOfEnder = new RecipeChoice.ExactChoice(new EyeOfEnder.EyeOfEnder1().getItem());
+        RecipeChoice endStone = new RecipeChoice.ExactChoice(new Endstone(2).getItem());
+        RecipeChoice eyeOfEnder = new RecipeChoice.ExactChoice(new EyeOfEnder(1).getItem());
 
         helmetRecipe.setIngredient('A', endStone);
         helmetRecipe.setIngredient('C', Material.DRAGON_HEAD);
@@ -334,7 +232,7 @@ public class RecipeHandler {
         leggingsRecipe.shape("AAA", "A A", "A A");
         bootsRecipe.shape("A A", "A A");
 
-        RecipeChoice cobblestone = new RecipeChoice.ExactChoice(new Cobblestone.Cobblestone2().getItem());
+        RecipeChoice cobblestone = new RecipeChoice.ExactChoice(new Cobblestone(2).getItem());
 
         helmetRecipe.setIngredient('A', cobblestone);
         chestplateRecipe.setIngredient('A', cobblestone);
@@ -370,8 +268,8 @@ public class RecipeHandler {
         leggingsRecipe.shape("AAA", "ABA", "A A");
         bootsRecipe.shape("ABA", "A A");
 
-        RecipeChoice soulSand = new RecipeChoice.ExactChoice(new SoulSand.SoulSand1().getItem());
-        RecipeChoice netherCrown = new RecipeChoice.ExactChoice(new NetherCrown().getItem());
+        RecipeChoice soulSand = new RecipeChoice.ExactChoice(new SoulSand(1).getItem());
+        RecipeChoice netherCrown = new RecipeChoice.ExactChoice(new NetherCrown(0).getItem());
 
         helmetRecipe.setIngredient('A', soulSand);
         helmetRecipe.setIngredient('C', netherCrown);
@@ -414,9 +312,9 @@ public class RecipeHandler {
         leggingsRecipe.shape("AAA", "BDB", "C C");
         bootsRecipe.shape("ADA", "B B");
 
-        RecipeChoice prismarine = new RecipeChoice.ExactChoice(new Prismarine.Prismarine1().getItem());
-        RecipeChoice goldBlock = new RecipeChoice.ExactChoice(new GoldBlock.GoldBlock1().getItem());
-        RecipeChoice diamondBlock = new RecipeChoice.ExactChoice(new DiamondBlock.DiamondBlock1().getItem());
+        RecipeChoice prismarine = new RecipeChoice.ExactChoice(new Prismarine(1).getItem());
+        RecipeChoice goldBlock = new RecipeChoice.ExactChoice(new GoldBlock(1).getItem());
+        RecipeChoice diamondBlock = new RecipeChoice.ExactChoice(new DiamondBlock(1).getItem());
 
         helmetRecipe.setIngredient('A', prismarine);
         helmetRecipe.setIngredient('B', goldBlock);
@@ -465,7 +363,7 @@ public class RecipeHandler {
         leggingsRecipe.shape("AAA", "A A", "A A");
         bootsRecipe.shape("A A", "A A");
 
-        RecipeChoice sugarCane = new RecipeChoice.ExactChoice(new SugarCane.SugarCane0().getItem());
+        RecipeChoice sugarCane = new RecipeChoice.ExactChoice(new SugarCane(0).getItem());
 
         helmetRecipe.setIngredient('A', sugarCane);
         chestplateRecipe.setIngredient('A', sugarCane);

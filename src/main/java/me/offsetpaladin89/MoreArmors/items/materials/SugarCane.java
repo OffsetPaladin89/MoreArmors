@@ -7,22 +7,23 @@ import org.bukkit.inventory.ItemStack;
 
 public class SugarCane extends CustomMaterial {
 
+    private static final Rarity BASE_RARITY = Rarity.UNCOMMON;
     private static final String DEFAULT_NAME = "Sugar Cane";
-    private static final Material MATERIAL = Material.SUGAR_CANE;
+    private static final MaterialType MATERIAL_TYPE = MaterialType.SUGAR_CANE;
 
-    SugarCane(Rarity rarity, int upgradeTier, MaterialType materialType, ItemStack prevMaterial) {
-        super(rarity, upgradeTier, DEFAULT_NAME, materialType, prevMaterial);
-        createItem(MATERIAL);
+    public SugarCane(int tier) {
+        super(BASE_RARITY, tier, DEFAULT_NAME, MATERIAL_TYPE);
+        this.previousItem = getPrevious(tier);
+        createItem(getBase());
     }
 
-    public static class SugarCane0 extends SugarCane {
-        private static final Rarity DEFAULT_RARITY = Rarity.UNCOMMON;
-        private static final int UPGRADE_TIER = 0;
-        private static final MaterialType MATERIAL_TYPE = MaterialType.SUGAR_CANE_0;
-        private static final ItemStack PREVIOUS_MATERIAL = new ItemStack(Material.SUGAR_CANE);
+    public static ItemStack getPrevious(int tier) {
+        if(tier == 0) return getBase();
+        if(tier <= MATERIAL_TYPE.maxTier) return new SugarCane(tier - 1).getItem();
+        return null;
+    }
 
-        public SugarCane0() {
-            super(DEFAULT_RARITY, UPGRADE_TIER, MATERIAL_TYPE, PREVIOUS_MATERIAL);
-        }
+    private static ItemStack getBase() {
+        return new ItemStack(Material.SUGAR_CANE);
     }
 }

@@ -1,35 +1,32 @@
 package me.offsetpaladin89.MoreArmors.items.materials;
 
 import de.tr7zw.changeme.nbtapi.NBT;
+import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.items.misc.CustomItem;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
-import me.offsetpaladin89.MoreArmors.utils.Util;
-import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class CustomMaterial extends CustomItem {
 
     protected MaterialType materialID;
-    protected ItemStack prevMaterial;
+    protected ItemStack previousItem;
 
-    protected CustomMaterial(Rarity rarity, String displayName, MaterialType materialID, ItemStack prevMaterial) {
-        super(rarity, displayName);
-        this.materialID = materialID;
-        this.prevMaterial = prevMaterial;
-    }
-
-    protected CustomMaterial(Rarity rarity, int upgradeTier, String displayName, MaterialType materialID) {
-        super(rarity, upgradeTier, displayName);
+    protected CustomMaterial(Rarity rarity, int tier, String displayName, MaterialType materialID) {
+        super(Rarity.getRarity(rarity.ordinal() + tier), tier, displayName);
+        this.tier = tier;
         this.materialID = materialID;
     }
 
-    protected void createItem(Material material) {
-        item = new ItemStack(material, 1);
+    protected void createItem(ItemStack item) {
+        this.item = item;
 
         setDisplayName();
         setLore();
@@ -48,10 +45,6 @@ public class CustomMaterial extends CustomItem {
         item.setItemMeta(itemMeta);
     }
 
-    public MaterialType getType() {
-        return this.materialID;
-    }
-
     protected void addGlowing() {
         ItemMeta itemMeta = item.getItemMeta();
 
@@ -59,18 +52,6 @@ public class CustomMaterial extends CustomItem {
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
         item.setItemMeta(itemMeta);
-    }
-
-    public void setAmount(int amount) {
-        item.setAmount(amount);
-    }
-
-    public String getID() {
-        return materialID.toString().toLowerCase();
-    }
-
-    public ItemStack getPrev() {
-        return prevMaterial;
     }
 
     protected void setDisplayName() {
@@ -83,6 +64,38 @@ public class CustomMaterial extends CustomItem {
         NBT.modify(item, nbt -> {
             nbt.setEnum("Rarity", rarity);
             nbt.setEnum("MaterialID", materialID);
+            nbt.setInteger("Tier", tier);
         });
+    }
+
+    public void setAmount(int amount) {
+        item.setAmount(amount);
+    }
+
+    public String getID() {
+        return materialID.toString().toLowerCase();
+    }
+
+    public MaterialType getType() {
+        return this.materialID;
+    }
+
+    public static void getRecipe(MaterialType type, MoreArmorsMain plugin) {
+        for(int i = 0; i <= type.maxTier; i++) {
+            CustomMaterial result = MaterialType.getMaterial(type, i);
+            if (result == null || result.getPrevious() == null) return;
+
+            NamespacedKey key = new NamespacedKey(plugin, String.format("%s_%d", result.getID(), i));
+
+            ShapedRecipe recipe = new ShapedRecipe(key, result.getItem());
+            recipe.shape("AAA", "AAA", "AAA");
+            recipe.setIngredient('A', new RecipeChoice.ExactChoice(result.getPrevious()));
+
+            plugin.getServer().addRecipe(recipe);
+        }
+    }
+
+    protected ItemStack getPrevious() {
+        return previousItem;
     }
 }

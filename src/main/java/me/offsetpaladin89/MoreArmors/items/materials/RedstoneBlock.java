@@ -7,22 +7,23 @@ import org.bukkit.inventory.ItemStack;
 
 public class RedstoneBlock extends CustomMaterial {
 
+    private static final Rarity BASE_RARITY = Rarity.RARE;
     private static final String DEFAULT_NAME = "Redstone Block";
-    private static final Material MATERIAL = Material.REDSTONE_BLOCK;
+    private static final MaterialType MATERIAL_TYPE = MaterialType.REDSTONE_BLOCK;
 
-    RedstoneBlock(Rarity rarity, int upgradeTier, MaterialType materialType, ItemStack prevMaterial) {
-        super(rarity, upgradeTier, DEFAULT_NAME, materialType, prevMaterial);
-        createItem(MATERIAL);
+    public RedstoneBlock(int tier) {
+        super(BASE_RARITY, tier, DEFAULT_NAME, MATERIAL_TYPE);
+        this.previousItem = getPrevious(tier);
+        createItem(getBase());
     }
 
-    public static class RedstoneBlock0 extends RedstoneBlock {
-        private static final Rarity DEFAULT_RARITY = Rarity.RARE;
-        private static final int UPGRADE_TIER = 0;
-        private static final MaterialType MATERIAL_TYPE = MaterialType.REDSTONE_BLOCK_0;
-        private static final ItemStack PREVIOUS_MATERIAL = new ItemStack(Material.REDSTONE_BLOCK);
+    public static ItemStack getPrevious(int tier) {
+        if(tier == 0) return getBase();
+        if(tier <= MATERIAL_TYPE.maxTier) return new RedstoneBlock(tier - 1).getItem();
+        return null;
+    }
 
-        public RedstoneBlock0() {
-            super(DEFAULT_RARITY, UPGRADE_TIER, MATERIAL_TYPE, PREVIOUS_MATERIAL);
-        }
+    private static ItemStack getBase() {
+        return new ItemStack(Material.REDSTONE_BLOCK);
     }
 }

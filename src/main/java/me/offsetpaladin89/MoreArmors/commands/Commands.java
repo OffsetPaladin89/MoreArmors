@@ -18,6 +18,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static me.offsetpaladin89.MoreArmors.enums.ArmorType.*;
 import static me.offsetpaladin89.MoreArmors.enums.CommandType.allCommandTypes;
@@ -223,7 +224,7 @@ public class Commands implements CommandExecutor {
 
 	private void giveMaterialCommand(CommandSender sender, String[] args, Player player) {
 		MaterialType materialType;
-		int giveAmount;
+		int giveAmount, tier;
 
 		if (args.length == 3) {
 			listCommandOptions(sender, allMaterialTypes());
@@ -237,18 +238,29 @@ public class Commands implements CommandExecutor {
 		}
 
 		if (args.length == 4) {
-			giveItem(sender, player, materialType, 1);
+			listCommandOptions(sender, IntStream.rangeClosed(0, materialType.maxTier).boxed().map(i -> String.format("Tier %d", i)).toList());
 			return;
 		}
 
-		if (Util.isInteger(args[4])) giveAmount = Integer.parseInt(args[4]);
+		if (Util.isInteger(args[4])) tier = Integer.parseInt(args[4]);
 		else {
 			invalidArgument(sender, args[4]);
 			return;
 		}
 
 		if (args.length == 5) {
-			giveItem(sender, player, materialType, giveAmount);
+			giveItem(sender, player, materialType, tier, 1);
+			return;
+		}
+
+		if (Util.isInteger(args[5])) giveAmount = Integer.parseInt(args[5]);
+		else {
+			invalidArgument(sender, args[5]);
+			return;
+		}
+
+		if (args.length == 6) {
+			giveItem(sender, player, materialType, tier, giveAmount);
 			return;
 		}
 
@@ -346,10 +358,10 @@ public class Commands implements CommandExecutor {
 		giveMessage(sender, target, item.getItem(), 1);
 	}
 
-	private void giveItem(CommandSender sender, Player target, MaterialType materialType, int amount) {
+	private void giveItem(CommandSender sender, Player target, MaterialType materialType, int tier, int amount) {
 		PlayerInventory inventory = target.getInventory();
 
-		CustomMaterial item = materialFromType(materialType);
+		CustomMaterial item = getMaterial(materialType, tier);
 
 		for(int i = 0; i < amount / 64; i++) Util.addItem(inventory, target, item.getItem(), 64);
 		Util.addItem(inventory, target, item.getItem(), amount % 64);

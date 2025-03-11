@@ -1,29 +1,48 @@
 package me.offsetpaladin89.MoreArmors.items.materials;
 
+import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.ShapedRecipe;
 
 import java.util.UUID;
 
 public class EnergyCell extends CustomMaterial {
 
+    private static final Rarity BASE_RARITY = Rarity.LEGENDARY;
     private static final String DEFAULT_NAME = "Energy Cell";
-    private static final Material MATERIAL = Material.PLAYER_HEAD;
-    private static final Rarity DEFAULT_RARITY = Rarity.LEGENDARY;
-    private static final int UPGRADE_TIER = 0;
     private static final MaterialType MATERIAL_TYPE = MaterialType.ENERGY_CELL;
     private static final UUID SKULL_UUID = UUID.nameUUIDFromBytes("ENERGY_CELL".getBytes());
 
-    public EnergyCell() {
-        super(DEFAULT_RARITY, UPGRADE_TIER, DEFAULT_NAME, MATERIAL_TYPE);
-        createItem(MATERIAL);
-
+    public EnergyCell(int tier) {
+        super(BASE_RARITY, tier, DEFAULT_NAME, MATERIAL_TYPE);
+        createItem(getBase());
         assignSkull();
     }
 
     private void assignSkull() {
         Util.modifySkullSkin(item, "9ac52419b99025828c89fa825945e6948e45bb5a22e4425a59e9096e4c1ac38", SKULL_UUID);
+    }
+
+    private static ItemStack getBase() {
+        return new ItemStack(Material.PLAYER_HEAD);
+    }
+
+    public static void getRecipe(MoreArmorsMain plugin) {
+        CustomMaterial result = new EnergyCell(0);
+
+        NamespacedKey key = new NamespacedKey(plugin, result.getID());
+
+        ShapedRecipe recipe = new ShapedRecipe(key, result.getItem());
+        recipe.shape("AAA", "ABA", "AAA");
+        recipe.setIngredient('A', new RecipeChoice.ExactChoice(new IronBlock(0).getItem()));
+        recipe.setIngredient('B', new RecipeChoice.ExactChoice(new StarDust(0).getItem()));
+
+        plugin.getServer().addRecipe(recipe);
     }
 }

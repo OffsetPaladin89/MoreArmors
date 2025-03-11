@@ -7,40 +7,23 @@ import org.bukkit.inventory.ItemStack;
 
 public class BlazeRod extends CustomMaterial {
 
+    private static final Rarity BASE_RARITY = Rarity.UNCOMMON;
     private static final String DEFAULT_NAME = "Blaze Rod";
-    private static final Material MATERIAL = Material.BLAZE_ROD;
+    private static final MaterialType MATERIAL_TYPE = MaterialType.BLAZE_ROD;
 
-    BlazeRod(Rarity rarity, int upgradeTier, MaterialType materialType, ItemStack prevMaterial) {
-        super(rarity, upgradeTier, DEFAULT_NAME, materialType, prevMaterial);
-        createItem(MATERIAL);
+    public BlazeRod(int tier) {
+        super(BASE_RARITY, tier, DEFAULT_NAME, MATERIAL_TYPE);
+        this.previousItem = getPrevious(tier);
+        createItem(getBase());
     }
 
-    public static class BlazeRod0 extends BlazeRod {
-
-        private static final Rarity DEFAULT_RARITY = Rarity.UNCOMMON;
-        private static final int UPGRADE_TIER = 0;
-        private static final MaterialType MATERIAL_TYPE = MaterialType.BLAZE_ROD_0;
-        private static final ItemStack PREVIOUS_MATERIAL = new ItemStack(Material.BLAZE_ROD);
-
-        public BlazeRod0() {
-            super(DEFAULT_RARITY, UPGRADE_TIER, MATERIAL_TYPE, PREVIOUS_MATERIAL);
-        }
-
-        public ItemStack getPrev() {
-            return new ItemStack(Material.BLAZE_ROD);
-        }
+    public static ItemStack getPrevious(int tier) {
+        if(tier == 0) return getBase();
+        if(tier <= MATERIAL_TYPE.maxTier) return new BlazeRod(tier - 1).getItem();
+        return null;
     }
 
-    public static class BlazeRod1 extends BlazeRod {
-
-        private static final Rarity DEFAULT_RARITY = Rarity.RARE;
-        private static final int UPGRADE_TIER = 1;
-        private static final MaterialType MATERIAL_TYPE = MaterialType.BLAZE_ROD_1;
-        private static final ItemStack PREVIOUS_MATERIAL = new BlazeRod0().getItem();
-
-        public BlazeRod1() {
-            super(DEFAULT_RARITY, UPGRADE_TIER, MATERIAL_TYPE, PREVIOUS_MATERIAL);
-        }
+    public static ItemStack getBase() {
+        return new ItemStack(Material.BLAZE_ROD);
     }
-
 }

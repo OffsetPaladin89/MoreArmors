@@ -2,10 +2,10 @@ package me.offsetpaladin89.MoreArmors;
 
 import com.cryptomorin.xseries.XSound;
 import de.tr7zw.changeme.nbtapi.NBT;
-import me.offsetpaladin89.MoreArmors.items.armors.DestroyerArmor;
-import me.offsetpaladin89.MoreArmors.items.armors.EmeraldArmor;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
+import me.offsetpaladin89.MoreArmors.items.armors.DestroyerArmor;
+import me.offsetpaladin89.MoreArmors.items.armors.EmeraldArmor;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.*;
 import org.bukkit.World.Environment;
@@ -197,7 +197,7 @@ public class MoreArmorsListener implements Listener {
 		ItemStack item = inv.getItemInMainHand();
 		if(Util.isAirOrNull(item)) return;
 		MaterialType type = NBT.get(item, nbt -> (MaterialType) nbt.getEnum("MaterialID", MaterialType.class));
-		if(type == null || !(type.equals(MaterialType.EYE_OF_ENDER_0) || type.equals(MaterialType.EYE_OF_ENDER_1))) return;
+		if(type == null || type.equals(MaterialType.EYE_OF_ENDER)) return;
 		event.setCancelled(true);
 	}
 	private void endArmorInteract(Player p, Action a) {

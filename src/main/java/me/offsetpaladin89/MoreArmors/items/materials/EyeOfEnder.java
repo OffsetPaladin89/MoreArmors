@@ -7,35 +7,23 @@ import org.bukkit.inventory.ItemStack;
 
 public class EyeOfEnder extends CustomMaterial {
 
+    private static final Rarity BASE_RARITY = Rarity.UNCOMMON;
     private static final String DEFAULT_NAME = "Eye of Ender";
-    private static final Material MATERIAL = Material.ENDER_EYE;
+    private static final MaterialType MATERIAL_TYPE = MaterialType.EYE_OF_ENDER;
 
-    EyeOfEnder(Rarity rarity, int upgradeTier, MaterialType materialType, ItemStack prevMaterial) {
-        super(rarity, upgradeTier, DEFAULT_NAME, materialType, prevMaterial);
-        createItem(MATERIAL);
+    public EyeOfEnder(int tier) {
+        super(BASE_RARITY, tier, DEFAULT_NAME, MATERIAL_TYPE);
+        this.previousItem = getPrevious(tier);
+        createItem(getBase());
     }
 
-    public static class EyeOfEnder0 extends EyeOfEnder {
-
-        private static final Rarity DEFAULT_RARITY = Rarity.UNCOMMON;
-        private static final int UPGRADE_TIER = 0;
-        private static final MaterialType MATERIAL_TYPE = MaterialType.EYE_OF_ENDER_0;
-        private static final ItemStack PREVIOUS_MATERIAL = new ItemStack(Material.ENDER_EYE);
-
-        public EyeOfEnder0() {
-            super(DEFAULT_RARITY, UPGRADE_TIER, MATERIAL_TYPE, PREVIOUS_MATERIAL);
-        }
+    public static ItemStack getPrevious(int tier) {
+        if(tier == 0) return getBase();
+        if(tier <= MATERIAL_TYPE.maxTier) return new EyeOfEnder(tier - 1).getItem();
+        return null;
     }
 
-    public static class EyeOfEnder1 extends EyeOfEnder {
-
-        private static final Rarity DEFAULT_RARITY = Rarity.RARE;
-        private static final int UPGRADE_TIER = 1;
-        private static final MaterialType MATERIAL_TYPE = MaterialType.EYE_OF_ENDER_1;
-        private static final ItemStack PREVIOUS_MATERIAL = new EyeOfEnder0().getItem();
-
-        public EyeOfEnder1() {
-            super(DEFAULT_RARITY, UPGRADE_TIER, MATERIAL_TYPE, PREVIOUS_MATERIAL);
-        }
+    private static ItemStack getBase() {
+        return new ItemStack(Material.ENDER_EYE);
     }
 }

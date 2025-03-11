@@ -9,10 +9,16 @@ public class CustomItem {
     protected ItemStack item;
     protected Rarity rarity = Rarity.DEVELOPER;
     protected String displayName = "Offset";
-    protected int upgradeTier = 0;
+    protected int tier = 0;
 
     protected CustomItem(Rarity rarity, String displayName) {
         this.rarity = rarity;
+        this.displayName = getFormattedName(displayName);
+    }
+
+    protected CustomItem(Rarity rarity, int tier, String displayName) {
+        this.rarity = rarity;
+        this.tier = tier;
         this.displayName = getFormattedName(displayName);
     }
 
@@ -23,6 +29,6 @@ public class CustomItem {
     }
 
     protected String getFormattedName(String displayName) {
-        return Util.colorString(String.format("%s%s &b(+%d)", rarity.color, displayName, upgradeTier));
+        return Util.colorString(String.format("%s%s &b(+%d)", rarity.color, displayName, tier));
     }
 }

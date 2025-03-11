@@ -1,14 +1,12 @@
 package me.offsetpaladin89.MoreArmors.enums;
 
 public enum Rarity {
-    COMMON(0), UNCOMMON(1), RARE(2), EPIC(3), LEGENDARY(4), MYTHIC(5), DIVINE(6), SPECIAL(7), ADMIN(8), DEVELOPER(9);
+    COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, MYTHIC, DIVINE, SPECIAL, ADMIN, DEVELOPER;
 
-    public final int id;
     public final String color;
 
-    Rarity(int id) {
-        this.id = id;
-        this.color = switch (id) {
+    Rarity() {
+        this.color = switch (ordinal()) {
             case 0 -> "&f";
             case 1 -> "&a";
             case 2 -> "&9";
@@ -23,6 +21,7 @@ public enum Rarity {
     }
 
     public static Rarity getRarity(int id) {
-        for(Rarity rarity : values()) if(rarity.id == id) return rarity;
+        for(Rarity rarity : values()) if(rarity.ordinal() == id) return rarity;
+        return DEVELOPER;
     }
 }
