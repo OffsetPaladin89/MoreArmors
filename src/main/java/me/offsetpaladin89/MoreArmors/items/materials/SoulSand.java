@@ -1,4 +1,4 @@
-package me.offsetpaladin89.MoreArmors.materials;
+package me.offsetpaladin89.MoreArmors.items.materials;
 
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;

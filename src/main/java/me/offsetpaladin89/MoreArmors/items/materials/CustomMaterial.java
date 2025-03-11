@@ -1,8 +1,9 @@
-package me.offsetpaladin89.MoreArmors.materials;
+package me.offsetpaladin89.MoreArmors.items.materials;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
+import me.offsetpaladin89.MoreArmors.items.misc.CustomItem;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.Material;
@@ -11,27 +12,19 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class CustomMaterial {
+public class CustomMaterial extends CustomItem {
 
-    protected ItemStack item;
-    protected Rarity rarity;
-    protected int upgradeTier;
-    protected String displayName = "Offset";
     protected MaterialType materialID;
     protected ItemStack prevMaterial;
 
-    protected CustomMaterial(Rarity rarity, int upgradeTier, String displayName, MaterialType materialID, ItemStack prevMaterial) {
-        this.rarity = rarity;
-        this.upgradeTier = upgradeTier;
-        this.displayName = getFormattedName(displayName);
+    protected CustomMaterial(Rarity rarity, String displayName, MaterialType materialID, ItemStack prevMaterial) {
+        super(rarity, displayName);
         this.materialID = materialID;
         this.prevMaterial = prevMaterial;
     }
 
     protected CustomMaterial(Rarity rarity, int upgradeTier, String displayName, MaterialType materialID) {
-        this.rarity = rarity;
-        this.upgradeTier = upgradeTier;
-        this.displayName = getFormattedName(displayName);
+        super(rarity, upgradeTier, displayName);
         this.materialID = materialID;
     }
 
@@ -55,16 +48,8 @@ public class CustomMaterial {
         item.setItemMeta(itemMeta);
     }
 
-    public ItemStack getItem() {
-        return this.item;
-    }
-
     public MaterialType getType() {
         return this.materialID;
-    }
-
-    protected String getFormattedName(String displayName) {
-        return Util.colorString(String.format("%s%s &b(+%d)", Rarity.getColorRarity(rarity), displayName, upgradeTier));
     }
 
     protected void addGlowing() {

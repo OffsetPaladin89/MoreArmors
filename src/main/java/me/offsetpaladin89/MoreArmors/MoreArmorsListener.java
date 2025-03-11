@@ -2,8 +2,8 @@ package me.offsetpaladin89.MoreArmors;
 
 import com.cryptomorin.xseries.XSound;
 import de.tr7zw.changeme.nbtapi.NBT;
-import me.offsetpaladin89.MoreArmors.armors.DestroyerArmor;
-import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
+import me.offsetpaladin89.MoreArmors.items.armors.DestroyerArmor;
+import me.offsetpaladin89.MoreArmors.items.armors.EmeraldArmor;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.utils.Util;

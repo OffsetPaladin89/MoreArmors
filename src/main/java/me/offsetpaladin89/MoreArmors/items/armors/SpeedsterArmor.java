@@ -1,4 +1,4 @@
-package me.offsetpaladin89.MoreArmors.armors;
+package me.offsetpaladin89.MoreArmors.items.armors;
 
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
@@ -6,14 +6,17 @@ import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class ExperienceArmor extends CustomArmor {
+public class SpeedsterArmor extends CustomArmor {
 
-    private static final Color LEATHER_COLOR = Color.BLUE;
+    private static final Color LEATHER_COLOR = Color.WHITE;
 
-    public ExperienceArmor(SlotType slot) {
+    public SpeedsterArmor(SlotType slot) {
         super(slot);
         this.item = getBaseItem();
         this.rarity = getDefaultRarity();
@@ -35,7 +38,7 @@ public class ExperienceArmor extends CustomArmor {
 
     private Rarity getDefaultRarity() {
         return switch (slot) {
-            case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> Rarity.RARE;
+            case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> Rarity.UNCOMMON;
             default -> Rarity.DEVELOPER;
         };
     }
@@ -51,35 +54,45 @@ public class ExperienceArmor extends CustomArmor {
 
     private String getDefaultName() {
         return switch (slot) {
-            case HELMET -> "Experience Helmet";
-            case CHESTPLATE -> "Experience Chestplate";
-            case LEGGINGS -> "Experience Leggings";
-            case BOOTS -> "Experience Boots";
+            case HELMET -> "Speedster Helmet";
+            case CHESTPLATE -> "Speedster Chestplate";
+            case LEGGINGS -> "Speedster Leggings";
+            case BOOTS -> "Speedster Boots";
             default -> null;
         };
     }
 
     public void updateItem() {
-        this.armorID = ArmorType.EXPERIENCE;
+        this.armorID = ArmorType.SPEEDSTER;
 
         setLeatherColor(LEATHER_COLOR);
         setLore();
 
         setFlags();
 
-        baseAttributes();
-        setAttributes();
+        addAttributes();
 
         baseNBT();
+    }
+
+    private void addAttributes() {
+        baseAttributes();
+        AttributeModifier blockBreakSpeed = new AttributeModifier(pluginKey(), 0.02, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR);
+
+        attributeModifiers.put(Attribute.MOVEMENT_SPEED, blockBreakSpeed);
+
+        setAttributes();
     }
 
     private void setLore() {
         ItemMeta itemMeta = item.getItemMeta();
 
         Lore lore = new Lore();
-        lore.addColoredLine("&6Full Set Bonus: Experience");
-        lore.addColoredLine("&7Recieve &adouble experience &7from killing");
-        lore.addColoredLine("&7mobs and mining ores.");
+        lore.addColoredLine("&6Item Ability: Speed");
+        lore.addColoredLine("&7Increased movement speed by &a10%&7.");
+        lore.addEmpty();
+        lore.addColoredLine("&6Full Set Bonus: Retreat");
+        lore.addColoredLine("&7Grants &aSpeed I &7for &a20 seconds &7when damaged.");
         lore.addArmorRarity(rarity);
         itemMeta.setLore(lore.getLore());
 

@@ -1,7 +1,7 @@
 package me.offsetpaladin89.MoreArmors.enums;
 
-import me.offsetpaladin89.MoreArmors.materials.CustomMaterial;
-import me.offsetpaladin89.MoreArmors.materials.*;
+import me.offsetpaladin89.MoreArmors.items.materials.CustomMaterial;
+import me.offsetpaladin89.MoreArmors.items.materials.*;
 
 import java.util.ArrayList;
 import java.util.List;

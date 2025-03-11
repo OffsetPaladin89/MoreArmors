@@ -1,4 +1,4 @@
-package me.offsetpaladin89.MoreArmors.armors;
+package me.offsetpaladin89.MoreArmors.items.armors;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.utils.Lore;

@@ -1,4 +1,4 @@
-package me.offsetpaladin89.MoreArmors.armors;
+package me.offsetpaladin89.MoreArmors.items.armors;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -6,6 +6,7 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.items.misc.CustomItem;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -20,16 +21,12 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.UUID;
 
-public class CustomArmor {
+public class CustomArmor extends CustomItem {
 
-    protected ItemStack item;
-    protected Rarity rarity = Rarity.DEVELOPER;
     protected int armor = 0;
     protected int armorToughness = 0;
     protected SlotType slot;
-    protected String displayName = "Offset";
     protected ArmorType armorID;
-    protected int upgradeTier = 0;
 
     protected ListMultimap<Attribute, AttributeModifier> attributeModifiers = ArrayListMultimap.create();
 
@@ -97,13 +94,5 @@ public class CustomArmor {
             if(item.getType().equals(Material.PLAYER_HEAD)) nbt.setUUID("UUID", UUID.randomUUID());
             nbt.setEnum("ArmorID", armorID);
         });
-    }
-
-    public ItemStack getItem() {
-        return item;
-    }
-
-    protected String getFormattedName(String displayName) {
-        return Util.colorString(String.format("%s%s &b(+%d)", Rarity.getColorRarity(rarity), displayName, upgradeTier));
     }
 }

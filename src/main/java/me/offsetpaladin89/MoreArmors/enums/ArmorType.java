@@ -1,6 +1,6 @@
 package me.offsetpaladin89.MoreArmors.enums;
 
-import me.offsetpaladin89.MoreArmors.armors.*;
+import me.offsetpaladin89.MoreArmors.items.armors.*;
 
 import java.util.ArrayList;
 import java.util.List;

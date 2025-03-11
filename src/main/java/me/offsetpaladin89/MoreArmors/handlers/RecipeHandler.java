@@ -1,10 +1,10 @@
 package me.offsetpaladin89.MoreArmors.handlers;
 
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import me.offsetpaladin89.MoreArmors.armors.*;
+import me.offsetpaladin89.MoreArmors.items.armors.*;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
-import me.offsetpaladin89.MoreArmors.materials.*;
+import me.offsetpaladin89.MoreArmors.items.materials.*;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;

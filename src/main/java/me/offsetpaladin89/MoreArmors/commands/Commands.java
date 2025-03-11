@@ -2,12 +2,12 @@ package me.offsetpaladin89.MoreArmors.commands;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import me.offsetpaladin89.MoreArmors.armors.CustomArmor;
-import me.offsetpaladin89.MoreArmors.armors.DestroyerArmor;
-import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
+import me.offsetpaladin89.MoreArmors.items.armors.CustomArmor;
+import me.offsetpaladin89.MoreArmors.items.armors.DestroyerArmor;
+import me.offsetpaladin89.MoreArmors.items.armors.EmeraldArmor;
 import me.offsetpaladin89.MoreArmors.enums.*;
 import me.offsetpaladin89.MoreArmors.handlers.RecipeHandler;
-import me.offsetpaladin89.MoreArmors.materials.CustomMaterial;
+import me.offsetpaladin89.MoreArmors.items.materials.CustomMaterial;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
