@@ -3,6 +3,7 @@ package me.offsetpaladin89.MoreArmors.materials;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
+import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.Material;
 
 import java.util.UUID;
@@ -24,6 +25,6 @@ public class MachineCore extends CustomMaterial {
     }
 
     private void assignSkull() {
-        MoreArmorsMain.modifySkullSkin(item, "76856a8f37b6c3146854f2caa7101b9dd592f4669a3c75f941e2859552bd1ae8", SKULL_UUID);
+        Util.modifySkullSkin(item, "76856a8f37b6c3146854f2caa7101b9dd592f4669a3c75f941e2859552bd1ae8", SKULL_UUID);
     }
 }

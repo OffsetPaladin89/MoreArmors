@@ -6,6 +6,7 @@ import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -71,7 +72,7 @@ public class DestroyerArmor extends CustomArmor {
         lore.addColoredLine("&7Kill mobs to increase your damage.");
         if(killCount >= MAX_KILL_COUNT) {
             lore.addColoredLine("&7Current Bonus (&a10&8/&a10&7): &e+10 Damage &a&lMAXED OUT");
-            lore.addColoredLine(String.format("&8%s Mobs Killed &6%s", MoreArmorsMain.formatNumber(killCount), integerLimit));
+            lore.addColoredLine(String.format("&8%s Mobs Killed &6%s", Util.formatNumber(killCount), integerLimit));
         }
         else {
             lore.addColoredLine(String.format("&7Current Bonus (&a%d&8/&a10&7): &e+%d Damage", currentStage, damageBonus));
@@ -178,7 +179,7 @@ public class DestroyerArmor extends CustomArmor {
     }
 
     private void assignSkull(ItemStack item) {
-        MoreArmorsMain.modifySkullSkin(item, "ea0076ab9a5c0ed8ebd08bb18137321df0fdc8abc7499465cc32221ca192ad43", null);
+        Util.modifySkullSkin(item, "ea0076ab9a5c0ed8ebd08bb18137321df0fdc8abc7499465cc32221ca192ad43", null);
     }
 
     private void updateDamage() {

@@ -1,6 +1,6 @@
 package me.offsetpaladin89.MoreArmors.enums;
 
-import org.bukkit.Material;
+import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ public enum SlotType {
     HELMET, CHESTPLATE, LEGGINGS, BOOTS, INVALID;
 
     public static SlotType matchType(ItemStack item) {
-        if (isAirOrNull(item)) return INVALID;
+        if (Util.isAirOrNull(item)) return INVALID;
 
         String type = item.getType().toString();
 
@@ -35,9 +35,5 @@ public enum SlotType {
             if (type != INVALID) arrayList.add(type.toString().toLowerCase());
         }
         return arrayList;
-    }
-
-    private static boolean isAirOrNull(ItemStack item) {
-        return item == null || item.getType().equals(Material.AIR);
     }
 }

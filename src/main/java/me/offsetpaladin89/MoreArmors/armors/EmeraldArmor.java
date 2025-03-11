@@ -2,10 +2,10 @@ package me.offsetpaladin89.MoreArmors.armors;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
-import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -133,7 +133,7 @@ public class EmeraldArmor extends CustomArmor {
         lore.addColoredLine("&7Mine emeralds to increase your max health.");
         if(emeraldCount >= MAX_EMERALD_COUNT) {
             lore.addColoredLine("&7Current Bonus (&a5&8/&a5&7): &e+10 Health &a&lMAXED OUT");
-            lore.addColoredLine(String.format("&8%s Emeralds Mined &6%s", MoreArmorsMain.formatNumber(emeraldCount), integerLimit));
+            lore.addColoredLine(String.format("&8%s Emeralds Mined &6%s", Util.formatNumber(emeraldCount), integerLimit));
         }
         else {
             lore.addColoredLine(String.format("&7Current Bonus (&a%d&8/&a5&7): &e+%d Health", currentStage, healthBoost));

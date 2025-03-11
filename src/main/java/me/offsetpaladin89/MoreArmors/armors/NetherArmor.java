@@ -1,10 +1,10 @@
 package me.offsetpaladin89.MoreArmors.armors;
 
 import me.offsetpaladin89.MoreArmors.utils.Lore;
-import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -106,6 +106,6 @@ public class NetherArmor extends CustomArmor {
     }
 
     private void assignSkull(ItemStack item) {
-        MoreArmorsMain.modifySkullSkin(item, "cdf74e323ed41436965f5c57ddf2815d5332fe999e68fbb9d6cf5c8bd4139f", null);
+        Util.modifySkullSkin(item, "cdf74e323ed41436965f5c57ddf2815d5332fe999e68fbb9d6cf5c8bd4139f", null);
     }
 }

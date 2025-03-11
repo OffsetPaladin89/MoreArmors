@@ -1,10 +1,14 @@
 package me.offsetpaladin89.MoreArmors.commands;
 
 import de.tr7zw.changeme.nbtapi.NBT;
-import me.offsetpaladin89.MoreArmors.materials.CustomMaterial;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import me.offsetpaladin89.MoreArmors.armors.*;
+import me.offsetpaladin89.MoreArmors.armors.CustomArmor;
+import me.offsetpaladin89.MoreArmors.armors.DestroyerArmor;
+import me.offsetpaladin89.MoreArmors.armors.EmeraldArmor;
 import me.offsetpaladin89.MoreArmors.enums.*;
+import me.offsetpaladin89.MoreArmors.handlers.RecipeHandler;
+import me.offsetpaladin89.MoreArmors.materials.CustomMaterial;
+import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,11 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import static me.offsetpaladin89.MoreArmors.enums.ArmorType.*;
-import static me.offsetpaladin89.MoreArmors.enums.ArmorType.DESTROYER;
 import static me.offsetpaladin89.MoreArmors.enums.CommandType.allCommandTypes;
 import static me.offsetpaladin89.MoreArmors.enums.CommandType.commandType;
 import static me.offsetpaladin89.MoreArmors.enums.EditType.*;
-import static me.offsetpaladin89.MoreArmors.enums.EditType.KILL_COUNT;
 import static me.offsetpaladin89.MoreArmors.enums.GiveType.allGiveTypes;
 import static me.offsetpaladin89.MoreArmors.enums.GiveType.giveType;
 import static me.offsetpaladin89.MoreArmors.enums.MaterialType.*;
@@ -119,7 +121,7 @@ public class Commands implements CommandExecutor {
 				noPermission(sender);
 				return;
 			}
-			plugin.reloadConfig(sender);
+			reloadConfig(sender);
 			return;
 		}
 
@@ -129,7 +131,7 @@ public class Commands implements CommandExecutor {
 	private void viewRecipeCommand(CommandSender sender, String[] args) {
 		if (args.length == 1) {
 			if(!(sender instanceof Player player)) {
-				plugin.sendColoredMessage(sender, prefix() + " &cCommand sender must be a player!");
+				Util.sendColoredMessage(sender, prefix() + " &cCommand sender must be a player!");
 				return;
 			}
 			plugin.inventoryHandler.viewRecipes(player);
@@ -144,7 +146,7 @@ public class Commands implements CommandExecutor {
 		ItemStack item;
 
 		if(!(sender instanceof Player player)) {
-			plugin.sendColoredMessage(sender, prefix() + " &cCommand sender must be a player!");
+			Util.sendColoredMessage(sender, prefix() + " &cCommand sender must be a player!");
 			return;
 		}
 
@@ -159,7 +161,7 @@ public class Commands implements CommandExecutor {
 			return;
 		}
 
-		if(plugin.isAirOrNull(player.getInventory().getItemInMainHand())) {
+		if(Util.isAirOrNull(player.getInventory().getItemInMainHand())) {
 			notHoldingItem(sender);
 			return;
 		}
@@ -171,7 +173,7 @@ public class Commands implements CommandExecutor {
 			return;
 		}
 
-		if(plugin.isInteger(args[2])) editAmount = Integer.parseInt(args[2]);
+		if(Util.isInteger(args[2])) editAmount = Integer.parseInt(args[2]);
 		else {
 			invalidArgument(sender, args[2]);
 			return;
@@ -239,7 +241,7 @@ public class Commands implements CommandExecutor {
 			return;
 		}
 
-		if (plugin.isInteger(args[4])) giveAmount = Integer.parseInt(args[4]);
+		if (Util.isInteger(args[4])) giveAmount = Integer.parseInt(args[4]);
 		else {
 			invalidArgument(sender, args[4]);
 			return;
@@ -328,12 +330,19 @@ public class Commands implements CommandExecutor {
 		else editItemMessage(p, item);
 	}
 
+	private void reloadConfig(CommandSender s) {
+		plugin.registerConfig();
+		plugin.getServer().resetRecipes();
+		new RecipeHandler(plugin);
+		Util.sendColoredMessage(s, prefix() + " &aSuccessfully reloaded config!");
+	}
+
 	private void giveItem(CommandSender sender, Player target, ArmorType armorType, SlotType slotType) {
 		PlayerInventory inventory = target.getInventory();
 
 		CustomArmor item = armorFromType(armorType, slotType);
 
-		plugin.addItem(inventory, target, item.getItem(), 1);
+		Util.addItem(inventory, target, item.getItem(), 1);
 		giveMessage(sender, target, item.getItem(), 1);
 	}
 
@@ -342,56 +351,56 @@ public class Commands implements CommandExecutor {
 
 		CustomMaterial item = materialFromType(materialType);
 
-		for(int i = 0; i < amount / 64; i++) plugin.addItem(inventory, target, item.getItem(), 64);
-		plugin.addItem(inventory, target, item.getItem(), amount % 64);
+		for(int i = 0; i < amount / 64; i++) Util.addItem(inventory, target, item.getItem(), 64);
+		Util.addItem(inventory, target, item.getItem(), amount % 64);
 
 		giveMessage(sender, target, item.getItem(), amount);
 	}
 
 	private void giveMessage(CommandSender sender, Player target, ItemStack item, int amount) {
-		target.sendMessage(MoreArmorsMain.colorString(String.format("&e(&6MoreArmors&e) Received %dx %s&e.", amount, item.getItemMeta().getDisplayName())));
-		sender.sendMessage(MoreArmorsMain.colorString(String.format("&e(&6MoreArmors&e) Gave %s %dx %s&e.", target.getName(), amount, item.getItemMeta().getDisplayName())));
+		target.sendMessage(Util.colorString(String.format("&e(&6MoreArmors&e) Received %dx %s&e.", amount, item.getItemMeta().getDisplayName())));
+		sender.sendMessage(Util.colorString(String.format("&e(&6MoreArmors&e) Gave %s %dx %s&e.", target.getName(), amount, item.getItemMeta().getDisplayName())));
 	}
 
 	public String prefix() {
-		return MoreArmorsMain.colorString("&e(&6MoreArmors&e)");
+		return Util.colorString("&e(&6MoreArmors&e)");
 	}
 
 	private void listCommandOptions(CommandSender sender, List<String> list) {
-		plugin.sendColoredMessage(sender, prefix() + " &6Command Options:");
+		Util.sendColoredMessage(sender, prefix() + " &6Command Options:");
 		for(String s : list) {
-			if(!s.equals("invalid")) plugin.sendColoredMessage(sender, "&6> &e" + s);
+			if(!s.equals("invalid")) Util.sendColoredMessage(sender, "&6> &e" + s);
 		}
 	}
 
 	private void tooManyArguments(CommandSender sender) {
-		plugin.sendColoredMessage(sender, prefix() + " &cToo many arguments! Do /morearmors help for help.");
+		Util.sendColoredMessage(sender, prefix() + " &cToo many arguments! Do /morearmors help for help.");
 	}
 
 	private void invalidArgument(CommandSender sender, String argument) {
-		plugin.sendColoredMessage(sender, prefix() + " &cInvalid argument " + argument + ".");
+		Util.sendColoredMessage(sender, prefix() + " &cInvalid argument " + argument + ".");
 	}
 
 	private void noPermission(CommandSender sender) {
-		plugin.sendColoredMessage(sender, prefix() + " &cYou do not have permission to do this!");
+		Util.sendColoredMessage(sender, prefix() + " &cYou do not have permission to do this!");
 	}
 
 	private void pluginInfoMessage(CommandSender sender) {
-		plugin.sendColoredMessage(sender, "");
-		plugin.sendColoredMessage(sender, prefix() + " &eRunning &6" + plugin.getName() + " " + plugin.getDescription().getVersion() + " &ecreated by &6OffsetPaladin89&e.");
-		plugin.sendColoredMessage(sender, "&6> &eOfficial Site: &6https://dev.bukkit.org/projects/MoreArmors");
+		Util.sendColoredMessage(sender, "");
+		Util.sendColoredMessage(sender, prefix() + " &eRunning &6" + plugin.getName() + " " + plugin.getDescription().getVersion() + " &ecreated by &6OffsetPaladin89&e.");
+		Util.sendColoredMessage(sender, "&6> &eOfficial Site: &6https://dev.bukkit.org/projects/MoreArmors");
 	}
 
 	private void notHoldingItem(CommandSender s) {
-		plugin.sendColoredMessage(s, prefix() + " &cYou are not holding a valid item!");
+		Util.sendColoredMessage(s, prefix() + " &cYou are not holding a valid item!");
 	}
 
 	private void editItemMessage(Player target, ItemStack item) {
-		plugin.sendColoredMessage(target, String.format("%s &eEdited %s&e.", prefix(), item.getItemMeta().getDisplayName()));
+		Util.sendColoredMessage(target, String.format("%s &eEdited %s&e.", prefix(), item.getItemMeta().getDisplayName()));
 	}
 
 	private void resetItemMessage(Player target, ItemStack item) {
-		plugin.sendColoredMessage(target, String.format("%s &eReset %s&e.", prefix(), item.getItemMeta().getDisplayName()));
+		Util.sendColoredMessage(target, String.format("%s &eReset %s&e.", prefix(), item.getItemMeta().getDisplayName()));
 	}
 }
 

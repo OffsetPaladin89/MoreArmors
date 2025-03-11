@@ -10,6 +10,7 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
+import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
@@ -22,13 +23,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-import static me.offsetpaladin89.MoreArmors.MoreArmorsMain.colorString;
-import static me.offsetpaladin89.MoreArmors.MoreArmorsMain.modifySkullSkin;
-
 public record InventoryHandler(MoreArmorsMain plugin) {
 
     public void viewRecipes(HumanEntity humanEntity) {
-        ChestGui gui = new ChestGui(6, colorString("&8MoreArmors Recipes"));
+        ChestGui gui = new ChestGui(6, Util.colorString("&8MoreArmors Recipes"));
 
         gui.setOnGlobalClick(event -> event.setCancelled(true));
 
@@ -61,7 +59,7 @@ public record InventoryHandler(MoreArmorsMain plugin) {
 
             result.setAmount(1);
 
-            if(plugin.isAirOrNull(result)) continue;
+            if(Util.isAirOrNull(result)) continue;
 
             NBT.get(result, nbt -> {
                 ArmorType armorID = nbt.getEnum("ArmorID", ArmorType.class);
@@ -84,7 +82,7 @@ public record InventoryHandler(MoreArmorsMain plugin) {
     }
 
     private void getRecipeGUI(ShapedRecipe recipe, HumanEntity humanEntity) {
-        ChestGui gui = new ChestGui(6, colorString(recipe.getResult().getItemMeta().getDisplayName() + " &8Recipe"));
+        ChestGui gui = new ChestGui(6, Util.colorString(recipe.getResult().getItemMeta().getDisplayName() + " &8Recipe"));
 
         gui.setOnGlobalClick(event -> event.setCancelled(true));
 
@@ -95,7 +93,7 @@ public record InventoryHandler(MoreArmorsMain plugin) {
         int i = 0;
         for(ItemStack item : recipe.getIngredientMap().values()) {
             GuiItem guiItem;
-            if(plugin.isAirOrNull(item)) guiItem = new GuiItem(new ItemStack(Material.AIR));
+            if(Util.isAirOrNull(item)) guiItem = new GuiItem(new ItemStack(Material.AIR));
             else guiItem = new GuiItem(item);
 
             pane.addItem(guiItem, Slot.fromXY(1 + i % 3, 1 + i / 3));
@@ -115,24 +113,24 @@ public record InventoryHandler(MoreArmorsMain plugin) {
 
     private void setBlackRightArrow(ItemStack item) {
         UUID SKULL_UUID = UUID.nameUUIDFromBytes("BLACK_RIGHT_ARROW".getBytes());
-        modifySkullSkin(item, "682ad1b9cb4dd21259c0d75aa315ff389c3cef752be3949338164bac84a96e", SKULL_UUID);
+        Util.modifySkullSkin(item, "682ad1b9cb4dd21259c0d75aa315ff389c3cef752be3949338164bac84a96e", SKULL_UUID);
     }
 
     private void setBlackLeftArrow(ItemStack item) {
         UUID SKULL_UUID = UUID.nameUUIDFromBytes("BLACK_LEFT_ARROW".getBytes());
-        modifySkullSkin(item, "37aee9a75bf0df7897183015cca0b2a7d755c63388ff01752d5f4419fc645", SKULL_UUID);
+        Util.modifySkullSkin(item, "37aee9a75bf0df7897183015cca0b2a7d755c63388ff01752d5f4419fc645", SKULL_UUID);
     }
 
     private void setLimeRightArrow(ItemStack item) {
         UUID SKULL_UUID = UUID.nameUUIDFromBytes("LIME_RIGHT_ARROW".getBytes());
-        modifySkullSkin(item, "4ef356ad2aa7b1678aecb88290e5fa5a3427e5e456ff42fb515690c67517b8", SKULL_UUID);
+        Util.modifySkullSkin(item, "4ef356ad2aa7b1678aecb88290e5fa5a3427e5e456ff42fb515690c67517b8", SKULL_UUID);
     }
 
     private GuiItem getResultItem() {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         ItemMeta itemMeta = item.getItemMeta();
 
-        itemMeta.setDisplayName(colorString("&aResult"));
+        itemMeta.setDisplayName(Util.colorString("&aResult"));
         item.setItemMeta(itemMeta);
 
         setLimeRightArrow(item);
@@ -144,7 +142,7 @@ public record InventoryHandler(MoreArmorsMain plugin) {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         ItemMeta itemMeta = item.getItemMeta();
 
-        itemMeta.setDisplayName(colorString("&cBack"));
+        itemMeta.setDisplayName(Util.colorString("&cBack"));
         item.setItemMeta(itemMeta);
 
         setBlackLeftArrow(item);
@@ -156,7 +154,7 @@ public record InventoryHandler(MoreArmorsMain plugin) {
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta itemMeta = item.getItemMeta();
 
-        itemMeta.setDisplayName(colorString("&cClose"));
+        itemMeta.setDisplayName(Util.colorString("&cClose"));
         item.setItemMeta(itemMeta);
         return new GuiItem(item, event -> event.getWhoClicked().closeInventory());
     }
@@ -175,7 +173,7 @@ public record InventoryHandler(MoreArmorsMain plugin) {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         ItemMeta itemMeta = item.getItemMeta();
 
-        itemMeta.setDisplayName(colorString("&ePrevious Page"));
+        itemMeta.setDisplayName(Util.colorString("&ePrevious Page"));
         item.setItemMeta(itemMeta);
 
         setBlackLeftArrow(item);
@@ -187,7 +185,7 @@ public record InventoryHandler(MoreArmorsMain plugin) {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         ItemMeta itemMeta = item.getItemMeta();
 
-        itemMeta.setDisplayName(colorString("&eNext Page"));
+        itemMeta.setDisplayName(Util.colorString("&eNext Page"));
         item.setItemMeta(itemMeta);
 
         setBlackRightArrow(item);

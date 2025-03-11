@@ -3,6 +3,7 @@ package me.offsetpaladin89.MoreArmors.materials;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
+import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.Material;
 
 import java.util.UUID;
@@ -24,6 +25,6 @@ public class NetherCrown extends CustomMaterial {
     }
 
     private void assignSkull() {
-        MoreArmorsMain.modifySkullSkin(item, "3e4f49535a276aacc4dc84133bfe81be5f2a4799a4c04d9a4ddb72d819ec2b2b", SKULL_UUID);
+        Util.modifySkullSkin(item, "3e4f49535a276aacc4dc84133bfe81be5f2a4799a4c04d9a4ddb72d819ec2b2b", SKULL_UUID);
     }
 }
