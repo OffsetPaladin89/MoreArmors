@@ -17,7 +17,7 @@ public enum ItemType {
         }
     }
 
-    public static CustomItem itemFromType(ItemType type, SlotType slot) {
+    public static CustomItem itemFromType(ItemType type) {
         return switch(type) {
             case TIER_UPGRADER -> new TierUpgraderItem();
             case INVALID -> null;

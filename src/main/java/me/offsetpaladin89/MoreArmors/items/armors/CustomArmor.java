@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -18,6 +19,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.UUID;
+
+import static me.offsetpaladin89.MoreArmors.BaseSkillTree.getBaseSkillTree;
 
 public class CustomArmor extends CustomItem {
 
@@ -28,7 +31,7 @@ public class CustomArmor extends CustomItem {
 
     protected ListMultimap<Attribute, AttributeModifier> attributeModifiers = ArrayListMultimap.create();
 
-    CustomArmor(ItemStack item) {
+    public CustomArmor(ItemStack item) {
         this.item = item;
     }
 

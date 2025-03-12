@@ -4,6 +4,7 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
+import me.offsetpaladin89.MoreArmors.enums.ItemType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -71,7 +72,8 @@ public record Util(MoreArmorsMain plugin) {
     public static boolean isCustomItem(ItemStack item) {
         boolean isMaterial = NBT.get(item, nbt -> nbt.getEnum("MaterialID", MaterialType.class) != null);
         boolean isArmor = NBT.get(item, nbt -> nbt.getEnum("ArmorID", ArmorType.class) != null);
-        return isMaterial || isArmor;
+        boolean isItem = NBT.get(item, nbt -> nbt.getEnum("ItemID", ItemType.class) != null);
+        return isMaterial || isArmor || isItem;
     }
 
     public static boolean matchingCustomItem(ItemStack item, ArmorType itemID) {

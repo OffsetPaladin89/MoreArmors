@@ -1,6 +1,9 @@
 package me.offsetpaladin89.MoreArmors.items.armors;
 
+import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import de.tr7zw.changeme.nbtapi.NBT;
+import me.offsetpaladin89.MoreArmors.BaseSkillTree;
+import me.offsetpaladin89.MoreArmors.DestroyerSkillTree;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
@@ -8,9 +11,11 @@ import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import static me.offsetpaladin89.MoreArmors.BaseSkillTree.getBaseSkillTree;
 import static me.offsetpaladin89.MoreArmors.enums.SlotType.HELMET;
 
 public class DestroyerArmor extends CustomArmor {
@@ -169,6 +174,13 @@ public class DestroyerArmor extends CustomArmor {
             nbt.setInteger("KillCount", killCount);
             nbt.setInteger("DamageBonus", damageBonus);
         });
+    }
+
+    public static void openSkillTree(HumanEntity p) {
+        GuiItem[] minorNodes, majorNodes;
+        GuiItem mainNode;
+        BaseSkillTree skillTree = new BaseSkillTree(minorNodes, majorNodes, mainNode);
+        skillTree.getBaseSkillTree().show(p);
     }
 
     private void assignSkull(ItemStack item) {

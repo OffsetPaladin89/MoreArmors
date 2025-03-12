@@ -8,6 +8,7 @@ import me.offsetpaladin89.MoreArmors.items.armors.EmeraldArmor;
 import me.offsetpaladin89.MoreArmors.enums.*;
 import me.offsetpaladin89.MoreArmors.handlers.RecipeHandler;
 import me.offsetpaladin89.MoreArmors.items.materials.CustomMaterial;
+import me.offsetpaladin89.MoreArmors.items.misc.CustomItem;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,6 +27,7 @@ import static me.offsetpaladin89.MoreArmors.enums.CommandType.commandType;
 import static me.offsetpaladin89.MoreArmors.enums.EditType.*;
 import static me.offsetpaladin89.MoreArmors.enums.GiveType.allGiveTypes;
 import static me.offsetpaladin89.MoreArmors.enums.GiveType.giveType;
+import static me.offsetpaladin89.MoreArmors.enums.ItemType.*;
 import static me.offsetpaladin89.MoreArmors.enums.MaterialType.*;
 import static me.offsetpaladin89.MoreArmors.enums.SlotType.allSlotTypes;
 import static me.offsetpaladin89.MoreArmors.enums.SlotType.slotType;
@@ -267,6 +269,40 @@ public class Commands implements CommandExecutor {
 		tooManyArguments(sender);
 	}
 
+	private void giveItemCommand(CommandSender sender, String[] args, Player player) {
+		ItemType itemType;
+		int giveAmount;
+
+		if (args.length == 3) {
+			listCommandOptions(sender, allItemTypes());
+			return;
+		}
+
+		itemType = itemType(args[3]);
+		if(itemType == ItemType.INVALID){
+			invalidArgument(sender, args[3]);
+			return;
+		}
+
+		if (args.length == 4) {
+			giveItem(sender, player, itemType, 1);
+			return;
+		}
+
+		if (Util.isInteger(args[4])) giveAmount = Integer.parseInt(args[4]);
+		else {
+			invalidArgument(sender, args[4]);
+			return;
+		}
+
+		if (args.length == 5) {
+			giveItem(sender, player, itemType, giveAmount);
+			return;
+		}
+
+		tooManyArguments(sender);
+	}
+
 	private void giveCommand(CommandSender sender, String[] args) {
 		Player player;
 		GiveType giveType;
@@ -292,6 +328,7 @@ public class Commands implements CommandExecutor {
 		switch (giveType) {
 			case ARMOR -> giveArmorCommand(sender, args, player);
 			case MATERIAL -> giveMaterialCommand(sender, args, player);
+			case ITEM -> giveItemCommand(sender, args, player);
 			case INVALID -> invalidArgument(sender, args[2]);
 		}
 	}
@@ -347,6 +384,17 @@ public class Commands implements CommandExecutor {
 		plugin.getServer().resetRecipes();
 		new RecipeHandler(plugin);
 		Util.sendColoredMessage(s, prefix() + " &aSuccessfully reloaded config!");
+	}
+
+	private void giveItem(CommandSender sender, Player target, ItemType itemType, int amount) {
+		PlayerInventory inventory = target.getInventory();
+
+		CustomItem item = itemFromType(itemType);
+
+		for(int i = 0; i < amount / 64; i++) Util.addItem(inventory, target, item.getItem(), 64);
+		Util.addItem(inventory, target, item.getItem(), amount % 64);
+
+		giveMessage(sender, target, item.getItem(), amount);
 	}
 
 	private void giveItem(CommandSender sender, Player target, ArmorType armorType, SlotType slotType) {

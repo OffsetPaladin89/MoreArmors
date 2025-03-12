@@ -4,8 +4,12 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.enums.ItemType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
+import me.offsetpaladin89.MoreArmors.utils.Util;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class TierUpgraderItem extends CustomItem {
@@ -17,6 +21,7 @@ public class TierUpgraderItem extends CustomItem {
 
     public TierUpgraderItem() {
         super(BASE_RARITY, DEFAULT_NAME);
+        this.item = getBaseItem();
 
         createItem();
     }
@@ -37,6 +42,14 @@ public class TierUpgraderItem extends CustomItem {
         baseNBT();
     }
 
+    private ItemStack getBaseItem() {
+        return new ItemStack(Material.EMERALD);
+    }
+
+    protected String getFormattedName(String displayName) {
+        return Util.colorString(String.format("%s%s &b", rarity.color, displayName));
+    }
+
     private void addGlowing() {
         ItemMeta itemMeta = item.getItemMeta();
 
@@ -50,10 +63,10 @@ public class TierUpgraderItem extends CustomItem {
         ItemMeta itemMeta = item.getItemMeta();
 
         Lore lore = new Lore();
-        lore.addColoredLine("&7Allows upgrading armors from &6MoreArmors");
-        lore.addColoredLine("&7up to &b(+35)&7, granting &a+1 Skill Point");
-        lore.addColoredLine("&7every 5 tiers.");
-        lore.addMaterialRarity(rarity);
+        lore.addColoredLine("&7Allows upgrading armors from");
+        lore.addColoredLine("&6MoreArmors &7up to &b(+35)&7, granting");
+        lore.addColoredLine("&a+1 Skill Point &7every 5 tiers.");
+        lore.addItemRarity(rarity);
 
         itemMeta.setLore(lore.getLore());
 

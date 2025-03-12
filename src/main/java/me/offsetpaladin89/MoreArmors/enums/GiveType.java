@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum GiveType {
-    ARMOR, MATERIAL, INVALID;
+    ARMOR, MATERIAL, ITEM, INVALID;
 
     public static GiveType giveType(String s) {
         try {

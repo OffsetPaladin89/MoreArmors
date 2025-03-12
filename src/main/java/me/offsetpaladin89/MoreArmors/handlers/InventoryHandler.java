@@ -150,7 +150,7 @@ public record InventoryHandler(MoreArmorsMain plugin) {
         return new GuiItem(item, event -> viewRecipes(event.getWhoClicked()));
     }
 
-    private GuiItem getExitItem() {
+    public static GuiItem getExitItem() {
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta itemMeta = item.getItemMeta();
 
@@ -159,7 +159,7 @@ public record InventoryHandler(MoreArmorsMain plugin) {
         return new GuiItem(item, event -> event.getWhoClicked().closeInventory());
     }
 
-    private ItemStack getEmptyPane() {
+    public static ItemStack getEmptyPane() {
         ItemStack item = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta itemMeta = item.getItemMeta();
 

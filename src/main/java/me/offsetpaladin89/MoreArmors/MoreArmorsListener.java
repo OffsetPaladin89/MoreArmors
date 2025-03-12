@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
+import static me.offsetpaladin89.MoreArmors.items.armors.CustomArmor.openSkillTree;
+
 public class MoreArmorsListener implements Listener {
 
 	private final MoreArmorsMain plugin;
@@ -189,8 +191,10 @@ public class MoreArmorsListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player p = event.getPlayer();
 		PlayerInventory inv = p.getInventory();
+		Action a = event.getAction();
 		materialInteract(event, inv);
-		endArmorInteract(p, event.getAction());
+		armorInteract(event);
+		endArmorInteract(p, a);
 	}
 	private void materialInteract(PlayerInteractEvent event, PlayerInventory inv) {
 		if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) return;
@@ -199,6 +203,15 @@ public class MoreArmorsListener implements Listener {
 		MaterialType type = NBT.get(item, nbt -> (MaterialType) nbt.getEnum("MaterialID", MaterialType.class));
 		if(type == null || type.equals(MaterialType.EYE_OF_ENDER)) return;
 		event.setCancelled(true);
+	}
+	private void armorInteract(PlayerInteractEvent event) {
+		if(!(event.getAction().equals(Action.LEFT_CLICK_AIR) || event.getAction().equals(Action.LEFT_CLICK_BLOCK))) return;
+		ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
+		if(Util.isAirOrNull(item)) return;
+		ArmorType type = NBT.get(item, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class));
+		if(type == null) return;
+		event.setCancelled(true);
+		openSkillTree(event.getPlayer());
 	}
 	private void endArmorInteract(Player p, Action a) {
 		PlayerInventory inv = p.getInventory();

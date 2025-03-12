@@ -2,6 +2,7 @@ package me.offsetpaladin89.MoreArmors.commands;
 
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
+import me.offsetpaladin89.MoreArmors.enums.ItemType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import org.bukkit.command.Command;
@@ -40,11 +41,13 @@ public class CommandCompleter implements TabCompleter {
 			if (args.length == 3) {
 				arguments.add("armor");
 				arguments.add("material");
+				arguments.add("item");
 			}
 
 			if(args.length == 4) {
 				if (args[2].equalsIgnoreCase("armor")) arguments.addAll(ArmorType.allArmorTypes());
 				else if(args[2].equalsIgnoreCase("material")) arguments.addAll(MaterialType.allMaterialTypes());
+				else if(args[2].equalsIgnoreCase("item")) arguments.addAll(ItemType.allItemTypes());
 			}
 
 			if(args.length == 5) {
