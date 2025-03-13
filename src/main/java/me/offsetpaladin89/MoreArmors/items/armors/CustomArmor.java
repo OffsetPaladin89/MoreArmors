@@ -1,10 +1,13 @@
 package me.offsetpaladin89.MoreArmors.items.armors;
 
+import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import de.tr7zw.changeme.nbtapi.NBT;
-import me.offsetpaladin89.MoreArmors.SkillTreeNode;
+import me.offsetpaladin89.MoreArmors.utils.skilltree.SkillTree;
+import me.offsetpaladin89.MoreArmors.utils.skilltree.SkillTreeNode;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
+import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.items.misc.CustomItem;
 import org.bukkit.Color;
@@ -28,7 +31,6 @@ public class CustomArmor extends CustomItem {
     protected int armorToughness = 0;
     protected SlotType slot;
     protected ArmorType armorID;
-    protected int availableSkillPoints;
 
     protected ListMultimap<Attribute, AttributeModifier> attributeModifiers = ArrayListMultimap.create();
 
@@ -38,26 +40,52 @@ public class CustomArmor extends CustomItem {
 
     CustomArmor(SlotType slot) {
         this.slot = slot;
-    }
+        item = getBaseItem();
+        rarity = getRarity();
+        displayName = getFormattedName(getDefaultName());
+        armor = getDefaultArmor();
+        armorToughness = getDefaultArmorToughness();
 
-    public void createItem() {
-        ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.setDisplayName(displayName);
-        item.setItemMeta(itemMeta);
-
-        updateItem();
+        createItem(true);
     }
 
     public void setTier(int tier) {
         this.tier = tier;
     }
 
-    public void increaseTier() {
-        tier++;
+    // Armor Creation
+
+    protected void createItem(boolean resetPersistent) {
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName(displayName);
+        item.setItemMeta(itemMeta);
+
+        updateItem(resetPersistent);
     }
 
-    public void updateItem() {
+    protected void updateItem(boolean resetPersistent) {
+        armorID = getArmorID();
 
+        setDisplayName();
+        setTextures();
+        setLore();
+
+        setFlags();
+
+        baseAttributes();
+        armorAttributes();
+        setAttributes();
+
+        baseNBT(resetPersistent);
+        armorNBT();
+    }
+
+    protected void setDisplayName() {
+        displayName = getFormattedName(getDefaultName());
+
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName(displayName);
+        item.setItemMeta(itemMeta);
     }
 
     protected void setFlags() {
@@ -85,93 +113,80 @@ public class CustomArmor extends CustomItem {
         attributeModifiers.put(Attribute.ARMOR_TOUGHNESS, armorToughnessAttribute);
     }
 
-    protected NamespacedKey pluginKey() {
-        return new NamespacedKey("morearmors", String.format("%s_%s", armorID, slot).toLowerCase());
-    }
-
     protected void setAttributes() {
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setAttributeModifiers(attributeModifiers);
         item.setItemMeta(itemMeta);
     }
 
-    protected ArrayList<SkillTreeNode> baseMinorNodes() {
-        ArrayList<SkillTreeNode> nodes = new ArrayList<>();
-        nodes.add(new SkillTreeNode(0, availableSkillPoints > 0, isNodeUnlocked(0)));
-        nodes.add(new SkillTreeNode(2, canAccess(3), isNodeUnlocked(2)));
-        nodes.add(new SkillTreeNode(4, canAccess(3), isNodeUnlocked(4)));
-        nodes.add(new SkillTreeNode(6, canAccess(1), isNodeUnlocked(6)));
-        nodes.add(new SkillTreeNode(7, canAccess(5), isNodeUnlocked(7)));
-        nodes.add(new SkillTreeNode(11, canAccess(8), isNodeUnlocked(11)));
-        nodes.add(new SkillTreeNode(14, canAccess(10), isNodeUnlocked(14)));
-
-        return nodes;
-    }
-
-    protected ArrayList<SkillTreeNode> baseMajorNodes() {
-        ArrayList<SkillTreeNode> nodes = new ArrayList<>();
-        nodes.add(new SkillTreeNode(1, canAccess(2), isNodeUnlocked(1)));
-        nodes.add(new SkillTreeNode(3, canAccess(0), isNodeUnlocked(3)));
-        nodes.add(new SkillTreeNode(5, canAccess(4), isNodeUnlocked(5)));
-        nodes.add(new SkillTreeNode(8, canAccess(6), isNodeUnlocked(8)));
-        nodes.add(new SkillTreeNode(10, canAccess(7), isNodeUnlocked(10)));
-        nodes.add(new SkillTreeNode(12, canAccess(11), isNodeUnlocked(12)));
-        nodes.add(new SkillTreeNode(13, canAccess(14), isNodeUnlocked(13)));
-
-        return nodes;
-    }
-
-    protected SkillTreeNode baseMainNode() {
-        return new SkillTreeNode(9, availableSkillPoints > 1 && (isNodeUnlocked(12) || isNodeUnlocked(13)), isNodeUnlocked(9));
-    }
-
-    private boolean canAccess(int key) {
-        return availableSkillPoints > 0 && isNodeUnlocked(key);
-    }
-
-    protected void getAvailableSkillPoints() {
-        int unlockedNodes = 0;
-        for(int n = 0; n < 15; n++) {
-            if(isNodeUnlocked(n)) {
-                unlockedNodes++;
-                if(n == 9) unlockedNodes++;
+    protected void baseNBT(boolean resetPersistent) {
+        NBT.modify(item, nbt -> {
+            nbt.setEnum("Rarity", rarity);
+            nbt.setInteger("Tier", tier);
+            nbt.setInteger("Armor", armor);
+            nbt.setInteger("ArmorToughness", armorToughness);
+            if(resetPersistent) {
+                nbt.resolveOrCreateCompound("SkillTree.SkillTreeNodes");
+                for (int n = 0; n < 15; n++) nbt.resolveOrCreateCompound("SkillTree.SkillTreeNodes").setBoolean("Node" + n, false);
+                if(item.getType().equals(Material.PLAYER_HEAD)) nbt.setUUID("UUID", UUID.randomUUID());
+                nbt.setEnum("ArmorID", armorID);
             }
+            nbt.resolveOrCreateCompound("SkillTree").setInteger("SkillPoints", tier > 50 ? 10 : tier / 5);
+        });
+    }
+
+    protected NamespacedKey pluginKey() {
+        return new NamespacedKey("morearmors", String.format("%s_%s", armorID, slot).toLowerCase());
+    }
+
+    // Skill Tree
+
+    protected ArrayList<GuiItem> nodes() {
+        ArrayList<GuiItem> nodes = new ArrayList<>();
+        SkillTree skillTree = new SkillTree(item);
+        for(SkillTreeNode node : skillTree.baseNodes()) {
+            node.setDescription(getDescription(node));
+            node.setDisplayName(getDisplayName(node));
+            nodes.add(node.getItem());
         }
 
-        availableSkillPoints = NBT.get(item, nbt -> (int) nbt.resolveOrDefault("SkillTree.SkillPoints", 0)) - unlockedNodes;
+        return nodes;
     }
 
-    protected boolean isNodeUnlocked(int key) {
-        return NBT.get(item, nbt -> (boolean) nbt.resolveOrDefault("SkillTree.SkillTreeNodes.Node" + key, false));
-    }
+    // Overridden Methods
 
-    protected void baseNBT() {
-        NBT.modify(item, nbt -> {
-            nbt.setEnum("Rarity", rarity);
-            nbt.setInteger("Tier", tier);
-            nbt.setInteger("Armor", armor);
-            nbt.setInteger("ArmorToughness", armorToughness);
-            nbt.resolveOrCreateCompound("SkillTree.SkillTreeNodes");
-            for(int n = 0; n < 15; n++) nbt.resolveOrCreateCompound("SkillTree.SkillTreeNodes").setBoolean("Node" + n, false);
-            nbt.resolveOrCreateCompound("SkillTree").setInteger("SkillPoints", tier > 50 ? 10 : tier / 5);
-            if(item.getType().equals(Material.PLAYER_HEAD)) nbt.setUUID("UUID", UUID.randomUUID());
-            nbt.setEnum("ArmorID", armorID);
-        });
+    protected ItemStack getBaseItem() {
+        return null;
     }
-
-    protected void updateNBT() {
-        NBT.modify(item, nbt -> {
-            nbt.setEnum("Rarity", rarity);
-            nbt.setInteger("Tier", tier);
-            nbt.setInteger("Armor", armor);
-            nbt.setInteger("ArmorToughness", armorToughness);
-            nbt.resolveOrCreateCompound("SkillTree").setInteger("SkillPoints", tier > 50 ? 10 : tier / 5);
-        });
+    protected Rarity getRarity() {
+        return Rarity.DEVELOPER;
     }
-
+    protected int getDefaultArmor() {
+        return 0;
+    }
+    protected int getDefaultArmorToughness() {
+        return 0;
+    }
+    protected void armorAttributes(){
+    }
+    protected void armorNBT() {
+    }
+    protected void setTextures() {
+    }
+    protected void setLore() {
+    }
+    protected ArmorType getArmorID() { return ArmorType.INVALID; }
+    protected String getDefaultName() {
+        return null;
+    }
+    protected ArrayList<String> getDescription(SkillTreeNode node) {
+        return null;
+    }
+    protected String getDisplayName(SkillTreeNode node) {
+        return null;
+    }
     public void openSkillTree(HumanEntity player) {
     }
-
     public void createItemFromNBT() {
     }
 }

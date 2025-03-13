@@ -1,9 +1,8 @@
 package me.offsetpaladin89.MoreArmors.items.armors;
 
-import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import de.tr7zw.changeme.nbtapi.NBT;
-import me.offsetpaladin89.MoreArmors.BaseSkillTree;
-import me.offsetpaladin89.MoreArmors.SkillTreeNode;
+import me.offsetpaladin89.MoreArmors.utils.skilltree.BaseSkillTree;
+import me.offsetpaladin89.MoreArmors.utils.skilltree.SkillTreeNode;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
@@ -12,7 +11,6 @@ import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -22,14 +20,13 @@ import static me.offsetpaladin89.MoreArmors.enums.SlotType.HELMET;
 
 public class DestroyerArmor extends CustomArmor {
 
-    private int killCount = 0;
-    private int damageBonus = 0;
-
     private static final Color LEATHER_COLOR = Color.fromRGB(228, 232, 235);
     private static final Rarity BASE_RARITY = Rarity.DIVINE;
-
     private static final int UPGRADE_THRESHOLD = 100;
     private static final int MAX_KILL_COUNT = 1000;
+
+    private int killCount = 0;
+    private int damageBonus = 0;
 
     public DestroyerArmor(ItemStack item) {
         super(item);
@@ -37,17 +34,50 @@ public class DestroyerArmor extends CustomArmor {
 
     public DestroyerArmor(SlotType slot) {
         super(slot);
-        item = getBaseItem();
-        rarity = Rarity.getRarity(BASE_RARITY, tier);
-        displayName = getFormattedName(getDefaultName());
-        armor = getDefaultArmor();
-        armorToughness = getDefaultArmorToughness();
-
-        createItem();
-        baseNBT();
     }
 
-    private void setLore() {
+    public void setKillCount(int killCount) {
+        this.killCount = killCount;
+    }
+
+    public void increaseKillCount(int killCount) {
+        if(this.killCount == Integer.MAX_VALUE) return;
+        this.killCount += killCount;
+    }
+
+    public void createItemFromNBT() {
+        NBT.get(item, nbt -> {
+            rarity = nbt.getEnum("Rarity", Rarity.class);
+            armor = nbt.getInteger("Armor");
+            armorToughness = nbt.getInteger("ArmorToughness");
+            killCount = nbt.getInteger("KillCount");
+            armorID = nbt.getEnum("ArmorID", ArmorType.class);
+        });
+
+        slot = SlotType.matchType(item);
+        displayName = getFormattedName(getDefaultName());
+    }
+
+    public void openSkillTree(HumanEntity p) {
+        BaseSkillTree skillTree = new BaseSkillTree(nodes());
+        skillTree.getBaseSkillTree().show(p);
+    }
+
+    private void updateDamage() {
+        if(killCount >= 1000) damageBonus = 10;
+        else damageBonus = killCount / UPGRADE_THRESHOLD;
+    }
+
+    @Override
+    protected ArmorType getArmorID() {
+        return ArmorType.DESTROYER;
+    }
+    @Override
+    protected Rarity getRarity() {
+        return Rarity.getRarity(BASE_RARITY, tier);
+    }
+    @Override
+    protected void setLore() {
         updateDamage();
         int currentStage = killCount / UPGRADE_THRESHOLD;
         int nextBonus = damageBonus + 1;
@@ -97,38 +127,8 @@ public class DestroyerArmor extends CustomArmor {
 
         item.setItemMeta(itemMeta);
     }
-
-    public void updateItem() {
-        displayName = getFormattedName(getDefaultName());
-
-        ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.setDisplayName(displayName);
-        item.setItemMeta(itemMeta);
-
-        armorID = ArmorType.DESTROYER;
-        if (slot.equals(HELMET)) assignSkull(item);
-        else setLeatherColor(LEATHER_COLOR);
-        setLore();
-
-        setFlags();
-
-        baseAttributes();
-        setAttributes();
-
-        updateNBT();
-        addNBT();
-    }
-
-    public void setKillCount(int killCount) {
-        this.killCount = killCount;
-    }
-
-    public void increaseKillCount(int killCount) {
-        if(this.killCount == Integer.MAX_VALUE) return;
-        this.killCount += killCount;
-    }
-
-    private int getDefaultArmor() {
+    @Override
+    protected int getDefaultArmor() {
         return switch (slot) {
             case HELMET, BOOTS -> 3;
             case CHESTPLATE -> 8;
@@ -136,15 +136,15 @@ public class DestroyerArmor extends CustomArmor {
             default -> 0;
         };
     }
-
-    private int getDefaultArmorToughness() {
+    @Override
+    protected int getDefaultArmorToughness() {
         return switch (slot) {
             case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> 2;
             default -> 0;
         };
     }
-
-    private String getDefaultName() {
+    @Override
+    protected String getDefaultName() {
         return switch (slot) {
             case HELMET -> "Destroyer Helmet";
             case CHESTPLATE -> "Destroyer Chestplate";
@@ -153,21 +153,8 @@ public class DestroyerArmor extends CustomArmor {
             default -> null;
         };
     }
-
-    public void createItemFromNBT() {
-        NBT.get(item, nbt -> {
-            rarity = nbt.getEnum("Rarity", Rarity.class);
-            armor = nbt.getInteger("Armor");
-            armorToughness = nbt.getInteger("ArmorToughness");
-            killCount = nbt.getInteger("KillCount");
-            armorID = nbt.getEnum("ArmorID", ArmorType.class);
-        });
-
-        slot = SlotType.matchType(item);
-        displayName = getFormattedName(getDefaultName());
-    }
-
-    private ItemStack getBaseItem() {
+    @Override
+    protected ItemStack getBaseItem() {
         return switch (slot) {
             case HELMET -> new ItemStack(Material.PLAYER_HEAD);
             case CHESTPLATE -> new ItemStack(Material.LEATHER_CHESTPLATE);
@@ -176,15 +163,15 @@ public class DestroyerArmor extends CustomArmor {
             default -> null;
         };
     }
-
-    private void addNBT() {
+    @Override
+    protected void armorNBT() {
         NBT.modify(item, nbt -> {
             nbt.setInteger("KillCount", killCount);
             nbt.setInteger("DamageBonus", damageBonus);
         });
     }
-
-    private String getDisplayName(SkillTreeNode node) {
+    @Override
+    protected String getDisplayName(SkillTreeNode node) {
         return switch (node.id) {
             case 0, 2, 4, 6, 7, 11, 14 -> "&aMinor Node";
             case 1, 3, 5, 8, 10, 12, 13 -> "&6Major Node";
@@ -212,13 +199,13 @@ public class DestroyerArmor extends CustomArmor {
 //            default -> "&4How Did You Find This?";
 //        };
     }
-
-    private Lore getDescription(SkillTreeNode node) {
-        Lore lore = new Lore();
+    @Override
+    protected ArrayList<String> getDescription(SkillTreeNode node) {
+        ArrayList<String> description = new ArrayList<>();
         switch (node.id) {
-            case 0, 2, 4, 6, 7, 11, 14, 1, 3, 5, 8, 10, 12, 13 -> lore.addColoredLine("&eUnlocks for 1 Skill Point");
-            case 9 -> lore.addColoredLine("&eUnlocks for 2 Skill Points");
-            default -> lore.addColoredLine("Impossible");
+            case 0, 2, 4, 6, 7, 11, 14, 1, 3, 5, 8, 10, 12, 13 -> description.add("&eUnlocks for 1 Skill Point");
+            case 9 -> description.add("&eUnlocks for 2 Skill Points");
+            default -> description.add("Impossible");
         }
 //        switch (node.id) {
 //            case 0 -> {
@@ -292,51 +279,11 @@ public class DestroyerArmor extends CustomArmor {
 //            default -> lore.addColoredLine("&5How Did You Find This?");
 //        }
 
-        return lore;
+        return description;
     }
-
-    protected ArrayList<GuiItem> minorNodes() {
-        ArrayList<GuiItem> nodes = new ArrayList<>();
-        for(SkillTreeNode node : baseMinorNodes()) {
-            node.setDescription(getDescription(node));
-            node.setDisplayName(getDisplayName(node));
-            nodes.add(node.getItem());
-        }
-
-        return nodes;
-    }
-
-    protected ArrayList<GuiItem> majorNodes() {
-        ArrayList<GuiItem> nodes = new ArrayList<>();
-        for(SkillTreeNode node : baseMajorNodes()) {
-            node.setDescription(getDescription(node));
-            node.setDisplayName(getDisplayName(node));
-            nodes.add(node.getItem());
-        }
-
-        return nodes;
-    }
-
-    protected GuiItem mainNode() {
-        SkillTreeNode node = baseMainNode();
-        node.setDescription(getDescription(node));
-        node.setDisplayName(getDisplayName(node));
-        return node.getItem();
-    }
-
-    public void openSkillTree(HumanEntity p) {
-        getAvailableSkillPoints();
-
-        BaseSkillTree skillTree = new BaseSkillTree(minorNodes(), majorNodes(), mainNode());
-        skillTree.getBaseSkillTree().show(p);
-    }
-
-    private void assignSkull(ItemStack item) {
-        Util.modifySkullSkin(item, "ea0076ab9a5c0ed8ebd08bb18137321df0fdc8abc7499465cc32221ca192ad43", null);
-    }
-
-    private void updateDamage() {
-        if(killCount >= 1000) damageBonus = 10;
-        else damageBonus = killCount / UPGRADE_THRESHOLD;
+    @Override
+    protected void setTextures() {
+        if (slot.equals(HELMET)) Util.modifySkullSkin(item, "ea0076ab9a5c0ed8ebd08bb18137321df0fdc8abc7499465cc32221ca192ad43", null);
+        else setLeatherColor(LEATHER_COLOR);
     }
 }

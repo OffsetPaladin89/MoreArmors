@@ -1,15 +1,16 @@
-package me.offsetpaladin89.MoreArmors;
+package me.offsetpaladin89.MoreArmors.utils.skilltree;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.items.armors.CustomArmor;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
-import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
 
 import static me.offsetpaladin89.MoreArmors.enums.ArmorType.armorFromType;
 import static me.offsetpaladin89.MoreArmors.utils.Util.colorString;
@@ -20,7 +21,7 @@ public class SkillTreeNode {
     private boolean canAccess, isUnlocked;
     public final int id;
     private String displayName;
-    private Lore description;
+    private ArrayList<String> description;
 
     public SkillTreeNode(int id, boolean canAccess, boolean isUnlocked) {
         this.id = id;
@@ -43,7 +44,7 @@ public class SkillTreeNode {
 
     private void addLore() {
         Lore lore = new Lore();
-        lore.add(description);
+        for(String s : description) lore.addColoredLine(s);
 
         lore.addUnlockedStatus(isUnlocked, canAccess);
 
@@ -72,7 +73,7 @@ public class SkillTreeNode {
         this.displayName = displayName;
     }
 
-    public void setDescription(Lore description) {
+    public void setDescription(ArrayList<String> description) {
         this.description = description;
     }
 
