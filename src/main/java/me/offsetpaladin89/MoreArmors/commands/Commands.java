@@ -182,6 +182,11 @@ public class Commands implements CommandExecutor {
 			return;
 		}
 
+		if(editAmount < 0) {
+			invalidArgument(sender, args[2]);
+			return;
+		}
+
 		if(args.length == 3) {
 			editItem(sender, item, editType, editAmount);
 			return;
@@ -246,6 +251,11 @@ public class Commands implements CommandExecutor {
 
 		if (Util.isInteger(args[4])) tier = Integer.parseInt(args[4]);
 		else {
+			invalidArgument(sender, args[4]);
+			return;
+		}
+
+		if(tier > materialType.maxTier) {
 			invalidArgument(sender, args[4]);
 			return;
 		}

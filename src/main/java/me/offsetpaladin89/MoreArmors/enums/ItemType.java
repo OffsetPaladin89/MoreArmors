@@ -2,12 +2,21 @@ package me.offsetpaladin89.MoreArmors.enums;
 
 import me.offsetpaladin89.MoreArmors.items.misc.CustomItem;
 import me.offsetpaladin89.MoreArmors.items.misc.TierUpgraderItem;
+import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public enum ItemType {
-    TIER_UPGRADER, INVALID;
+    TIER_UPGRADER(Material.EMERALD), INVALID;
+
+    public Material baseMaterial = null;
+
+    ItemType() {}
+
+    ItemType(Material baseMaterial) {
+        this.baseMaterial = baseMaterial;
+    }
 
     public static ItemType itemType(String s) {
         try {

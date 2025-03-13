@@ -50,6 +50,11 @@ public class SkillTree {
         }
 
         availableSkillPoints = NBT.get(item, nbt -> (int) nbt.resolveOrDefault("SkillTree.SkillPoints", 0)) - unlockedNodes;
+
+        if (availableSkillPoints < 0) NBT.modify(item, nbt -> { for (int n = 0; n < 15; n++) nbt.resolveOrCreateCompound("SkillTree.SkillTreeNodes").setBoolean("Node" + n, false); });
+        else return;
+
+        getAvailableSkillPoints();
     }
 
     protected boolean isNodeUnlocked(int key) {

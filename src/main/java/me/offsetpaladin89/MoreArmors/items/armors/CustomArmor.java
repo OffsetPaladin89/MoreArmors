@@ -48,7 +48,7 @@ public class CustomArmor extends CustomItem {
         armor = getDefaultArmor();
         armorToughness = getDefaultArmorToughness();
 
-        createItem(true);
+        updateItem(true);
     }
 
     public void setTier(int tier) {
@@ -57,16 +57,9 @@ public class CustomArmor extends CustomItem {
 
     // Armor Creation
 
-    protected void createItem(boolean resetPersistent) {
-        ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.setDisplayName(displayName);
-        item.setItemMeta(itemMeta);
-
-        updateItem(resetPersistent);
-    }
-
     public void updateItem(boolean resetPersistent) {
         armorID = getArmorID();
+        rarity = Rarity.getRarity(getRarity(), tier);
 
         setDisplayName();
         setTextures();
@@ -80,14 +73,6 @@ public class CustomArmor extends CustomItem {
 
         baseNBT(resetPersistent);
         armorNBT();
-    }
-
-    protected void setDisplayName() {
-        displayName = getFormattedName(getDefaultName());
-
-        ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.setDisplayName(displayName);
-        item.setItemMeta(itemMeta);
     }
 
     protected void setFlags() {
@@ -143,14 +128,15 @@ public class CustomArmor extends CustomItem {
 
     public void createItemFromNBT() {
         NBT.get(item, nbt -> {
-            rarity = nbt.getEnum("Rarity", Rarity.class);
             armor = nbt.getInteger("Armor");
+            tier = nbt.getInteger("Tier");
             armorToughness = nbt.getInteger("ArmorToughness");
             armorID = nbt.getEnum("ArmorID", ArmorType.class);
         });
 
         getSpecialValues();
 
+        rarity = Rarity.getRarity(getRarity(), tier);
         slot = SlotType.matchType(item);
         displayName = getFormattedName(getDefaultName());
     }
@@ -191,9 +177,6 @@ public class CustomArmor extends CustomItem {
     protected int getDefaultArmorToughness() {
         return 0;
     }
-    protected String getDefaultName() {
-        return null;
-    }
     protected ArrayList<String> getDescription(SkillTreeNode node) {
         return null;
     }
@@ -207,7 +190,5 @@ public class CustomArmor extends CustomItem {
     }
 
     protected void setTextures() {
-    }
-    protected void setLore() {
     }
 }

@@ -1,27 +1,45 @@
 package me.offsetpaladin89.MoreArmors.enums;
 
 import me.offsetpaladin89.MoreArmors.items.materials.*;
+import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 public enum MaterialType {
 
-    BLAZE_ROD(1), COBBLESTONE(2), DIAMOND_BLOCK(1),
-    ENDSTONE(2), ENERGY_CELL(0), EYE_OF_ENDER(1),
-    GOLD_BLOCK(1), IRON_BLOCK(2), MACHINE_CORE(0),
-    MACHINE_PART(1), NETHER_CROWN(0), PRISMARINE(1),
-    REDSTONE_BLOCK(0), SOUL_SAND(1), STAR_DUST(0),
-    SUGAR_CANE(0), INVALID;
+    BLAZE_ROD(1, Material.BLAZE_ROD), COBBLESTONE(2, Material.COBBLESTONE), DIAMOND_BLOCK(1, Material.DIAMOND_BLOCK),
+    ENDSTONE(2, Material.END_STONE), ENERGY_CELL(Material.PLAYER_HEAD, false), EYE_OF_ENDER(1, Material.ENDER_EYE),
+    GOLD_BLOCK(1, Material.GOLD_BLOCK), IRON_BLOCK(2, Material.IRON_BLOCK), MACHINE_CORE(Material.PLAYER_HEAD, false),
+    MACHINE_PART(1, Material.PLAYER_HEAD, false), NETHER_CROWN(Material.PLAYER_HEAD, false), PRISMARINE(1, Material.PRISMARINE),
+    REDSTONE_BLOCK(Material.REDSTONE_BLOCK), SOUL_SAND(1, Material.SOUL_SAND), STAR_DUST(Material.GHAST_TEAR, false),
+    SUGAR_CANE(Material.SUGAR_CANE), INVALID;
 
-    public final int maxTier;
+    public int maxTier = 0;
+    public Material baseMaterial = null;
+    public boolean isBasic = true;
 
-    MaterialType() {
-        this.maxTier = 0;
+    MaterialType() {}
+
+    MaterialType(Material baseMaterial) {
+        this.baseMaterial = baseMaterial;
     }
 
-    MaterialType(int maxTier) {
+    MaterialType(Material baseMaterial, boolean isBasic) {
+        this.baseMaterial = baseMaterial;
+        this.isBasic = isBasic;
+    }
+
+    MaterialType(int maxTier, Material baseMaterial) {
         this.maxTier = maxTier;
+        this.baseMaterial = baseMaterial;
+    }
+
+    MaterialType(int maxTier, Material baseMaterial, boolean isBasic) {
+        this.maxTier = maxTier;
+        this.baseMaterial = baseMaterial;
+        this.isBasic = isBasic;
     }
 
     public static CustomMaterial getMaterial(MaterialType type, int tier) {

@@ -12,21 +12,10 @@ import org.bukkit.inventory.ShapedRecipe;
 public class StarDust extends CustomMaterial {
 
     private static final Rarity BASE_RARITY = Rarity.RARE;
-    private static final String DEFAULT_NAME = "Star Dust";
     private static final MaterialType MATERIAL_TYPE = MaterialType.STAR_DUST;
 
     public StarDust(int tier) {
-        super(BASE_RARITY, tier, DEFAULT_NAME, MATERIAL_TYPE);
-        createItem(getBase());
-    }
-
-    public static ItemStack getPrevious(int tier) {
-        if(tier <= MATERIAL_TYPE.maxTier) return new StarDust(tier - 1).getItem();
-        return null;
-    }
-
-    private static ItemStack getBase() {
-        return new ItemStack(Material.GHAST_TEAR);
+        super(BASE_RARITY, tier, MATERIAL_TYPE);
     }
 
     public static void getRecipe(MoreArmorsMain plugin) {
@@ -41,5 +30,15 @@ public class StarDust extends CustomMaterial {
         recipe.setIngredient('B', Material.NETHER_STAR);
 
         plugin.getServer().addRecipe(recipe);
+    }
+
+    // Override Methods
+
+    protected String getDefaultName() {
+        return "Star Dust";
+    }
+
+    protected ItemStack getPrevious(int tier) {
+        return new StarDust(tier - 1).getItem();
     }
 }

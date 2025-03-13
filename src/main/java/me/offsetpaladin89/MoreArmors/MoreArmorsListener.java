@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
-import static me.offsetpaladin89.MoreArmors.enums.ArmorType.armorFromType;
+import static me.offsetpaladin89.MoreArmors.enums.ArmorType.armorFromItem;
 
 public class MoreArmorsListener implements Listener {
 
@@ -145,7 +145,7 @@ public class MoreArmorsListener implements Listener {
 			destroyerArmor.createItemFromNBT();
 			destroyerArmor.increaseKillCount(1);
 
-			destroyerArmor.createItem();
+			destroyerArmor.updateItem(false);
 
 			inv.setItem(i, destroyerArmor.getItem());
 		}
@@ -206,13 +206,12 @@ public class MoreArmorsListener implements Listener {
 		event.setCancelled(true);
 	}
 	private void armorInteract(PlayerInteractEvent event) {
-		if(!(event.getAction().equals(Action.LEFT_CLICK_AIR) || event.getAction().equals(Action.LEFT_CLICK_BLOCK))) return;
+		if(!(event.getAction().equals(Action.LEFT_CLICK_AIR) || event.getAction().equals(Action.LEFT_CLICK_BLOCK)) || !event.getPlayer().isSneaking()) return;
 		ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
 		if(Util.isAirOrNull(item)) return;
-		ArmorType type = NBT.get(item, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class));
-		if(type == null) return;
 		event.setCancelled(true);
-		CustomArmor armor = armorFromType(type, item);
+		CustomArmor armor = armorFromItem(item);
+		if (armor == null) return;
 		armor.openSkillTree(event.getPlayer());
 	}
 	private void endArmorInteract(Player p, Action a) {
@@ -257,7 +256,7 @@ public class MoreArmorsListener implements Listener {
 
 			emeraldArmor.increaseEmeraldCount(1);
 
-			emeraldArmor.createItem();
+			emeraldArmor.updateItem(false);
 
 			inv.setItem(i, emeraldArmor.getItem());
 		}

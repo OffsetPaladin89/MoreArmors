@@ -26,7 +26,7 @@ public enum Rarity {
     }
 
     public static Rarity getRarity(Rarity baseRarity, int tier) {
-        if(baseRarity.ordinal() + tier / 5 <= 6) getRarity(baseRarity.ordinal() + tier / 5);
+        if(baseRarity.ordinal() + tier / 5 <= 6) return getRarity(baseRarity.ordinal() + tier / 5);
         return Rarity.DIVINE;
     }
 }

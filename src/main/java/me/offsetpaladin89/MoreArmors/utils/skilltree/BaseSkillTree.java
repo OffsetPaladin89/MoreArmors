@@ -23,10 +23,7 @@ public class BaseSkillTree {
 
     public ChestGui getBaseSkillTree() {
         ChestGui gui = new ChestGui(6, colorString("&8Skill Tree"));
-        gui.setOnGlobalClick(event -> {
-            event.setCancelled(true);
-
-        });
+        gui.setOnGlobalClick(event -> event.setCancelled(true));
 
         StaticPane emptyPanes = new StaticPane(0, 0, 9, 6);
         emptyPanes.setPriority(Pane.Priority.LOWEST);

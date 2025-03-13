@@ -42,8 +42,7 @@ public class RecipeHandler {
 
         EnergyCell.getRecipe(plugin);
         MachineCore.getRecipe(plugin);
-        MachinePart.getRecipe(plugin, 0);
-        MachinePart.getRecipe(plugin, 1);
+        MachinePart.getRecipe(plugin);
         NetherCrown.getRecipe(plugin);
         StarDust.getRecipe(plugin);
     }

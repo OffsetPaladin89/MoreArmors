@@ -20,6 +20,7 @@ public enum ArmorType {
 
     public static CustomArmor armorFromItem(ItemStack item) {
         ArmorType type = NBT.get(item, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class));
+        if(type == null) return null;
         return switch(type) {
             case EMERALD -> new EmeraldArmor(item);
             case END -> new EndArmor(item);

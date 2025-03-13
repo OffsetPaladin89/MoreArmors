@@ -7,8 +7,6 @@ import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.items.misc.CustomItem;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
@@ -19,20 +17,27 @@ public class CustomMaterial extends CustomItem {
     protected MaterialType materialID;
     protected ItemStack previousItem;
 
-    protected CustomMaterial(Rarity rarity, int tier, String displayName, MaterialType materialID) {
-        super(Rarity.getRarity(rarity.ordinal() + tier), tier, displayName);
-        this.tier = tier;
+    protected CustomMaterial(Rarity rarity, int tier, MaterialType materialID) {
+        super(Rarity.getRarity(rarity.ordinal() + tier), tier);
         this.materialID = materialID;
+        this.baseMaterial = materialID.baseMaterial;
+        this.item = new ItemStack(baseMaterial);
+
+        if(tier == 0 && materialID.isBasic) this.previousItem = new ItemStack(baseMaterial);
+        else if(tier <= materialID.maxTier && tier > 0) this.previousItem = getPrevious(tier);
+
+        createItem();
     }
 
-    protected void createItem(ItemStack item) {
-        this.item = item;
-
+    protected void createItem() {
+        setTexture();
         setDisplayName();
         setLore();
         addGlowing();
         baseNBT();
     }
+
+    // Material Creation
 
     protected void setLore() {
         ItemMeta itemMeta = item.getItemMeta();
@@ -42,21 +47,6 @@ public class CustomMaterial extends CustomItem {
 
         itemMeta.setLore(lore.getLore());
 
-        item.setItemMeta(itemMeta);
-    }
-
-    protected void addGlowing() {
-        ItemMeta itemMeta = item.getItemMeta();
-
-        itemMeta.addEnchant(Enchantment.MENDING, 1, false);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-
-        item.setItemMeta(itemMeta);
-    }
-
-    protected void setDisplayName() {
-        ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.setDisplayName(displayName);
         item.setItemMeta(itemMeta);
     }
 
@@ -80,6 +70,10 @@ public class CustomMaterial extends CustomItem {
         return this.materialID;
     }
 
+    protected ItemStack getPrevious() {
+        return previousItem;
+    }
+
     public static void getRecipe(MaterialType type, MoreArmorsMain plugin) {
         for(int i = 0; i <= type.maxTier; i++) {
             CustomMaterial result = MaterialType.getMaterial(type, i);
@@ -95,7 +89,12 @@ public class CustomMaterial extends CustomItem {
         }
     }
 
-    protected ItemStack getPrevious() {
-        return previousItem;
+    // Overridden Methods
+
+    protected void setTexture() {
+    }
+
+    protected ItemStack getPrevious(int tier) {
+        return null;
     }
 }
