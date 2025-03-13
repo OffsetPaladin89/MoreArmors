@@ -1,5 +1,6 @@
 package me.offsetpaladin89.MoreArmors.enums;
 
+import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.items.armors.*;
 import org.bukkit.inventory.ItemStack;
 
@@ -17,19 +18,19 @@ public enum ArmorType {
         }
     }
 
-    public static CustomArmor armorFromType(ArmorType type, ItemStack item) {
+    public static CustomArmor armorFromItem(ItemStack item) {
+        ArmorType type = NBT.get(item, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class));
         return switch(type) {
             case EMERALD -> new EmeraldArmor(item);
-//            case END -> new EndArmor(item);
-//            case EXPERIENCE -> new ExperienceArmor(item);
-//            case MINER -> new MinerArmor(item);
-//            case NETHER -> new NetherArmor(item);
-//            case SEA_GREED -> new SeaGreedArmor(item);
-//            case SPEEDSTER -> new SpeedsterArmor(item);
-//            case TITAN -> new TitanArmor(item);
+            case END -> new EndArmor(item);
+            case EXPERIENCE -> new ExperienceArmor(item);
+            case MINER -> new MinerArmor(item);
+            case NETHER -> new NetherArmor(item);
+            case SEA_GREED -> new SeaGreedArmor(item);
+            case SPEEDSTER -> new SpeedsterArmor(item);
+            case TITAN -> new TitanArmor(item);
             case DESTROYER -> new DestroyerArmor(item);
-//            case INVALID -> null;
-            default -> null;
+            case INVALID -> null;
         };
     }
 

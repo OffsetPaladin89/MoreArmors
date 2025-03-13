@@ -4,6 +4,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import de.tr7zw.changeme.nbtapi.NBT;
+import me.offsetpaladin89.MoreArmors.utils.skilltree.BaseSkillTree;
 import me.offsetpaladin89.MoreArmors.utils.skilltree.SkillTree;
 import me.offsetpaladin89.MoreArmors.utils.skilltree.SkillTreeNode;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
@@ -36,12 +37,13 @@ public class CustomArmor extends CustomItem {
 
     public CustomArmor(ItemStack item) {
         this.item = item;
+        createItemFromNBT();
     }
 
     CustomArmor(SlotType slot) {
         this.slot = slot;
         item = getBaseItem();
-        rarity = getRarity();
+        rarity = Rarity.getRarity(getRarity(), tier);
         displayName = getFormattedName(getDefaultName());
         armor = getDefaultArmor();
         armorToughness = getDefaultArmorToughness();
@@ -63,7 +65,7 @@ public class CustomArmor extends CustomItem {
         updateItem(resetPersistent);
     }
 
-    protected void updateItem(boolean resetPersistent) {
+    public void updateItem(boolean resetPersistent) {
         armorID = getArmorID();
 
         setDisplayName();
@@ -139,6 +141,20 @@ public class CustomArmor extends CustomItem {
         return new NamespacedKey("morearmors", String.format("%s_%s", armorID, slot).toLowerCase());
     }
 
+    public void createItemFromNBT() {
+        NBT.get(item, nbt -> {
+            rarity = nbt.getEnum("Rarity", Rarity.class);
+            armor = nbt.getInteger("Armor");
+            armorToughness = nbt.getInteger("ArmorToughness");
+            armorID = nbt.getEnum("ArmorID", ArmorType.class);
+        });
+
+        getSpecialValues();
+
+        slot = SlotType.matchType(item);
+        displayName = getFormattedName(getDefaultName());
+    }
+
     // Skill Tree
 
     protected ArrayList<GuiItem> nodes() {
@@ -153,13 +169,21 @@ public class CustomArmor extends CustomItem {
         return nodes;
     }
 
+    public void openSkillTree(HumanEntity p) {
+        BaseSkillTree skillTree = new BaseSkillTree(nodes());
+        skillTree.getBaseSkillTree().show(p);
+    }
+
     // Overridden Methods
 
+    protected void armorNBT() {
+    }
+    protected void armorAttributes(){
+    }
+
+    protected ArmorType getArmorID() { return ArmorType.INVALID; }
     protected ItemStack getBaseItem() {
         return null;
-    }
-    protected Rarity getRarity() {
-        return Rarity.DEVELOPER;
     }
     protected int getDefaultArmor() {
         return 0;
@@ -167,15 +191,6 @@ public class CustomArmor extends CustomItem {
     protected int getDefaultArmorToughness() {
         return 0;
     }
-    protected void armorAttributes(){
-    }
-    protected void armorNBT() {
-    }
-    protected void setTextures() {
-    }
-    protected void setLore() {
-    }
-    protected ArmorType getArmorID() { return ArmorType.INVALID; }
     protected String getDefaultName() {
         return null;
     }
@@ -185,8 +200,14 @@ public class CustomArmor extends CustomItem {
     protected String getDisplayName(SkillTreeNode node) {
         return null;
     }
-    public void openSkillTree(HumanEntity player) {
+    protected Rarity getRarity() {
+        return Rarity.DEVELOPER;
     }
-    public void createItemFromNBT() {
+    protected void getSpecialValues() {
+    }
+
+    protected void setTextures() {
+    }
+    protected void setLore() {
     }
 }

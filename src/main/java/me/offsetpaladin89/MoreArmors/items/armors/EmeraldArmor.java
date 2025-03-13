@@ -6,6 +6,7 @@ import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.utils.Util;
+import me.offsetpaladin89.MoreArmors.utils.skilltree.SkillTreeNode;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -14,16 +15,18 @@ import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+
 public class EmeraldArmor extends CustomArmor {
 
-    private int emeraldCount = 0;
-    private int healthBoost = 0;
 
     private static final Color LEATHER_COLOR = Color.LIME;
     private static final Rarity BASE_RARITY = Rarity.EPIC;
-
     private static final int UPGRADE_THRESHOLD = 50;
     private static final int MAX_EMERALD_COUNT = 250;
+
+    private int emeraldCount = 0;
+    private int healthBoost = 0;
 
     public EmeraldArmor(ItemStack item) {
         super(item);
@@ -31,42 +34,9 @@ public class EmeraldArmor extends CustomArmor {
 
     public EmeraldArmor(SlotType slot) {
         super(slot);
-        item = getBaseItem();
-        rarity = Rarity.getRarity(BASE_RARITY, tier);
-        displayName = getFormattedName(getDefaultName());
-        emeraldCount = 0;
-        armor = getDefaultArmor();
-        armorToughness = getDefaultArmorToughness();
-
-        createItem();
     }
 
-    public void createItemFromNBT() {
-        NBT.get(item, nbt -> {
-            rarity = nbt.getEnum("Rarity", Rarity.class);
-            armor = nbt.getInteger("Armor");
-            armorToughness = nbt.getInteger("ArmorToughness");
-            emeraldCount = nbt.getInteger("EmeraldCount");
-            armorID = nbt.getEnum("ArmorID", ArmorType.class);
-        });
-
-        slot = SlotType.matchType(item);
-        displayName = getFormattedName(getDefaultName());
-    }
-
-    public void updateItem() {
-        this.armorID = ArmorType.EMERALD;
-
-        setLeatherColor(LEATHER_COLOR);
-        setLore();
-
-        setFlags();
-
-        addAttributes();
-
-        baseNBT();
-        addNBT();
-    }
+    // Class Methods
 
     public void setEmeraldCount(int emeraldCount) {
         this.emeraldCount = emeraldCount;
@@ -77,7 +47,27 @@ public class EmeraldArmor extends CustomArmor {
         this.emeraldCount += emeraldCount;
     }
 
-    private ItemStack getBaseItem() {
+    private void updateHealth() {
+        if(emeraldCount >= 250) healthBoost = 10;
+        else healthBoost = 2 * (emeraldCount / UPGRADE_THRESHOLD);
+    }
+
+    // Override Methods
+
+    protected void armorAttributes() {
+        updateHealth();
+        AttributeModifier healthAttribute = new AttributeModifier(pluginKey(), healthBoost, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR);
+
+        attributeModifiers.put(Attribute.MAX_HEALTH, healthAttribute);
+    }
+    protected void armorNBT() {
+        NBT.modify(item, nbt -> {
+            nbt.setInteger("EmeraldCount", emeraldCount);
+        });
+    }
+
+    protected ArmorType getArmorID() { return ArmorType.EMERALD; }
+    protected ItemStack getBaseItem() {
         return switch (slot) {
             case HELMET -> new ItemStack(Material.LEATHER_HELMET);
             case CHESTPLATE -> new ItemStack(Material.LEATHER_CHESTPLATE);
@@ -86,15 +76,7 @@ public class EmeraldArmor extends CustomArmor {
             default -> null;
         };
     }
-
-    private int getDefaultArmorToughness() {
-        return switch (slot) {
-            case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> 2;
-            default -> 0;
-        };
-    }
-
-    private int getDefaultArmor() {
+    protected int getDefaultArmor() {
         return switch (slot) {
             case HELMET, BOOTS -> 3;
             case CHESTPLATE -> 8;
@@ -102,8 +84,10 @@ public class EmeraldArmor extends CustomArmor {
             default -> 0;
         };
     }
-
-    private String getDefaultName() {
+    protected int getDefaultArmorToughness() {
+        return 2;
+    }
+    protected String getDefaultName() {
         return switch (slot) {
             case HELMET -> "Emerald Helmet";
             case CHESTPLATE -> "Emerald Chestplate";
@@ -112,8 +96,20 @@ public class EmeraldArmor extends CustomArmor {
             default -> null;
         };
     }
+    protected ArrayList<String> getDescription(SkillTreeNode node) {
+        return null;
+    }
+    protected String getDisplayName(SkillTreeNode node) {
+        return null;
+    }
+    protected Rarity getRarity() {
+        return BASE_RARITY;
+    }
+    protected void getSpecialValues() {
+        emeraldCount = NBT.get(item, nbt -> (int) nbt.getInteger("EmeraldCount"));
+    }
 
-    private void setLore() {
+    protected void setLore() {
         updateHealth();
         int currentStage = emeraldCount / UPGRADE_THRESHOLD;
         int nextBonus = healthBoost + 2;
@@ -139,26 +135,7 @@ public class EmeraldArmor extends CustomArmor {
 
         item.setItemMeta(itemMeta);
     }
-
-    private void addAttributes() {
-        updateHealth();
-
-        baseAttributes();
-        AttributeModifier healthAttribute = new AttributeModifier(pluginKey(), healthBoost, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR);
-
-        attributeModifiers.put(Attribute.MAX_HEALTH, healthAttribute);
-
-        setAttributes();
-    }
-
-    private void addNBT() {
-        NBT.modify(item, nbt -> {
-            nbt.setInteger("EmeraldCount", emeraldCount);
-        });
-    }
-
-    private void updateHealth() {
-        if(emeraldCount >= 250) healthBoost = 10;
-        else healthBoost = 2 * (emeraldCount / UPGRADE_THRESHOLD);
+    protected void setTextures() {
+        setLeatherColor(LEATHER_COLOR);
     }
 }

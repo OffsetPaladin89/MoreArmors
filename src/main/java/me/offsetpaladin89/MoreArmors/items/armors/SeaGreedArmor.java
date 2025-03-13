@@ -20,15 +20,12 @@ public class SeaGreedArmor extends CustomArmor {
     private static final Color LEATHER_COLOR = Color.fromRGB(130, 140, 100);
     private static final Rarity BASE_RARITY = Rarity.MYTHIC;
 
+    public SeaGreedArmor(ItemStack item) {
+        super(item);
+    }
+
     public SeaGreedArmor(SlotType slot) {
         super(slot);
-        this.item = getBaseItem();
-        this.rarity = Rarity.getRarity(BASE_RARITY, tier);
-        this.displayName = getFormattedName(getDefaultName());
-        this.armor = getDefaultArmor();
-        this.armorToughness = getDefaultArmorToughness();
-
-        createItem();
     }
 
     private void setLore() {

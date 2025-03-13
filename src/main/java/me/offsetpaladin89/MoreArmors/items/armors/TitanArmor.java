@@ -1,9 +1,9 @@
 package me.offsetpaladin89.MoreArmors.items.armors;
 
-import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.utils.Lore;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -15,14 +15,12 @@ public class TitanArmor extends CustomArmor {
 
     private static final Rarity BASE_RARITY = Rarity.UNCOMMON;
 
+    public TitanArmor(ItemStack item) {
+        super(item);
+    }
+
     public TitanArmor(SlotType slot) {
         super(slot);
-        this.item = getBaseItem();
-        this.rarity = Rarity.getRarity(BASE_RARITY, tier);
-        this.displayName = getFormattedName(getDefaultName());
-        this.armor = getDefaultArmor();
-
-        createItem();
     }
 
     private void setLore() {

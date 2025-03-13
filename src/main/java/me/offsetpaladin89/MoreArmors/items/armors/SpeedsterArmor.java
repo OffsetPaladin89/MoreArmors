@@ -17,14 +17,12 @@ public class SpeedsterArmor extends CustomArmor {
     private static final Color LEATHER_COLOR = Color.WHITE;
     private static final Rarity BASE_RARITY = Rarity.UNCOMMON;
 
+    public SpeedsterArmor(ItemStack item) {
+        super(item);
+    }
+
     public SpeedsterArmor(SlotType slot) {
         super(slot);
-        this.item = getBaseItem();
-        this.rarity = Rarity.getRarity(BASE_RARITY, tier);
-        this.displayName = getFormattedName(getDefaultName());
-        this.armor = getDefaultArmor();
-
-        createItem();
     }
 
     private ItemStack getBaseItem() {

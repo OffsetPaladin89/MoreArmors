@@ -351,11 +351,10 @@ public class Commands implements CommandExecutor {
 			}
 
 			EmeraldArmor armor = new EmeraldArmor(item);
-			armor.createItemFromNBT();
 
 			armor.setEmeraldCount(amount);
 
-			armor.updateItem();
+			armor.updateItem(false);
 
 			inv.setItemInMainHand(armor.getItem());
 		}
@@ -366,22 +365,19 @@ public class Commands implements CommandExecutor {
 			}
 
 			DestroyerArmor armor = new DestroyerArmor(item);
-			armor.createItemFromNBT();
 
 			armor.setKillCount(amount);
 
-			armor.updateItem();
+			armor.updateItem(false);
 
 			inv.setItemInMainHand(armor.getItem());
 		}
 		else if(editType == TIER) {
-			CustomArmor armor = armorFromType(type, item);
-
-			armor.createItemFromNBT();
+			CustomArmor armor = armorFromItem(item);
 
 			armor.setTier(amount);
 
-			armor.updateItem();
+			armor.updateItem(false);
 
 			inv.setItemInMainHand(armor.getItem());
 		}

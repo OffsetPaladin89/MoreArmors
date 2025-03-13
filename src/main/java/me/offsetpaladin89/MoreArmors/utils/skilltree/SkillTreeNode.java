@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
+import static me.offsetpaladin89.MoreArmors.enums.ArmorType.armorFromItem;
 import static me.offsetpaladin89.MoreArmors.enums.ArmorType.armorFromType;
 import static me.offsetpaladin89.MoreArmors.utils.Util.colorString;
 
@@ -64,8 +65,7 @@ public class SkillTreeNode {
         NBT.modify(event.getWhoClicked().getInventory().getItemInMainHand(), nbt -> { nbt.resolveCompound("SkillTree.SkillTreeNodes").setBoolean("Node" + id, true); });
 
         ItemStack item = event.getWhoClicked().getInventory().getItemInMainHand();
-        ArmorType type = NBT.get(item, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class));
-        CustomArmor armor = armorFromType(type, item);
+        CustomArmor armor = armorFromItem(item);
         armor.openSkillTree(event.getWhoClicked());
     }
 
