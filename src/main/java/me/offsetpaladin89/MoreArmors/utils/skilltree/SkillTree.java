@@ -57,6 +57,10 @@ public class SkillTree {
         getAvailableSkillPoints();
     }
 
+    public int availableSkillPoints() {
+        return availableSkillPoints;
+    }
+
     protected boolean isNodeUnlocked(int key) {
         return NBT.get(item, nbt -> (boolean) nbt.resolveOrDefault("SkillTree.SkillTreeNodes.Node" + key, false));
     }

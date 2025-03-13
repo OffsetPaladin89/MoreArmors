@@ -55,6 +55,14 @@ public class CustomArmor extends CustomItem {
         this.tier = tier;
     }
 
+    public void increaseTier(int n) {
+        this.tier += n;
+    }
+
+    public int getTier() {
+        return tier;
+    }
+
     // Armor Creation
 
     public void updateItem(boolean resetPersistent) {
@@ -157,7 +165,7 @@ public class CustomArmor extends CustomItem {
 
     public void openSkillTree(HumanEntity p) {
         BaseSkillTree skillTree = new BaseSkillTree(nodes());
-        skillTree.getBaseSkillTree().show(p);
+        skillTree.getBaseSkillTree(tier, new SkillTree(item).availableSkillPoints()).show(p);
     }
 
     // Overridden Methods

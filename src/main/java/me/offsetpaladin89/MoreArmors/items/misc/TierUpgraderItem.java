@@ -31,7 +31,7 @@ public class TierUpgraderItem extends CustomItem {
     }
 
     protected String getFormattedName(String displayName) {
-        return Util.colorString(String.format("%s%s &b", rarity.color, displayName));
+        return Util.colorString(String.format("%s%s", rarity.color, displayName));
     }
 
     protected String getDefaultName() { return "Tier Upgrader"; }
