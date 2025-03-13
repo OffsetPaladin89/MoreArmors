@@ -59,6 +59,7 @@ public class CommandCompleter implements TabCompleter {
 			if(args.length == 2) {
 				arguments.add("emerald_count");
 				arguments.add("kill_count");
+				arguments.add("tier");
 			}
 		}
 		return returnVals(arguments, args);

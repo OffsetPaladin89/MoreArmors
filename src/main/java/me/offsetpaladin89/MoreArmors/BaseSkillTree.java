@@ -2,8 +2,13 @@ package me.offsetpaladin89.MoreArmors;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
+import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
+
+import java.util.ArrayList;
 
 import static me.offsetpaladin89.MoreArmors.handlers.InventoryHandler.getEmptyPane;
 import static me.offsetpaladin89.MoreArmors.handlers.InventoryHandler.getExitItem;
@@ -11,63 +16,70 @@ import static me.offsetpaladin89.MoreArmors.utils.Util.colorString;
 
 public class BaseSkillTree {
 
-    protected GuiItem[] minorNodes, majorNodes;
+    protected ArrayList<GuiItem> minorNodes, majorNodes;
     protected GuiItem mainNode;
+    private static ChestGui gui;
 
-    public BaseSkillTree(GuiItem[] minorNodes, GuiItem[] majorNodes, GuiItem mainNode) {
+    public BaseSkillTree(ArrayList<GuiItem> minorNodes, ArrayList<GuiItem> majorNodes, GuiItem mainNode) {
         this.minorNodes = minorNodes;
         this.majorNodes = majorNodes;
         this.mainNode = mainNode;
+        gui = getBaseSkillTree();
     }
 
     public ChestGui getBaseSkillTree() {
         ChestGui gui = new ChestGui(6, colorString("&8Skill Tree"));
-        gui.setOnGlobalClick(event -> event.setCancelled(true));
+        gui.setOnGlobalClick(event -> {
+            event.setCancelled(true);
+
+        });
 
         StaticPane emptyPanes = new StaticPane(0, 0, 9, 6);
         emptyPanes.setPriority(Pane.Priority.LOWEST);
         emptyPanes.fillWith(getEmptyPane());
         emptyPanes.addItem(getExitItem(), 4, 5);
 
-        gui.addPane(emptyPanes);
+        Pattern pattern = new Pattern("00a00", "bcdef", "g000h", "i0j0k", "lm0no");
 
-        gui.addPane(minorNodes());
-        gui.addPane(majorNodes());
-        gui.addPane(mainNode());
+        PatternPane skillTreeNodes = new PatternPane(2, 0, 5, 5, pattern);
+
+        skillTreeNodes.bindItem('j', mainNode);
+
+        skillTreeNodes.bindItem('b', majorNodes.getFirst());
+        skillTreeNodes.bindItem('d', majorNodes.get(1));
+        skillTreeNodes.bindItem('f', majorNodes.get(2));
+        skillTreeNodes.bindItem('i', majorNodes.get(3));
+        skillTreeNodes.bindItem('k', majorNodes.get(4));
+        skillTreeNodes.bindItem('m', majorNodes.get(5));
+        skillTreeNodes.bindItem('n', majorNodes.get(6));
+
+        skillTreeNodes.bindItem('a', minorNodes.getFirst());
+        skillTreeNodes.bindItem('c', minorNodes.get(1));
+        skillTreeNodes.bindItem('e', minorNodes.get(2));
+        skillTreeNodes.bindItem('g', minorNodes.get(3));
+        skillTreeNodes.bindItem('h', minorNodes.get(4));
+        skillTreeNodes.bindItem('l', minorNodes.get(5));
+        skillTreeNodes.bindItem('o', minorNodes.get(6));
+
+        gui.addPane(emptyPanes);
+        gui.addPane(skillTreeNodes);
 
         return gui;
     }
 
-    private StaticPane minorNodes() {
-        StaticPane pane = new StaticPane(2, 0, 5, 5);
-        pane.addItem(minorNodes[0], 2, 0);
-        pane.addItem(minorNodes[1], 1, 1);
-        pane.addItem(minorNodes[2], 3, 1);
-        pane.addItem(minorNodes[3], 0, 2);
-        pane.addItem(minorNodes[4], 4, 2);
-        pane.addItem(minorNodes[5], 0, 4);
-        pane.addItem(minorNodes[6], 4, 4);
-
-        return pane;
+    public void setMinorNodes(ArrayList<GuiItem> minorNodes) {
+        this.minorNodes = minorNodes;
     }
 
-    private StaticPane majorNodes() {
-        StaticPane pane = new StaticPane(2, 1, 5, 4);
-        pane.addItem(majorNodes[0], 0, 0);
-        pane.addItem(majorNodes[1], 2, 0);
-        pane.addItem(majorNodes[2], 4, 0);
-        pane.addItem(majorNodes[3], 0, 2);
-        pane.addItem(majorNodes[4], 4, 2);
-        pane.addItem(majorNodes[5], 1, 3);
-        pane.addItem(majorNodes[6], 3, 3);
-
-        return pane;
+    public void setMajorNodes(ArrayList<GuiItem> majorNodes) {
+        this.majorNodes = majorNodes;
     }
 
-    private StaticPane mainNode() {
-        StaticPane pane = new StaticPane(4, 3, 1, 1);
-        pane.addItem(mainNode, 0, 0);
+    public void setMainNode(GuiItem mainNode) {
+        this.mainNode = mainNode;
+    }
 
-        return pane;
+    public static void updateGUI() {
+        gui.update();
     }
 }

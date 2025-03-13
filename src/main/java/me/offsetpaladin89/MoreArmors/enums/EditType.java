@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum EditType {
-    EMERALD_COUNT, KILL_COUNT, INVALID;
+    EMERALD_COUNT, KILL_COUNT, TIER, INVALID;
 
     public static EditType editType(String s) {
         try {

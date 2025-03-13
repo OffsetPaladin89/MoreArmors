@@ -1,6 +1,7 @@
 package me.offsetpaladin89.MoreArmors.enums;
 
 import me.offsetpaladin89.MoreArmors.items.armors.*;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,22 @@ public enum ArmorType {
         } catch (IllegalArgumentException e) {
             return INVALID;
         }
+    }
+
+    public static CustomArmor armorFromType(ArmorType type, ItemStack item) {
+        return switch(type) {
+            case EMERALD -> new EmeraldArmor(item);
+//            case END -> new EndArmor(item);
+//            case EXPERIENCE -> new ExperienceArmor(item);
+//            case MINER -> new MinerArmor(item);
+//            case NETHER -> new NetherArmor(item);
+//            case SEA_GREED -> new SeaGreedArmor(item);
+//            case SPEEDSTER -> new SpeedsterArmor(item);
+//            case TITAN -> new TitanArmor(item);
+            case DESTROYER -> new DestroyerArmor(item);
+//            case INVALID -> null;
+            default -> null;
+        };
     }
 
     public static CustomArmor armorFromType(ArmorType type, SlotType slot) {

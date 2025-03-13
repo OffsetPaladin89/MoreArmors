@@ -3,19 +3,21 @@ package me.offsetpaladin89.MoreArmors.items.armors;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.BaseSkillTree;
-import me.offsetpaladin89.MoreArmors.DestroyerSkillTree;
-import me.offsetpaladin89.MoreArmors.utils.Lore;
+import me.offsetpaladin89.MoreArmors.SkillTreeNode;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import static me.offsetpaladin89.MoreArmors.BaseSkillTree.getBaseSkillTree;
+import java.util.ArrayList;
+
 import static me.offsetpaladin89.MoreArmors.enums.SlotType.HELMET;
 
 public class DestroyerArmor extends CustomArmor {
@@ -42,6 +44,7 @@ public class DestroyerArmor extends CustomArmor {
         armorToughness = getDefaultArmorToughness();
 
         createItem();
+        baseNBT();
     }
 
     private void setLore() {
@@ -96,9 +99,14 @@ public class DestroyerArmor extends CustomArmor {
     }
 
     public void updateItem() {
-        armorID = ArmorType.DESTROYER;
+        displayName = getFormattedName(getDefaultName());
 
-        if(slot.equals(HELMET)) assignSkull(item);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName(displayName);
+        item.setItemMeta(itemMeta);
+
+        armorID = ArmorType.DESTROYER;
+        if (slot.equals(HELMET)) assignSkull(item);
         else setLeatherColor(LEATHER_COLOR);
         setLore();
 
@@ -107,7 +115,7 @@ public class DestroyerArmor extends CustomArmor {
         baseAttributes();
         setAttributes();
 
-        baseNBT();
+        updateNBT();
         addNBT();
     }
 
@@ -176,10 +184,150 @@ public class DestroyerArmor extends CustomArmor {
         });
     }
 
-    public static void openSkillTree(HumanEntity p) {
-        GuiItem[] minorNodes, majorNodes;
-        GuiItem mainNode;
-        BaseSkillTree skillTree = new BaseSkillTree(minorNodes, majorNodes, mainNode);
+    private String getDisplayName(SkillTreeNode node) {
+        return switch (node.id) {
+            case 0, 2, 4, 6, 7, 11, 14 -> "&aMinor Node";
+            case 1, 3, 5, 8, 10, 12, 13 -> "&6Major Node";
+            case 9 -> "&5Main Node";
+            default -> "&4Impossible";
+        };
+//        return switch (node.id) {
+//            case 0 -> "&5Testing 1";
+//            case 1 -> "&5Testing 2";
+//            case 2 -> "&5Testing 3";
+//            case 3 -> "&5Testing 4";
+//            case 4 -> "&5Testing 5";
+//            case 5 -> "&5Testing 6";
+//            case 6 -> "&5Testing 7";
+//            case 7 -> "&5Testing 8";
+//            case 8 -> "&5Testing 9";
+//            case 9 -> "&5Testing 10";
+//            case 10 -> "&6Testing 11";
+//            case 11 -> "&5Testing 12";
+//            case 12 -> "&5Testing 13";
+//            case 13 -> "&5Testing 14";
+//            case 14 -> "&5Testing 15";
+//            case 15 -> "&5Testing 16";
+//            case 16 -> "&5Testing 17";
+//            default -> "&4How Did You Find This?";
+//        };
+    }
+
+    private Lore getDescription(SkillTreeNode node) {
+        Lore lore = new Lore();
+        switch (node.id) {
+            case 0, 2, 4, 6, 7, 11, 14, 1, 3, 5, 8, 10, 12, 13 -> lore.addColoredLine("&eUnlocks for 1 Skill Point");
+            case 9 -> lore.addColoredLine("&eUnlocks for 2 Skill Points");
+            default -> lore.addColoredLine("Impossible");
+        }
+//        switch (node.id) {
+//            case 0 -> {
+//                lore.addColoredLine("&4Testing 1");
+//                lore.addColoredLine("&aHello World");
+//            }
+//            case 1 -> {
+//                lore.addColoredLine("&4Testing 2");
+//                lore.addColoredLine("&aHello World");
+//            }
+//            case 2 -> {
+//                lore.addColoredLine("&4Testing 3");
+//                lore.addColoredLine("&aHello World");
+//            }
+//            case 3 -> {
+//                lore.addColoredLine("&4Testing 4");
+//                lore.addColoredLine("&aHello World");
+//            }
+//            case 4 -> {
+//                lore.addColoredLine("&4Testing 5");
+//                lore.addColoredLine("&aHello World");
+//            }
+//            case 5 -> {
+//                lore.addColoredLine("&4Testing 6");
+//                lore.addColoredLine("&aHello World");
+//            }
+//            case 6 -> {
+//                lore.addColoredLine("&4Testing 7");
+//                lore.addColoredLine("&aHello World");
+//            }
+//            case 7 -> {
+//                lore.addColoredLine("&4Testing 8");
+//                lore.addColoredLine("&aHello World");
+//            }
+//            case 8 -> {
+//                lore.addColoredLine("&4Testing 9");
+//                lore.addColoredLine("&aHello World");
+//            }
+//            case 9 -> {
+//                lore.addColoredLine("&4Testing 10");
+//                lore.addColoredLine("&aHello World");
+//            }
+//            case 10 -> {
+//                lore.addColoredLine("&4Testing 11");
+//                lore.addColoredLine("&aHello World");
+//            }
+//            case 11 -> {
+//                lore.addColoredLine("&4Testing 12");
+//                lore.addColoredLine("&aHello World");
+//            }
+//            case 12 -> {
+//                lore.addColoredLine("&4Testing 13");
+//                lore.addColoredLine("&aHello World");
+//            }
+//            case 13 -> {
+//                lore.addColoredLine("&4Testing 14");
+//                lore.addColoredLine("&aHello World");
+//            }
+//            case 14 -> {
+//                lore.addColoredLine("&4Testing 15");
+//                lore.addColoredLine("&aHello World");
+//            }
+//            case 15 -> {
+//                lore.addColoredLine("&4Testing 16");
+//                lore.addColoredLine("&aHello World");
+//            }
+//            case 16 -> {
+//                lore.addColoredLine("&4Testing 17");
+//                lore.addColoredLine("&aHello World");
+//            }
+//            default -> lore.addColoredLine("&5How Did You Find This?");
+//        }
+
+        return lore;
+    }
+
+    protected ArrayList<GuiItem> minorNodes() {
+        ArrayList<GuiItem> nodes = new ArrayList<>();
+        for(SkillTreeNode node : baseMinorNodes()) {
+            node.setDescription(getDescription(node));
+            node.setDisplayName(getDisplayName(node));
+            nodes.add(node.getItem());
+        }
+
+        return nodes;
+    }
+
+    protected ArrayList<GuiItem> majorNodes() {
+        ArrayList<GuiItem> nodes = new ArrayList<>();
+        for(SkillTreeNode node : baseMajorNodes()) {
+            node.setDescription(getDescription(node));
+            node.setDisplayName(getDisplayName(node));
+            nodes.add(node.getItem());
+        }
+
+        return nodes;
+    }
+
+    protected GuiItem mainNode() {
+        SkillTreeNode node = baseMainNode();
+        node.setDescription(getDescription(node));
+        node.setDisplayName(getDisplayName(node));
+        return node.getItem();
+    }
+
+    public void openSkillTree(HumanEntity p) {
+        getAvailableSkillPoints();
+
+        BaseSkillTree skillTree = new BaseSkillTree(minorNodes(), majorNodes(), mainNode());
         skillTree.getBaseSkillTree().show(p);
     }
 

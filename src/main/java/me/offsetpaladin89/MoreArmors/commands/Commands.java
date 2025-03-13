@@ -374,6 +374,17 @@ public class Commands implements CommandExecutor {
 
 			inv.setItemInMainHand(armor.getItem());
 		}
+		else if(editType == TIER) {
+			CustomArmor armor = armorFromType(type, item);
+
+			armor.createItemFromNBT();
+
+			armor.setTier(amount);
+
+			armor.updateItem();
+
+			inv.setItemInMainHand(armor.getItem());
+		}
 
 		if(amount == 0) resetItemMessage(p, item);
 		else editItemMessage(p, item);

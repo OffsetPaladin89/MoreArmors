@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.XSound;
 import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.MaterialType;
+import me.offsetpaladin89.MoreArmors.items.armors.CustomArmor;
 import me.offsetpaladin89.MoreArmors.items.armors.DestroyerArmor;
 import me.offsetpaladin89.MoreArmors.items.armors.EmeraldArmor;
 import me.offsetpaladin89.MoreArmors.utils.Util;
@@ -40,7 +41,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
-import static me.offsetpaladin89.MoreArmors.items.armors.CustomArmor.openSkillTree;
+import static me.offsetpaladin89.MoreArmors.enums.ArmorType.armorFromType;
 
 public class MoreArmorsListener implements Listener {
 
@@ -211,7 +212,8 @@ public class MoreArmorsListener implements Listener {
 		ArmorType type = NBT.get(item, nbt -> (ArmorType) nbt.getEnum("ArmorID", ArmorType.class));
 		if(type == null) return;
 		event.setCancelled(true);
-		openSkillTree(event.getPlayer());
+		CustomArmor armor = armorFromType(type, item);
+		armor.openSkillTree(event.getPlayer());
 	}
 	private void endArmorInteract(Player p, Action a) {
 		PlayerInventory inv = p.getInventory();

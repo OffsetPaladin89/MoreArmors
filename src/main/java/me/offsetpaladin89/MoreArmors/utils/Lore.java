@@ -32,6 +32,15 @@ public class Lore {
         lore.add(colorString(String.format("%s&l%s ITEM", rarity.color, rarity)));
     }
 
+    public void addUnlockedStatus(boolean unlocked, boolean canAccess) {
+        addEmpty();
+        lore.add(colorString(unlocked ? "&a&lUNLOCKED" : canAccess ? "&a&lCLICK TO UNLOCK" : "&c&lNOT UNLOCKED"));
+    }
+
+    public void add(Lore lore) {
+        this.lore.addAll(lore.getLore());
+    }
+
     public void addEmpty() {
         lore.add("");
     }
