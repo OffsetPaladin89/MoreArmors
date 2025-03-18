@@ -4,7 +4,8 @@ import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
-import me.offsetpaladin89.MoreArmors.utils.skilltree.SkillTreeNode;
+import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
+import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -30,12 +31,6 @@ public class MinerArmor extends CustomArmor {
 
     // Override Methods
 
-    protected void armorAttributes() {
-        AttributeModifier blockBreakSpeed = new AttributeModifier(pluginKey(), 0.2, AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.ARMOR);
-
-        attributeModifiers.put(Attribute.BLOCK_BREAK_SPEED, blockBreakSpeed);
-    }
-
     protected ArmorType getArmorID() {
         return ArmorType.MINER;
     }
@@ -46,14 +41,6 @@ public class MinerArmor extends CustomArmor {
             case LEGGINGS -> new ItemStack(Material.LEATHER_LEGGINGS);
             case BOOTS -> new ItemStack(Material.LEATHER_BOOTS);
             default -> null;
-        };
-    }
-    protected int getDefaultArmor() {
-        return switch (slot) {
-            case HELMET, BOOTS -> 1;
-            case CHESTPLATE -> 5;
-            case LEGGINGS -> 4;
-            default -> 0;
         };
     }
     protected String getDefaultName() {
@@ -176,6 +163,21 @@ public class MinerArmor extends CustomArmor {
     }
     protected Rarity getRarity() {
         return BASE_RARITY;
+    }
+
+    protected void setArmorStats() {
+        double armor = switch (slot) {
+            case HELMET, BOOTS -> 1;
+            case CHESTPLATE -> 5;
+            case LEGGINGS -> 4;
+            default -> 0;
+        };
+        double blockBreakSpeed = 0.2;
+
+        ArmorStats armorStats = new ArmorStats(armor);
+        armorStats.setBlockBreakSpeed(blockBreakSpeed);
+
+        this.armorStats = armorStats;
     }
 
     protected void setLore() {

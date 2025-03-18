@@ -1,8 +1,7 @@
-package me.offsetpaladin89.MoreArmors.utils.skilltree;
+package me.offsetpaladin89.MoreArmors.utils.skills;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import de.tr7zw.changeme.nbtapi.NBT;
-import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.items.armors.CustomArmor;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import org.bukkit.Material;
@@ -13,7 +12,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 
 import static me.offsetpaladin89.MoreArmors.enums.ArmorType.armorFromItem;
-import static me.offsetpaladin89.MoreArmors.enums.ArmorType.armorFromType;
 import static me.offsetpaladin89.MoreArmors.utils.Util.colorString;
 
 public class SkillTreeNode {

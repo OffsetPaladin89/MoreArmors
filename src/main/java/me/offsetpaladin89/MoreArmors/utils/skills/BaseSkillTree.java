@@ -1,4 +1,4 @@
-package me.offsetpaladin89.MoreArmors.utils.skilltree;
+package me.offsetpaladin89.MoreArmors.utils.skills;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;

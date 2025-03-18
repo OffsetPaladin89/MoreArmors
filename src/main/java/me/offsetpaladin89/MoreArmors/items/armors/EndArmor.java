@@ -5,7 +5,8 @@ import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.Util;
-import me.offsetpaladin89.MoreArmors.utils.skilltree.SkillTreeNode;
+import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
+import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -41,17 +42,6 @@ public class EndArmor extends CustomArmor {
             case BOOTS -> new ItemStack(Material.LEATHER_BOOTS);
             default -> null;
         };
-    }
-    protected int getDefaultArmor() {
-        return switch (slot) {
-            case HELMET, BOOTS -> 3;
-            case CHESTPLATE -> 8;
-            case LEGGINGS -> 6;
-            default -> 0;
-        };
-    }
-    protected int getDefaultArmorToughness() {
-        return 2;
     }
     protected String getDefaultName() {
         return switch (slot) {
@@ -175,6 +165,17 @@ public class EndArmor extends CustomArmor {
         return BASE_RARITY;
     }
 
+    protected void setArmorStats() {
+        double armor = switch (slot) {
+            case HELMET, BOOTS -> 3;
+            case CHESTPLATE -> 8;
+            case LEGGINGS -> 6;
+            default -> 0;
+        };
+        double armorToughness = 2;
+
+        this.armorStats = new ArmorStats(armor, armorToughness);
+    }
     protected void setLore() {
         ItemMeta itemMeta = item.getItemMeta();
 

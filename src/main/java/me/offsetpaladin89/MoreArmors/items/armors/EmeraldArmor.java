@@ -1,17 +1,15 @@
 package me.offsetpaladin89.MoreArmors.items.armors;
 
 import de.tr7zw.changeme.nbtapi.NBT;
-import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.Util;
-import me.offsetpaladin89.MoreArmors.utils.skilltree.SkillTreeNode;
+import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
+import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -54,12 +52,6 @@ public class EmeraldArmor extends CustomArmor {
 
     // Override Methods
 
-    protected void armorAttributes() {
-        updateHealth();
-        AttributeModifier healthAttribute = new AttributeModifier(pluginKey(), healthBoost, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR);
-
-        attributeModifiers.put(Attribute.MAX_HEALTH, healthAttribute);
-    }
     protected void armorNBT() {
         NBT.modify(item, nbt -> {
             nbt.setInteger("EmeraldCount", emeraldCount);
@@ -75,17 +67,6 @@ public class EmeraldArmor extends CustomArmor {
             case BOOTS -> new ItemStack(Material.LEATHER_BOOTS);
             default -> null;
         };
-    }
-    protected int getDefaultArmor() {
-        return switch (slot) {
-            case HELMET, BOOTS -> 3;
-            case CHESTPLATE -> 8;
-            case LEGGINGS -> 6;
-            default -> 0;
-        };
-    }
-    protected int getDefaultArmorToughness() {
-        return 2;
     }
     protected String getDefaultName() {
         return switch (slot) {
@@ -212,6 +193,20 @@ public class EmeraldArmor extends CustomArmor {
         emeraldCount = NBT.get(item, nbt -> (int) nbt.getInteger("EmeraldCount"));
     }
 
+    protected void setArmorStats() {
+        double armor = switch (slot) {
+            case HELMET, BOOTS -> 3;
+            case CHESTPLATE -> 8;
+            case LEGGINGS -> 6;
+            default -> 0;
+        };
+        double armorToughness = 2;
+
+        ArmorStats armorStats = new ArmorStats(armor, armorToughness);
+        armorStats.setMaxHealth(healthBoost);
+
+        this.armorStats = armorStats;
+    }
     protected void setLore() {
         updateHealth();
         int currentStage = emeraldCount / UPGRADE_THRESHOLD;

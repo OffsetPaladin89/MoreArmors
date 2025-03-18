@@ -1,19 +1,18 @@
 package me.offsetpaladin89.MoreArmors.items.armors;
 
-import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
-import me.offsetpaladin89.MoreArmors.utils.Util;
-import me.offsetpaladin89.MoreArmors.utils.skilltree.SkillTreeNode;
+import me.offsetpaladin89.MoreArmors.utils.Lore;
+import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
+import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
+import me.offsetpaladin89.MoreArmors.utils.stats.Stats;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-
-import static me.offsetpaladin89.MoreArmors.enums.SlotType.HELMET;
 
 public class ExperienceArmor extends CustomArmor {
 
@@ -28,6 +27,14 @@ public class ExperienceArmor extends CustomArmor {
         super(slot);
     }
 
+    public static Stats getSetStats() {
+        Stats stats = new Stats();
+        stats.setExperienceMultiplier(2);
+
+        return stats;
+    }
+
+
     // Override Methods
 
     protected ArmorType getArmorID() {
@@ -40,14 +47,6 @@ public class ExperienceArmor extends CustomArmor {
             case LEGGINGS -> new ItemStack(Material.LEATHER_LEGGINGS);
             case BOOTS -> new ItemStack(Material.LEATHER_BOOTS);
             default -> null;
-        };
-    }
-    protected int getDefaultArmor() {
-        return switch (slot) {
-            case HELMET, BOOTS -> 1;
-            case CHESTPLATE -> 5;
-            case LEGGINGS -> 4;
-            default -> 0;
         };
     }
     protected String getDefaultName() {
@@ -172,6 +171,16 @@ public class ExperienceArmor extends CustomArmor {
         return BASE_RARITY;
     }
 
+    protected void setArmorStats() {
+        double armor = switch (slot) {
+            case HELMET, BOOTS -> 1;
+            case CHESTPLATE -> 5;
+            case LEGGINGS -> 4;
+            default -> 0;
+        };
+
+        this.armorStats = new ArmorStats(armor);
+    }
     protected void setLore() {
         ItemMeta itemMeta = item.getItemMeta();
 

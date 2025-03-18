@@ -4,13 +4,14 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import de.tr7zw.changeme.nbtapi.NBT;
-import me.offsetpaladin89.MoreArmors.utils.skilltree.BaseSkillTree;
-import me.offsetpaladin89.MoreArmors.utils.skilltree.SkillTree;
-import me.offsetpaladin89.MoreArmors.utils.skilltree.SkillTreeNode;
+import me.offsetpaladin89.MoreArmors.utils.skills.BaseSkillTree;
+import me.offsetpaladin89.MoreArmors.utils.skills.SkillTree;
+import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.items.misc.CustomItem;
+import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -28,10 +29,9 @@ import java.util.UUID;
 
 public class CustomArmor extends CustomItem {
 
-    protected int armor = 0;
-    protected int armorToughness = 0;
     protected SlotType slot;
     protected ArmorType armorID;
+    protected ArmorStats armorStats;
 
     protected ListMultimap<Attribute, AttributeModifier> attributeModifiers = ArrayListMultimap.create();
 
@@ -45,8 +45,6 @@ public class CustomArmor extends CustomItem {
         item = getBaseItem();
         rarity = Rarity.getRarity(getRarity(), tier);
         displayName = getFormattedName(getDefaultName());
-        armor = getDefaultArmor();
-        armorToughness = getDefaultArmorToughness();
 
         updateItem(true);
     }
@@ -63,6 +61,10 @@ public class CustomArmor extends CustomItem {
         return tier;
     }
 
+    public ArmorStats getArmorStats() {
+        return armorStats;
+    }
+
     // Armor Creation
 
     public void updateItem(boolean resetPersistent) {
@@ -72,12 +74,11 @@ public class CustomArmor extends CustomItem {
         setDisplayName();
         setTextures();
         setLore();
+        setArmorStats();
 
         setFlags();
 
-        baseAttributes();
-        armorAttributes();
-        setAttributes();
+        armorStats.setStats(item, armorID, slot);
 
         baseNBT(resetPersistent);
         armorNBT();
@@ -100,26 +101,10 @@ public class CustomArmor extends CustomItem {
         item.setItemMeta(itemMeta);
     }
 
-    protected void baseAttributes() {
-        AttributeModifier armorAttribute = new AttributeModifier(pluginKey(), armor, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR);
-        AttributeModifier armorToughnessAttribute = new AttributeModifier(pluginKey(), armorToughness, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR);
-
-        attributeModifiers.put(Attribute.ARMOR, armorAttribute);
-        attributeModifiers.put(Attribute.ARMOR_TOUGHNESS, armorToughnessAttribute);
-    }
-
-    protected void setAttributes() {
-        ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.setAttributeModifiers(attributeModifiers);
-        item.setItemMeta(itemMeta);
-    }
-
     protected void baseNBT(boolean resetPersistent) {
         NBT.modify(item, nbt -> {
             nbt.setEnum("Rarity", rarity);
             nbt.setInteger("Tier", tier);
-            nbt.setInteger("Armor", armor);
-            nbt.setInteger("ArmorToughness", armorToughness);
             if(resetPersistent) {
                 nbt.resolveOrCreateCompound("SkillTree.SkillTreeNodes");
                 for (int n = 0; n < 15; n++) nbt.resolveOrCreateCompound("SkillTree.SkillTreeNodes").setBoolean("Node" + n, false);
@@ -136,9 +121,7 @@ public class CustomArmor extends CustomItem {
 
     public void createItemFromNBT() {
         NBT.get(item, nbt -> {
-            armor = nbt.getInteger("Armor");
             tier = nbt.getInteger("Tier");
-            armorToughness = nbt.getInteger("ArmorToughness");
             armorID = nbt.getEnum("ArmorID", ArmorType.class);
         });
 
@@ -172,18 +155,10 @@ public class CustomArmor extends CustomItem {
 
     protected void armorNBT() {
     }
-    protected void armorAttributes(){
-    }
-
     protected ArmorType getArmorID() { return ArmorType.INVALID; }
+
     protected ItemStack getBaseItem() {
         return null;
-    }
-    protected int getDefaultArmor() {
-        return 0;
-    }
-    protected int getDefaultArmorToughness() {
-        return 0;
     }
     protected ArrayList<String> getDescription(SkillTreeNode node) {
         return null;
@@ -197,6 +172,8 @@ public class CustomArmor extends CustomItem {
     protected void getSpecialValues() {
     }
 
+    protected void setArmorStats() {
+    }
     protected void setTextures() {
     }
 }

@@ -4,7 +4,9 @@ import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
-import me.offsetpaladin89.MoreArmors.utils.skilltree.SkillTreeNode;
+import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
+import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
+import me.offsetpaladin89.MoreArmors.utils.stats.Stats;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -26,13 +28,14 @@ public class TitanArmor extends CustomArmor {
         super(slot);
     }
 
-    // Override Methods
+    public static Stats getSetStats() {
+        Stats stats = new Stats();
+        stats.setPlayerScale(1.5);
 
-    protected void armorAttributes() {
-        AttributeModifier healthAttribute = new AttributeModifier(pluginKey(), 2, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR);
-
-        attributeModifiers.put(Attribute.MAX_HEALTH, healthAttribute);
+        return stats;
     }
+
+    // Override Methods
 
     protected ArmorType getArmorID() {
         return ArmorType.TITAN;
@@ -44,14 +47,6 @@ public class TitanArmor extends CustomArmor {
             case LEGGINGS -> new ItemStack(Material.IRON_LEGGINGS);
             case BOOTS -> new ItemStack(Material.IRON_BOOTS);
             default -> null;
-        };
-    }
-    protected int getDefaultArmor() {
-        return switch (slot) {
-            case HELMET, BOOTS -> 2;
-            case CHESTPLATE -> 6;
-            case LEGGINGS -> 5;
-            default -> 0;
         };
     }
     protected String getDefaultName() {
@@ -174,6 +169,21 @@ public class TitanArmor extends CustomArmor {
     }
     protected Rarity getRarity() {
         return BASE_RARITY;
+    }
+
+    protected void setArmorStats() {
+        double armor = switch (slot) {
+            case HELMET, BOOTS -> 2;
+            case CHESTPLATE -> 6;
+            case LEGGINGS -> 5;
+            default -> 0;
+        };
+        double maxHealth = 2;
+
+        ArmorStats armorStats = new ArmorStats(armor);
+        armorStats.setMaxHealth(maxHealth);
+
+        this.armorStats = armorStats;
     }
 
     protected void setLore() {

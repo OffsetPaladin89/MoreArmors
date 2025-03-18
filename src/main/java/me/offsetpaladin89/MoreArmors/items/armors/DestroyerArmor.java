@@ -6,7 +6,8 @@ import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.Util;
-import me.offsetpaladin89.MoreArmors.utils.skilltree.SkillTreeNode;
+import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
+import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -14,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
-import static me.offsetpaladin89.MoreArmors.enums.SlotType.HELMET;
+import static me.offsetpaladin89.MoreArmors.enums.SlotType.*;
 
 public class DestroyerArmor extends CustomArmor {
 
@@ -68,17 +69,6 @@ public class DestroyerArmor extends CustomArmor {
             case BOOTS -> new ItemStack(Material.LEATHER_BOOTS);
             default -> null;
         };
-    }
-    protected int getDefaultArmor() {
-        return switch (slot) {
-            case HELMET, BOOTS -> 3;
-            case CHESTPLATE -> 8;
-            case LEGGINGS -> 6;
-            default -> 0;
-        };
-    }
-    protected int getDefaultArmorToughness() {
-        return 2;
     }
     protected String getDefaultName() {
         return switch (slot) {
@@ -205,6 +195,20 @@ public class DestroyerArmor extends CustomArmor {
         killCount = NBT.get(item, nbt -> (int) nbt.getInteger("KillCount"));
     }
 
+    protected void setArmorStats() {
+        double armor = switch (slot) {
+            case HELMET, BOOTS -> 3;
+            case CHESTPLATE -> 8;
+            case LEGGINGS -> 6;
+            default -> 0;
+        };
+        double armorToughness = 2;
+
+        ArmorStats armorStats = new ArmorStats(armor, armorToughness);
+        armorStats.setAdditionalDamage(damageBonus);
+
+        this.armorStats = armorStats;
+    }
     protected void setLore() {
         updateDamage();
         int currentStage = killCount / UPGRADE_THRESHOLD;

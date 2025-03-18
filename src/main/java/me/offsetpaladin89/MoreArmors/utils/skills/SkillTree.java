@@ -1,4 +1,4 @@
-package me.offsetpaladin89.MoreArmors.utils.skilltree;
+package me.offsetpaladin89.MoreArmors.utils.skills;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import org.bukkit.inventory.ItemStack;
