@@ -4,6 +4,7 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.utils.Util;
+import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
 import org.bukkit.World.Environment;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Arrow;
@@ -30,25 +31,34 @@ public class DamageHandler implements Listener {
 
 	@EventHandler
 	public void DamageEntity(EntityDamageByEntityEvent event) {
-		if(event.getDamager() instanceof Player player && event.getEntity() instanceof LivingEntity) {
-			event.setDamage(event.getDamage() + destroyerDamage(player));
-            event.setDamage(event.getDamage() * netherDamage(player) * seaGreedDamage(player) * endDamage(player));
-            if(config.getBoolean("damageindicators")) plugin.hologramHandler.createDamageHologram(player, player.getLocation(), (LivingEntity) event.getEntity(), 20L, event.getDamage());
-		}
+		if(event.getDamager() instanceof Player p && event.getEntity() instanceof LivingEntity e) {
+			ArmorStats stats = new ArmorStats();
+			stats.getStats(p.getInventory().getArmorContents());
+			double initDamage = event.getDamage();
+			double finalDamage = (initDamage + stats.getAdditionalDamage()) * (1 + stats.getDamageMultiplier());
 
-		if(event.getEntity() instanceof Player player) {
-			Environment env = player.getWorld().getEnvironment();
-			if(Util.IsFullCustomSet(ArmorType.NETHER, player.getInventory()) && env.equals(NETHER)) event.setDamage(event.getDamage() * 0.5);
-			if(Util.IsFullCustomSet(ArmorType.END, player.getInventory()) && env.equals(THE_END)) event.setDamage(event.getDamage() * 0.5);
+			event.setDamage(finalDamage);
+			plugin.hologramHandler.createDamageHologram(p, p.getLocation(), e, 20L, finalDamage);
 		}
-
-		if(event.getDamager() instanceof Arrow damager && event.getEntity() instanceof LivingEntity) {
-			if(damager.getShooter() instanceof Player player) {
-                event.setDamage(event.getDamage() + destroyerDamage(player));
-                event.setDamage(event.getDamage() * netherDamage(player) * seaGreedDamage(player) * endDamage(player));
-				if(config.getBoolean("damageindicators")) plugin.hologramHandler.createDamageHologram(player, damager.getLocation(), (LivingEntity) event.getEntity(), 20L, event.getDamage());
-			}
-		}
+//		if(event.getDamager() instanceof Player player && event.getEntity() instanceof LivingEntity) {
+//			event.setDamage(event.getDamage() + destroyerDamage(player));
+//            event.setDamage(event.getDamage() * netherDamage(player) * seaGreedDamage(player) * endDamage(player));
+//            if(config.getBoolean("damageindicators")) plugin.hologramHandler.createDamageHologram(player, player.getLocation(), (LivingEntity) event.getEntity(), 20L, event.getDamage());
+//		}
+//
+//		if(event.getEntity() instanceof Player player) {
+//			Environment env = player.getWorld().getEnvironment();
+//			if(Util.IsFullCustomSet(ArmorType.NETHER, player.getInventory()) && env.equals(NETHER)) event.setDamage(event.getDamage() * 0.5);
+//			if(Util.IsFullCustomSet(ArmorType.END, player.getInventory()) && env.equals(THE_END)) event.setDamage(event.getDamage() * 0.5);
+//		}
+//
+//		if(event.getDamager() instanceof Arrow damager && event.getEntity() instanceof LivingEntity) {
+//			if(damager.getShooter() instanceof Player player) {
+//                event.setDamage(event.getDamage() + destroyerDamage(player));
+//                event.setDamage(event.getDamage() * netherDamage(player) * seaGreedDamage(player) * endDamage(player));
+//				if(config.getBoolean("damageindicators")) plugin.hologramHandler.createDamageHologram(player, damager.getLocation(), (LivingEntity) event.getEntity(), 20L, event.getDamage());
+//			}
+//		}
 	}
 
 	public Float destroyerDamage(Player p) {
@@ -56,8 +66,8 @@ public class DamageHandler implements Listener {
 
 		PlayerInventory inv = p.getInventory();
 		int helmetBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
-		int chestplateBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
-		int leggingsBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
+		int chestplateBonus = NBT.get(inv.getChestplate(), nbt -> (int) nbt.getInteger("DamageBonus"));
+		int leggingsBonus = NBT.get(inv.getLeggings(), nbt -> (int) nbt.getInteger("DamageBonus"));
 		int bootsBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
 
 		return (float) (helmetBonus + chestplateBonus + leggingsBonus + bootsBonus);

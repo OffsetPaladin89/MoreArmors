@@ -3,12 +3,15 @@ package me.offsetpaladin89.MoreArmors.utils.stats;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import de.tr7zw.changeme.nbtapi.NBT;
+import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import static org.bukkit.attribute.AttributeModifier.Operation.ADD_NUMBER;
@@ -69,6 +72,18 @@ public class ArmorStats extends Stats {
         });
     }
 
+    public void getStats(ItemStack[] armor) {
+        for(ItemStack i : armor) {
+            if(Util.isAirOrNull(i)) continue;
+            NBT.get(i, nbt -> {
+                additionalDamage += nbt.resolveCompound("Stats").getOrDefault("AdditionalDamage", 0);
+                damageMultiplier += nbt.resolveCompound("Stats").getOrDefault("DamageMultiplier", 0);
+                damageReduction += nbt.resolveCompound("Stats").getOrDefault("DamageReduction", 0);
+                criticalHitChance += nbt.resolveCompound("Stats").getOrDefault("CriticalHitChance", 0);
+                criticalHitDamage += nbt.resolveCompound("Stats").getOrDefault("CriticalHitDamage", 0);
+            });
+        }
+    }
 
     public double getMovementSpeed() {
         return movementSpeed;

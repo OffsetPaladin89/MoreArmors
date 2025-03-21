@@ -54,7 +54,6 @@ public class DestroyerArmor extends CustomArmor {
     protected void armorNBT() {
         NBT.modify(item, nbt -> {
             nbt.setInteger("KillCount", killCount);
-            nbt.setInteger("DamageBonus", damageBonus);
         });
     }
 
