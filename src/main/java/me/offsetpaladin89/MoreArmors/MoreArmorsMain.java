@@ -5,18 +5,22 @@ import me.offsetpaladin89.MoreArmors.commands.Commands;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.handlers.*;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static me.offsetpaladin89.MoreArmors.handlers.ArmorSetAbilityHandler.scanPlayers;
+
 public class MoreArmorsMain extends JavaPlugin {
 
 	public HologramHandler hologramHandler;
-	public ArmorSetAbilityHandler armorSetAbilities;
 	public ConfigHandler configHandler;
 	public InventoryHandler inventoryHandler;
+
+	public static FileConfiguration config;
 
 	public void onEnable() {
 		new NamespacedKey(this, "morearmors");
@@ -31,7 +35,6 @@ public class MoreArmorsMain extends JavaPlugin {
 		new DamageHandler(this);
 		hologramHandler = new HologramHandler(this);
 
-		armorSetAbilities = new ArmorSetAbilityHandler(this);
 		ArmorChecker();
 
 		new RecipeHandler(this);
@@ -49,12 +52,15 @@ public class MoreArmorsMain extends JavaPlugin {
 			defaultValues.put(String.format("%s_armor.craftable", s), true);
 		}
 		configHandler.saveConfigDefaults("config", defaultValues);
+
+		config = configHandler.getConfig("config");
+
 	}
 
 	private void ArmorChecker() {
 		new BukkitRunnable() {
 			public void run() {
-				armorSetAbilities.scanPlayers(getServer().getOnlinePlayers().toArray());
+				scanPlayers(getServer().getOnlinePlayers().toArray());
 			}
 		}.runTaskTimer(this, 0, 10);
 	}

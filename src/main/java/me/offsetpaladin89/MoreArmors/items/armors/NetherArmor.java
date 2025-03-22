@@ -3,6 +3,7 @@ package me.offsetpaladin89.MoreArmors.items.armors;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.enums.WorldType;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
@@ -14,12 +15,21 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
+import static me.offsetpaladin89.MoreArmors.MoreArmorsMain.config;
 import static me.offsetpaladin89.MoreArmors.enums.SlotType.HELMET;
 
 public class NetherArmor extends CustomArmor {
 
     private static final Color LEATHER_COLOR = Color.GRAY;
     private static final Rarity BASE_RARITY = Rarity.LEGENDARY;
+
+    public NetherArmor() {
+        super();
+        if(config.getBoolean("nether_armor.enabled")) {
+            setStats.setDamageMultiplier(1d, WorldType.NETHER);
+            setStats.setDamageReduction(0.5, WorldType.NETHER);
+        }
+    }
 
     public NetherArmor(ItemStack item) {
         super(item);
@@ -175,8 +185,9 @@ public class NetherArmor extends CustomArmor {
         double armorToughness = 2;
 
         this.armorStats = new ArmorStats(armor, armorToughness);
-    }
 
+        armorStats.setDamageMultiplier(0.1, WorldType.NETHER);
+    }
     protected void setLore() {
         ItemMeta itemMeta = item.getItemMeta();
 

@@ -21,6 +21,10 @@ public class MinerArmor extends CustomArmor {
     private static final Color LEATHER_COLOR = Color.GRAY;
     private static final Rarity BASE_RARITY = Rarity.RARE;
 
+    public MinerArmor() {
+        super();
+    }
+
     public MinerArmor(ItemStack item) {
         super(item);
     }

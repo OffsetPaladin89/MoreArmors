@@ -18,6 +18,10 @@ public class SpeedsterArmor extends CustomArmor {
     private static final Color LEATHER_COLOR = Color.WHITE;
     private static final Rarity BASE_RARITY = Rarity.UNCOMMON;
 
+    public SpeedsterArmor() {
+        super();
+    }
+
     public SpeedsterArmor(ItemStack item) {
         super(item);
     }

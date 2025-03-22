@@ -26,6 +26,10 @@ public class EmeraldArmor extends CustomArmor {
     private int emeraldCount = 0;
     private int healthBoost = 0;
 
+    public EmeraldArmor() {
+        super();
+    }
+
     public EmeraldArmor(ItemStack item) {
         super(item);
     }

@@ -6,7 +6,6 @@ import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
 import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
-import me.offsetpaladin89.MoreArmors.utils.stats.Stats;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -14,10 +13,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
+import static me.offsetpaladin89.MoreArmors.MoreArmorsMain.config;
+
 public class ExperienceArmor extends CustomArmor {
 
     private static final Color LEATHER_COLOR = Color.BLUE;
     private static final Rarity BASE_RARITY = Rarity.RARE;
+
+    public ExperienceArmor() {
+        super();
+        if(config.getBoolean("experience_armor.enabled")) setStats.setExperienceMultiplier(1d);
+    }
 
     public ExperienceArmor(ItemStack item) {
         super(item);
@@ -25,13 +31,6 @@ public class ExperienceArmor extends CustomArmor {
 
     public ExperienceArmor(SlotType slot) {
         super(slot);
-    }
-
-    public static Stats getSetStats() {
-        Stats stats = new Stats();
-        stats.setExperienceMultiplier(2);
-
-        return stats;
     }
 
 

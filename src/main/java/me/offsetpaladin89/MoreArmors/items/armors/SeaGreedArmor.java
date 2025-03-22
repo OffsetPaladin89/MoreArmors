@@ -3,26 +3,30 @@ package me.offsetpaladin89.MoreArmors.items.armors;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.enums.WorldType;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
 import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
+import static me.offsetpaladin89.MoreArmors.MoreArmorsMain.config;
 import static me.offsetpaladin89.MoreArmors.enums.SlotType.HELMET;
 
 public class SeaGreedArmor extends CustomArmor {
 
     private static final Color LEATHER_COLOR = Color.fromRGB(130, 140, 100);
     private static final Rarity BASE_RARITY = Rarity.MYTHIC;
+
+    public SeaGreedArmor() {
+        super();
+        if(config.getBoolean("sea_greed.enabled")) setStats.setDamageMultiplier(1d, WorldType.OVERWORLD);
+    }
 
     public SeaGreedArmor(ItemStack item) {
         super(item);
@@ -190,7 +194,7 @@ public class SeaGreedArmor extends CustomArmor {
         lore.addColoredLine("&7Gain &a+100% &7mining speed while underwater.");
         lore.addEmpty();
         lore.addColoredLine("&6Full Set Bonus: Sea's Greed");
-        lore.addColoredLine("&7Deal &c+100% &7damage while in water.");
+        lore.addColoredLine("&7Deal &c+100% &7damage in the &aOverworld&7.");
         lore.addColoredLine("&7Gain &a+200% &7swim speed while in water.");
         lore.addColoredLine("&7Gain &5Conduit Power &7while in water.");
         lore.addEmpty();

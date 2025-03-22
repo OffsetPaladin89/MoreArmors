@@ -5,9 +5,10 @@ import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
-import org.bukkit.World.Environment;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,34 +32,47 @@ public class DamageHandler implements Listener {
 
 	@EventHandler
 	public void DamageEntity(EntityDamageByEntityEvent event) {
-		if(event.getDamager() instanceof Player p && event.getEntity() instanceof LivingEntity e) {
-			ArmorStats stats = new ArmorStats();
-			stats.getStats(p.getInventory().getArmorContents());
-			double initDamage = event.getDamage();
-			double finalDamage = (initDamage + stats.getAdditionalDamage()) * (1 + stats.getDamageMultiplier());
+		event.setDamage(getDamage(event.getDamager(), event.getEntity(), event.getFinalDamage()));
+	}
 
-			event.setDamage(finalDamage);
-			plugin.hologramHandler.createDamageHologram(p, p.getLocation(), e, 20L, finalDamage);
+	private double getDamage(Entity e1, Entity e2, double initDamage) {
+		if(!(e2 instanceof LivingEntity)) return initDamage;
+
+		ArmorStats e1stats = new ArmorStats();
+		ArmorStats e2stats = new ArmorStats();
+		Location damageLoc = null, damageLoc2 = null;
+		Player p = null, p2 = null;
+
+		if(e1 instanceof Player) {
+			p = (Player) e1;
+			e1stats.getStats(p.getInventory().getArmorContents(), p.getWorld().getEnvironment());
+			damageLoc = p.getLocation();
 		}
-//		if(event.getDamager() instanceof Player player && event.getEntity() instanceof LivingEntity) {
-//			event.setDamage(event.getDamage() + destroyerDamage(player));
-//            event.setDamage(event.getDamage() * netherDamage(player) * seaGreedDamage(player) * endDamage(player));
-//            if(config.getBoolean("damageindicators")) plugin.hologramHandler.createDamageHologram(player, player.getLocation(), (LivingEntity) event.getEntity(), 20L, event.getDamage());
-//		}
-//
-//		if(event.getEntity() instanceof Player player) {
-//			Environment env = player.getWorld().getEnvironment();
-//			if(Util.IsFullCustomSet(ArmorType.NETHER, player.getInventory()) && env.equals(NETHER)) event.setDamage(event.getDamage() * 0.5);
-//			if(Util.IsFullCustomSet(ArmorType.END, player.getInventory()) && env.equals(THE_END)) event.setDamage(event.getDamage() * 0.5);
-//		}
-//
-//		if(event.getDamager() instanceof Arrow damager && event.getEntity() instanceof LivingEntity) {
-//			if(damager.getShooter() instanceof Player player) {
-//                event.setDamage(event.getDamage() + destroyerDamage(player));
-//                event.setDamage(event.getDamage() * netherDamage(player) * seaGreedDamage(player) * endDamage(player));
-//				if(config.getBoolean("damageindicators")) plugin.hologramHandler.createDamageHologram(player, damager.getLocation(), (LivingEntity) event.getEntity(), 20L, event.getDamage());
-//			}
-//		}
+		else if(e1 instanceof Arrow a) {
+			if(a.getShooter() instanceof Player) {
+				p = (Player) a.getShooter();
+				e1stats.getStats(p.getInventory().getArmorContents(), p.getWorld().getEnvironment());
+				damageLoc = a.getLocation();
+			}
+			else return initDamage;
+		}
+
+		if(e2 instanceof Player) {
+			p2 = (Player) e2;
+			e2stats.getStats(p2.getInventory().getArmorContents(), p2.getWorld().getEnvironment());
+			damageLoc2 = p2.getLocation();
+		}
+
+		double damageMultiplier = 1 + e1stats.getDamageMultiplier();
+
+		double finalDamage = (initDamage + e1stats.getAdditionalDamage()) * damageMultiplier * (1 - e2stats.getDamageReduction());
+
+		if(config.getBoolean("damageindicators")) {
+			if(p != null) plugin.hologramHandler.createDamageHologram(p, damageLoc, (LivingEntity) e2, 20L, finalDamage);
+			if(p2 != null) plugin.hologramHandler.createDamageHologram(p2, damageLoc2, (LivingEntity) e2, 20L, finalDamage);
+
+		}
+		return finalDamage;
 	}
 
 	public Float destroyerDamage(Player p) {
@@ -71,38 +85,5 @@ public class DamageHandler implements Listener {
 		int bootsBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
 
 		return (float) (helmetBonus + chestplateBonus + leggingsBonus + bootsBonus);
-	}
-
-    public Float netherDamage(Player p) {
-		float damageBonus = 1f;
-		if(!config.getBoolean("nether_armor.enabled")) return damageBonus;
-		PlayerInventory inv = p.getInventory();
-		if(p.getWorld().getEnvironment().equals(NETHER)) {
-			if(Util.matchingCustomItem(inv.getHelmet(), ArmorType.NETHER)) damageBonus += 0.1f;
-			if(Util.matchingCustomItem(inv.getChestplate(), ArmorType.NETHER)) damageBonus += 0.1f;
-			if(Util.matchingCustomItem(inv.getLeggings(), ArmorType.NETHER)) damageBonus += 0.1f;
-			if(Util.matchingCustomItem(inv.getBoots(), ArmorType.NETHER)) damageBonus += 0.1f;
-			if(Util.IsFullCustomSet(ArmorType.NETHER, inv)) damageBonus += 1f;
-		}
-		return damageBonus;
-    }
-
-	public Float endDamage(Player p) {
-		float damageBonus = 1f;
-		if(!config.getBoolean("end_armor.enabled")) return damageBonus;
-		PlayerInventory inv = p.getInventory();
-		if(p.getWorld().getEnvironment().equals(THE_END)) {
-			if(Util.matchingCustomItem(inv.getHelmet(), ArmorType.END)) damageBonus += 0.1f;
-			if(Util.matchingCustomItem(inv.getChestplate(), ArmorType.END)) damageBonus += 0.1f;
-			if(Util.matchingCustomItem(inv.getLeggings(), ArmorType.END)) damageBonus += 0.1f;
-			if(Util.matchingCustomItem(inv.getBoots(), ArmorType.END)) damageBonus += 0.1f;
-			if(Util.IsFullCustomSet(ArmorType.END, inv)) damageBonus += 1f;
-		}
-		return damageBonus;
-	}
-
-	public Float seaGreedDamage(Player p) {
-		if(!(config.getBoolean("sea_greed_armor.enabled") && p.isInWater() && Util.IsFullCustomSet(ArmorType.SEA_GREED, p.getInventory()))) return 1f;
-		return 2f;
 	}
 }

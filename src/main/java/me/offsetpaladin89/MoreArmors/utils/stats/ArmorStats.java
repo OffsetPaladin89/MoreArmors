@@ -3,11 +3,16 @@ package me.offsetpaladin89.MoreArmors.utils.stats;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import de.tr7zw.changeme.nbtapi.NBT;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
+import de.tr7zw.changeme.nbtapi.iface.ReadableNBT;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.enums.WorldType;
+import me.offsetpaladin89.MoreArmors.items.armors.CustomArmor;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.ItemStack;
@@ -35,7 +40,6 @@ public class ArmorStats extends Stats {
     }
 
     public ArmorStats() {
-
     }
 
     public void setStats(ItemStack item, ArmorType armorID, SlotType slot) {
@@ -57,31 +61,78 @@ public class ArmorStats extends Stats {
         item.setItemMeta(itemMeta);
 
         NBT.modify(item, nbt -> {
-            if(maxHealth != 0) nbt.resolveOrCreateCompound("Stats").setDouble("MaxHealth", maxHealth);
-            if(armor != 0) nbt.resolveOrCreateCompound("Stats").setDouble("Armor", armor);
-            if(armorToughness != 0) nbt.resolveOrCreateCompound("Stats").setDouble("ArmorToughness", armorToughness);
-            if(movementSpeed != 0) nbt.resolveOrCreateCompound("Stats").setDouble("MovementSpeed", movementSpeed);
-            if(blockBreakSpeed != 0) nbt.resolveOrCreateCompound("Stats").setDouble("BlockBreakSpeed", blockBreakSpeed);
-            if(submergedMiningSpeed != 0) nbt.resolveOrCreateCompound("Stats").setDouble("SubmergedMiningSpeed", submergedMiningSpeed);
 
-            if(additionalDamage != 0) nbt.resolveOrCreateCompound("Stats").setDouble("AdditionalDamage", additionalDamage);
-            if(damageMultiplier != 0) nbt.resolveOrCreateCompound("Stats").setDouble("DamageMultiplier", damageMultiplier);
-            if(damageReduction != 0) nbt.resolveOrCreateCompound("Stats").setDouble("DamageReduction", damageReduction);
-            if(criticalHitChance != 0) nbt.resolveOrCreateCompound("Stats").setDouble("CriticalHitChance", criticalHitChance);
-            if(criticalHitDamage != 0) nbt.resolveOrCreateCompound("Stats").setDouble("CriticalHitDamage", criticalHitDamage);
+            ReadWriteNBT baseCompound = nbt.resolveOrCreateCompound("Stats");
+
+            if(maxHealth != 0) baseCompound.setDouble("MaxHealth", maxHealth);
+            if(armor != 0) baseCompound.setDouble("Armor", armor);
+            if(armorToughness != 0) baseCompound.setDouble("ArmorToughness", armorToughness);
+            if(movementSpeed != 0) baseCompound.setDouble("MovementSpeed", movementSpeed);
+            if(blockBreakSpeed != 0) baseCompound.setDouble("BlockBreakSpeed", blockBreakSpeed);
+            if(submergedMiningSpeed != 0) baseCompound.setDouble("SubmergedMiningSpeed", submergedMiningSpeed);
+
+            for(WorldType type : WorldType.values()) {
+
+                ReadWriteNBT worldCompound = baseCompound.resolveOrCreateCompound("Worlds").resolveOrCreateCompound(type.name);
+
+                if(getAdditionalDamage(type) != 0) worldCompound.setDouble("AdditionalDamage", additionalDamage.get(type));
+                if(getDamageMultiplier(type) != 0) worldCompound.setDouble("DamageMultiplier", damageMultiplier.get(type));
+                if(getDamageReduction(type) != 0) worldCompound.setDouble("DamageReduction", damageReduction.get(type));
+                if(getCriticalHitChance(type) != 0) worldCompound.setDouble("CriticalHitChance", criticalHitChance.get(type));
+                if(getCriticalHitDamage(type) != 0) worldCompound.setDouble("CriticalHitDamage", criticalHitDamage.get(type));
+                if(getExperienceMultiplier(type) != 0) worldCompound.setDouble("ExperienceMultiplier", experienceMultiplier.get(type));
+                if(getPlayerScale(type) != 0) worldCompound.setDouble("PlayerScale", playerScale.get(type));
+            }
         });
     }
 
-    public void getStats(ItemStack[] armor) {
+    public void getStats(ItemStack[] armor, World.Environment env) {
         for(ItemStack i : armor) {
-            if(Util.isAirOrNull(i)) continue;
+            if(Util.isAirOrNull(i) || !Util.isCustomItem(i)) continue;
+
+            WorldType worldType = WorldType.getWorldType(env);
+
             NBT.get(i, nbt -> {
-                additionalDamage += nbt.resolveCompound("Stats").getOrDefault("AdditionalDamage", 0);
-                damageMultiplier += nbt.resolveCompound("Stats").getOrDefault("DamageMultiplier", 0);
-                damageReduction += nbt.resolveCompound("Stats").getOrDefault("DamageReduction", 0);
-                criticalHitChance += nbt.resolveCompound("Stats").getOrDefault("CriticalHitChance", 0);
-                criticalHitDamage += nbt.resolveCompound("Stats").getOrDefault("CriticalHitDamage", 0);
+
+                for(WorldType type : WorldType.values()) {
+
+                    ReadableNBT worldCompound = nbt.resolveCompound("Stats.Worlds").resolveCompound(type.name);
+
+                    if(worldType == type || type == WorldType.ALL) {
+                        setAdditionalDamage(worldCompound.getOrDefault("AdditionalDamage", 0d) + getAdditionalDamage(type), type);
+                        setDamageMultiplier(worldCompound.getOrDefault("DamageMultiplier", 0d) + getDamageMultiplier(type), type);
+                        setDamageReduction(worldCompound.getOrDefault("DamageReduction", 0d) + getDamageReduction(type), type);
+                        setCriticalHitChance(worldCompound.getOrDefault("CriticalHitChance", 0d) + getCriticalHitChance(type), type);
+                        setCriticalHitDamage(worldCompound.getOrDefault("CriticalHitDamage", 0d) + getCriticalHitDamage(type), type);
+                        setExperienceMultiplier(worldCompound.getOrDefault("ExperienceMultiplier", 0d) + getExperienceMultiplier(type), type);
+                        setPlayerScale(worldCompound.getOrDefault("PlayerScale", 0d) + getPlayerScale(type), type);
+                    }
+                }
             });
+        }
+
+        CustomArmor fullSet = ArmorType.fullSetType(armor);
+
+        if(fullSet == null) return;
+
+        Stats setStats = fullSet.getSetStats();
+
+        for(WorldType type : WorldType.values()) {
+
+            WorldType worldType = WorldType.getWorldType(env);
+
+
+            if(worldType == type || type == WorldType.ALL) {
+
+                setAdditionalDamage(setStats.getAdditionalDamage(type) + getAdditionalDamage(type), type);
+                setDamageMultiplier(setStats.getDamageMultiplier(type) + getDamageMultiplier(type), type);
+                setDamageReduction(setStats.getDamageReduction(type) + getDamageReduction(type), type);
+                setCriticalHitChance(setStats.getCriticalHitChance(type) + getCriticalHitChance(type), type);
+                setCriticalHitDamage(setStats.getCriticalHitDamage(type) + getCriticalHitDamage(type), type);
+                setExperienceMultiplier(setStats.getExperienceMultiplier(type) + getExperienceMultiplier(type), type);
+                setPlayerScale(setStats.getPlayerScale(type) + getPlayerScale(type), type);
+
+            }
         }
     }
 

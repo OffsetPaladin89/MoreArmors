@@ -3,6 +3,7 @@ package me.offsetpaladin89.MoreArmors.enums;
 import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.items.armors.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,21 @@ public enum ArmorType {
         };
     }
 
+    public static CustomArmor armorFromType(ArmorType type) {
+        return switch(type) {
+            case EMERALD -> new EmeraldArmor();
+            case END -> new EndArmor();
+            case EXPERIENCE -> new ExperienceArmor();
+            case MINER -> new MinerArmor();
+            case NETHER -> new NetherArmor();
+            case SEA_GREED -> new SeaGreedArmor();
+            case SPEEDSTER -> new SpeedsterArmor();
+            case TITAN -> new TitanArmor();
+            case DESTROYER -> new DestroyerArmor();
+            case INVALID -> null;
+        };
+    }
+
     public static CustomArmor armorFromType(ArmorType type, SlotType slot) {
         return switch(type) {
             case EMERALD -> new EmeraldArmor(slot);
@@ -48,6 +64,16 @@ public enum ArmorType {
             case DESTROYER -> new DestroyerArmor(slot);
             case INVALID -> null;
         };
+    }
+
+    public static CustomArmor fullSetType(ItemStack[] armor) {
+        for(ItemStack i : armor) if(i == null) return null;
+
+        ArmorType boots = armorFromItem(armor[0]).getType(), leggings = armorFromItem(armor[1]).getType(), chestplate = armorFromItem(armor[2]).getType(), helmet = armorFromItem(armor[3]).getType();
+
+        if(boots == leggings && leggings == chestplate && chestplate == helmet) return armorFromType(boots);
+
+        return null;
     }
 
     public static List<String> allArmorTypes() {

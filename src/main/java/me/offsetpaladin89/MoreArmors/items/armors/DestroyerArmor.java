@@ -27,6 +27,10 @@ public class DestroyerArmor extends CustomArmor {
     private int killCount = 0;
     private int damageBonus = 0;
 
+    public DestroyerArmor() {
+        super();
+    }
+
     public DestroyerArmor(ItemStack item) {
         super(item);
     }

@@ -1,9 +1,8 @@
 package me.offsetpaladin89.MoreArmors.items.armors;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import de.tr7zw.changeme.nbtapi.NBT;
+import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.utils.skills.BaseSkillTree;
 import me.offsetpaladin89.MoreArmors.utils.skills.SkillTree;
 import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
@@ -12,13 +11,12 @@ import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.items.misc.CustomItem;
 import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
+import me.offsetpaladin89.MoreArmors.utils.stats.Stats;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -32,8 +30,11 @@ public class CustomArmor extends CustomItem {
     protected SlotType slot;
     protected ArmorType armorID;
     protected ArmorStats armorStats;
+    protected Stats setStats;
 
-    protected ListMultimap<Attribute, AttributeModifier> attributeModifiers = ArrayListMultimap.create();
+    public CustomArmor() {
+        setStats = new Stats();
+    }
 
     public CustomArmor(ItemStack item) {
         this.item = item;
@@ -61,9 +62,14 @@ public class CustomArmor extends CustomItem {
         return tier;
     }
 
-    public ArmorStats getArmorStats() {
-        return armorStats;
+    public ArmorType getType() {
+        return armorID;
     }
+
+    public Stats getSetStats() {
+        return setStats;
+    }
+
 
     // Armor Creation
 

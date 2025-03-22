@@ -6,19 +6,22 @@ import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
 import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
-import me.offsetpaladin89.MoreArmors.utils.stats.Stats;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
+import static me.offsetpaladin89.MoreArmors.MoreArmorsMain.config;
+
 public class TitanArmor extends CustomArmor {
 
     private static final Rarity BASE_RARITY = Rarity.UNCOMMON;
+
+    public TitanArmor() {
+        super();
+        if(config.getBoolean("titan_armor.enabled")) setStats.setPlayerScale(0.5);
+    }
 
     public TitanArmor(ItemStack item) {
         super(item);
@@ -26,13 +29,6 @@ public class TitanArmor extends CustomArmor {
 
     public TitanArmor(SlotType slot) {
         super(slot);
-    }
-
-    public static Stats getSetStats() {
-        Stats stats = new Stats();
-        stats.setPlayerScale(1.5);
-
-        return stats;
     }
 
     // Override Methods
