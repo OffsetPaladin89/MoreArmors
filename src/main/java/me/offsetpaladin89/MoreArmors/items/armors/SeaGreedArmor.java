@@ -3,7 +3,7 @@ package me.offsetpaladin89.MoreArmors.items.armors;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
-import me.offsetpaladin89.MoreArmors.enums.WorldType;
+import me.offsetpaladin89.MoreArmors.enums.Location;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
@@ -25,7 +25,7 @@ public class SeaGreedArmor extends CustomArmor {
 
     public SeaGreedArmor() {
         super();
-        if(config.getBoolean("sea_greed.enabled")) setStats.setDamageMultiplier(1d, WorldType.OVERWORLD);
+        if(config.getBoolean("sea_greed.enabled")) setStats.setDamageMultiplier(1d, Location.OVERWORLD);
     }
 
     public SeaGreedArmor(ItemStack item) {

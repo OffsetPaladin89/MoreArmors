@@ -45,13 +45,13 @@ public class DamageHandler implements Listener {
 
 		if(e1 instanceof Player) {
 			p = (Player) e1;
-			e1stats.getStats(p.getInventory().getArmorContents(), p.getWorld().getEnvironment());
+			e1stats.getStats(p.getInventory().getArmorContents(), p);
 			damageLoc = p.getLocation();
 		}
 		else if(e1 instanceof Arrow a) {
 			if(a.getShooter() instanceof Player) {
 				p = (Player) a.getShooter();
-				e1stats.getStats(p.getInventory().getArmorContents(), p.getWorld().getEnvironment());
+				e1stats.getStats(p.getInventory().getArmorContents(), p);
 				damageLoc = a.getLocation();
 			}
 			else return initDamage;
@@ -59,7 +59,7 @@ public class DamageHandler implements Listener {
 
 		if(e2 instanceof Player) {
 			p2 = (Player) e2;
-			e2stats.getStats(p2.getInventory().getArmorContents(), p2.getWorld().getEnvironment());
+			e2stats.getStats(p2.getInventory().getArmorContents(), p2);
 			damageLoc2 = p2.getLocation();
 		}
 

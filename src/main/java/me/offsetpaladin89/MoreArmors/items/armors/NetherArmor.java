@@ -3,7 +3,7 @@ package me.offsetpaladin89.MoreArmors.items.armors;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
-import me.offsetpaladin89.MoreArmors.enums.WorldType;
+import me.offsetpaladin89.MoreArmors.enums.Location;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
@@ -26,8 +26,8 @@ public class NetherArmor extends CustomArmor {
     public NetherArmor() {
         super();
         if(config.getBoolean("nether_armor.enabled")) {
-            setStats.setDamageMultiplier(1d, WorldType.NETHER);
-            setStats.setDamageReduction(0.5, WorldType.NETHER);
+            setStats.setDamageMultiplier(1d, Location.NETHER);
+            setStats.setDamageReduction(0.5, Location.NETHER);
         }
     }
 
@@ -186,7 +186,7 @@ public class NetherArmor extends CustomArmor {
 
         this.armorStats = new ArmorStats(armor, armorToughness);
 
-        armorStats.setDamageMultiplier(0.1, WorldType.NETHER);
+        armorStats.setDamageMultiplier(0.1, Location.NETHER);
     }
     protected void setLore() {
         ItemMeta itemMeta = item.getItemMeta();

@@ -2,6 +2,7 @@ package me.offsetpaladin89.MoreArmors.items.armors;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
+import me.offsetpaladin89.MoreArmors.enums.Location;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
@@ -12,9 +13,11 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 
+import static me.offsetpaladin89.MoreArmors.MoreArmorsMain.config;
 import static me.offsetpaladin89.MoreArmors.enums.SlotType.*;
 
 public class DestroyerArmor extends CustomArmor {
@@ -29,6 +32,11 @@ public class DestroyerArmor extends CustomArmor {
 
     public DestroyerArmor() {
         super();
+        if(config.getBoolean("destroyer_armor.enabled")) {
+            setStats.addPotionEffect(PotionEffectType.STRENGTH, 1, Location.ALL);
+            setStats.addPotionEffect(PotionEffectType.REGENERATION, 1, Location.ALL);
+            setStats.addPotionEffect(PotionEffectType.RESISTANCE, 1, Location.ALL);
+        }
     }
 
     public DestroyerArmor(ItemStack item) {
@@ -209,6 +217,7 @@ public class DestroyerArmor extends CustomArmor {
 
         ArmorStats armorStats = new ArmorStats(armor, armorToughness);
         armorStats.setAdditionalDamage(damageBonus);
+        if(slot == HELMET) armorStats.addPotionEffect(PotionEffectType.NIGHT_VISION, 0, Location.ALL);
 
         this.armorStats = armorStats;
     }

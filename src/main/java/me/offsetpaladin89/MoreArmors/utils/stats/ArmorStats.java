@@ -4,20 +4,25 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBTCompoundList;
 import de.tr7zw.changeme.nbtapi.iface.ReadableNBT;
-import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
+import de.tr7zw.changeme.nbtapi.iface.ReadableNBTList;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
+import me.offsetpaladin89.MoreArmors.enums.Location;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
-import me.offsetpaladin89.MoreArmors.enums.WorldType;
 import me.offsetpaladin89.MoreArmors.items.armors.CustomArmor;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.NamespacedKey;
-import org.bukkit.World;
+import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+import java.util.ArrayList;
 
 import static org.bukkit.attribute.AttributeModifier.Operation.ADD_NUMBER;
 import static org.bukkit.attribute.AttributeModifier.Operation.ADD_SCALAR;
@@ -71,41 +76,65 @@ public class ArmorStats extends Stats {
             if(blockBreakSpeed != 0) baseCompound.setDouble("BlockBreakSpeed", blockBreakSpeed);
             if(submergedMiningSpeed != 0) baseCompound.setDouble("SubmergedMiningSpeed", submergedMiningSpeed);
 
-            for(WorldType type : WorldType.values()) {
+            for(Location type : Location.values()) {
 
-                ReadWriteNBT worldCompound = baseCompound.resolveOrCreateCompound("Worlds").resolveOrCreateCompound(type.name);
+                ReadWriteNBT locationCompound = baseCompound.resolveOrCreateCompound("Locations").resolveOrCreateCompound(type.name);
 
-                if(getAdditionalDamage(type) != 0) worldCompound.setDouble("AdditionalDamage", additionalDamage.get(type));
-                if(getDamageMultiplier(type) != 0) worldCompound.setDouble("DamageMultiplier", damageMultiplier.get(type));
-                if(getDamageReduction(type) != 0) worldCompound.setDouble("DamageReduction", damageReduction.get(type));
-                if(getCriticalHitChance(type) != 0) worldCompound.setDouble("CriticalHitChance", criticalHitChance.get(type));
-                if(getCriticalHitDamage(type) != 0) worldCompound.setDouble("CriticalHitDamage", criticalHitDamage.get(type));
-                if(getExperienceMultiplier(type) != 0) worldCompound.setDouble("ExperienceMultiplier", experienceMultiplier.get(type));
-                if(getPlayerScale(type) != 0) worldCompound.setDouble("PlayerScale", playerScale.get(type));
+                if(getAdditionalDamage(type) != 0) locationCompound.setDouble("AdditionalDamage", additionalDamage.get(type));
+                if(getDamageMultiplier(type) != 0) locationCompound.setDouble("DamageMultiplier", damageMultiplier.get(type));
+                if(getDamageReduction(type) != 0) locationCompound.setDouble("DamageReduction", damageReduction.get(type));
+                if(getCriticalHitChance(type) != 0) locationCompound.setDouble("CriticalHitChance", criticalHitChance.get(type));
+                if(getCriticalHitDamage(type) != 0) locationCompound.setDouble("CriticalHitDamage", criticalHitDamage.get(type));
+                if(getExperienceMultiplier(type) != 0) locationCompound.setDouble("ExperienceMultiplier", experienceMultiplier.get(type));
+                if(getPlayerScale(type) != 0) locationCompound.setDouble("PlayerScale", playerScale.get(type));
+
+                ReadWriteNBTCompoundList effectList = locationCompound.getCompoundList("PotionEffects");
+
+                for(PotionEffect potionEffect : potionEffects.get(type)) {
+                    ReadWriteNBT effect = effectList.addCompound();
+
+                    String effectKey = potionEffect.getType().getKeyOrNull().toString();
+                    effect.setString("Type", effectKey);
+                    effect.setInteger("Level", potionEffect.getAmplifier());
+                }
             }
         });
     }
 
-    public void getStats(ItemStack[] armor, World.Environment env) {
+    public void getStats(ItemStack[] armor, Player p) {
         for(ItemStack i : armor) {
             if(Util.isAirOrNull(i) || !Util.isCustomItem(i)) continue;
 
-            WorldType worldType = WorldType.getWorldType(env);
+            ArrayList<Location> locations = Location.getLocation(p);
 
             NBT.get(i, nbt -> {
 
-                for(WorldType type : WorldType.values()) {
+                for(Location type : Location.values()) {
 
-                    ReadableNBT worldCompound = nbt.resolveCompound("Stats.Worlds").resolveCompound(type.name);
+                    ReadableNBT locationCompound = nbt.resolveCompound("Stats.Locations").resolveCompound(type.name);
 
-                    if(worldType == type || type == WorldType.ALL) {
-                        setAdditionalDamage(worldCompound.getOrDefault("AdditionalDamage", 0d) + getAdditionalDamage(type), type);
-                        setDamageMultiplier(worldCompound.getOrDefault("DamageMultiplier", 0d) + getDamageMultiplier(type), type);
-                        setDamageReduction(worldCompound.getOrDefault("DamageReduction", 0d) + getDamageReduction(type), type);
-                        setCriticalHitChance(worldCompound.getOrDefault("CriticalHitChance", 0d) + getCriticalHitChance(type), type);
-                        setCriticalHitDamage(worldCompound.getOrDefault("CriticalHitDamage", 0d) + getCriticalHitDamage(type), type);
-                        setExperienceMultiplier(worldCompound.getOrDefault("ExperienceMultiplier", 0d) + getExperienceMultiplier(type), type);
-                        setPlayerScale(worldCompound.getOrDefault("PlayerScale", 0d) + getPlayerScale(type), type);
+                    if(locations.contains(type)) {
+                        setAdditionalDamage(locationCompound.getOrDefault("AdditionalDamage", 0d) + getAdditionalDamage(type), type);
+                        setDamageMultiplier(locationCompound.getOrDefault("DamageMultiplier", 0d) + getDamageMultiplier(type), type);
+                        setDamageReduction(locationCompound.getOrDefault("DamageReduction", 0d) + getDamageReduction(type), type);
+                        setCriticalHitChance(locationCompound.getOrDefault("CriticalHitChance", 0d) + getCriticalHitChance(type), type);
+                        setCriticalHitDamage(locationCompound.getOrDefault("CriticalHitDamage", 0d) + getCriticalHitDamage(type), type);
+                        setExperienceMultiplier(locationCompound.getOrDefault("ExperienceMultiplier", 0d) + getExperienceMultiplier(type), type);
+                        setPlayerScale(locationCompound.getOrDefault("PlayerScale", 0d) + getPlayerScale(type), type);
+
+
+                        ArrayList<PotionEffect> effects = new ArrayList<>();
+
+                        ReadableNBTList<ReadWriteNBT> effectList = locationCompound.getCompoundList("PotionEffects");
+
+                        for(int n = 0; n < effectList.size(); n++) {
+                            ReadWriteNBT compound = effectList.get(n);
+                            PotionEffectType potionEffectType = Registry.EFFECT.get(NamespacedKey.fromString(compound.getString("Type")));
+                            int level = compound.getInteger("Level");
+                            effects.add(new PotionEffect(potionEffectType, 30, level, false, false));
+                        }
+
+                        potionEffects.put(type, effects);
                     }
                 }
             });
@@ -117,12 +146,11 @@ public class ArmorStats extends Stats {
 
         Stats setStats = fullSet.getSetStats();
 
-        for(WorldType type : WorldType.values()) {
+        for(Location type : Location.values()) {
 
-            WorldType worldType = WorldType.getWorldType(env);
+            ArrayList<Location> locations = Location.getLocation(p);
 
-
-            if(worldType == type || type == WorldType.ALL) {
+            if(locations.contains(type)) {
 
                 setAdditionalDamage(setStats.getAdditionalDamage(type) + getAdditionalDamage(type), type);
                 setDamageMultiplier(setStats.getDamageMultiplier(type) + getDamageMultiplier(type), type);
@@ -131,7 +159,6 @@ public class ArmorStats extends Stats {
                 setCriticalHitDamage(setStats.getCriticalHitDamage(type) + getCriticalHitDamage(type), type);
                 setExperienceMultiplier(setStats.getExperienceMultiplier(type) + getExperienceMultiplier(type), type);
                 setPlayerScale(setStats.getPlayerScale(type) + getPlayerScale(type), type);
-
             }
         }
     }

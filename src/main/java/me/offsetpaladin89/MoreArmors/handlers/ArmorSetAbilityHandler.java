@@ -16,14 +16,15 @@ public class ArmorSetAbilityHandler {
 	public static void scanPlayers(Object[] players) {
 		for (Object obj : players) {
 			if (obj instanceof Player p) {
-				destroyerArmor(p);
+//				destroyerArmor(p);
 				netherArmor(p);
 				seaGreedArmor(p);
 
 				ArmorStats stats = new ArmorStats();
-				stats.getStats(p.getInventory().getArmorContents(), p.getWorld().getEnvironment());
+				stats.getStats(p.getInventory().getArmorContents(), p);
 
 				p.getAttribute(Attribute.SCALE).setBaseValue(1 + stats.getPlayerScale());
+				p.addPotionEffects(stats.getPotionEffects());
 			}
 		}
 	}
