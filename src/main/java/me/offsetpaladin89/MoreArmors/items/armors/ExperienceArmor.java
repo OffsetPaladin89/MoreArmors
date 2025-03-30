@@ -1,8 +1,6 @@
 package me.offsetpaladin89.MoreArmors.items.armors;
 
-import me.offsetpaladin89.MoreArmors.enums.ArmorType;
-import me.offsetpaladin89.MoreArmors.enums.Rarity;
-import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.enums.*;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
 import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
@@ -22,7 +20,7 @@ public class ExperienceArmor extends CustomArmor {
 
     public ExperienceArmor() {
         super();
-        if(config.getBoolean("experience_armor.enabled")) setStats.setExperienceMultiplier(1d);
+        if(config.getBoolean("experience_armor.enabled")) setStats.setStat(Location.ALL, StatType.XP_MULT, 1d);
     }
 
     public ExperienceArmor(ItemStack item) {
@@ -178,7 +176,7 @@ public class ExperienceArmor extends CustomArmor {
             default -> 0;
         };
 
-        this.armorStats = new ArmorStats(armor);
+        this.stats = new ArmorStats(armor);
     }
     protected void setLore() {
         ItemMeta itemMeta = item.getItemMeta();

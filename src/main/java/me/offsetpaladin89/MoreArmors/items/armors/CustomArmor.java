@@ -2,20 +2,18 @@ package me.offsetpaladin89.MoreArmors.items.armors;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import de.tr7zw.changeme.nbtapi.NBT;
-import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
-import me.offsetpaladin89.MoreArmors.utils.skills.BaseSkillTree;
-import me.offsetpaladin89.MoreArmors.utils.skills.SkillTree;
-import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
 import me.offsetpaladin89.MoreArmors.enums.ArmorType;
 import me.offsetpaladin89.MoreArmors.enums.Rarity;
 import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.items.misc.CustomItem;
+import me.offsetpaladin89.MoreArmors.utils.skills.BaseSkillTree;
+import me.offsetpaladin89.MoreArmors.utils.skills.SkillTree;
+import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
 import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
-import me.offsetpaladin89.MoreArmors.utils.stats.Stats;
+import me.offsetpaladin89.MoreArmors.utils.stats.BaseStats;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -29,11 +27,11 @@ public class CustomArmor extends CustomItem {
 
     protected SlotType slot;
     protected ArmorType armorID;
-    protected ArmorStats armorStats;
-    protected Stats setStats;
+    protected ArmorStats stats;
+    protected BaseStats setStats;
 
     public CustomArmor() {
-        setStats = new Stats();
+        setStats = new BaseStats();
     }
 
     public CustomArmor(ItemStack item) {
@@ -66,10 +64,9 @@ public class CustomArmor extends CustomItem {
         return armorID;
     }
 
-    public Stats getSetStats() {
+    public BaseStats getSetStats() {
         return setStats;
     }
-
 
     // Armor Creation
 
@@ -84,7 +81,7 @@ public class CustomArmor extends CustomItem {
 
         setFlags();
 
-        armorStats.setStats(item, armorID, slot);
+        stats.setStats(item, armorID, slot);
 
         baseNBT(resetPersistent);
         armorNBT();

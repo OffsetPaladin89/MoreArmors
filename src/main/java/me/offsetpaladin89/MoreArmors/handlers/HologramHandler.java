@@ -9,13 +9,16 @@ import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import org.bukkit.Location;
-import org.bukkit.entity.*;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.text.DecimalFormat;
-import java.util.*;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 public class HologramHandler {
 

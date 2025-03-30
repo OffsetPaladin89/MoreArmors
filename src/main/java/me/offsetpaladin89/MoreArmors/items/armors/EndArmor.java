@@ -1,9 +1,6 @@
 package me.offsetpaladin89.MoreArmors.items.armors;
 
-import me.offsetpaladin89.MoreArmors.enums.ArmorType;
-import me.offsetpaladin89.MoreArmors.enums.Rarity;
-import me.offsetpaladin89.MoreArmors.enums.SlotType;
-import me.offsetpaladin89.MoreArmors.enums.Location;
+import me.offsetpaladin89.MoreArmors.enums.*;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
@@ -25,7 +22,10 @@ public class EndArmor extends CustomArmor {
 
     public EndArmor() {
         super();
-        if(config.getBoolean("end_armor.enabled")) setStats.setDamageMultiplier(1d, Location.END);
+        if(config.getBoolean("end_armor.enabled")) {
+            setStats.setStat(Location.END, StatType.MULT_DMG, 1d);
+            setStats.setStat(Location.END, StatType.DMG_REDUC, 0.5d);
+        }
     }
 
     public EndArmor(ItemStack item) {
@@ -181,9 +181,11 @@ public class EndArmor extends CustomArmor {
         };
         double armorToughness = 2;
 
-        armorStats = new ArmorStats(armor, armorToughness);
+        ArmorStats stats = new ArmorStats(armor, armorToughness);
 
-        armorStats.setDamageMultiplier(0.1, Location.END);
+        stats.setStat(Location.END, StatType.MULT_DMG, 0.1d);
+
+        this.stats = stats;
     }
     protected void setLore() {
         ItemMeta itemMeta = item.getItemMeta();

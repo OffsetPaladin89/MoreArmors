@@ -1,16 +1,11 @@
 package me.offsetpaladin89.MoreArmors.items.armors;
 
+import me.offsetpaladin89.MoreArmors.enums.*;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
-import me.offsetpaladin89.MoreArmors.enums.ArmorType;
-import me.offsetpaladin89.MoreArmors.enums.Rarity;
-import me.offsetpaladin89.MoreArmors.enums.SlotType;
 import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
 import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -176,12 +171,11 @@ public class MinerArmor extends CustomArmor {
             case LEGGINGS -> 4;
             default -> 0;
         };
-        double blockBreakSpeed = 0.2;
 
-        ArmorStats armorStats = new ArmorStats(armor);
-        armorStats.setBlockBreakSpeed(blockBreakSpeed);
+        ArmorStats stats = new ArmorStats(armor);
+        stats.setStat(Location.ALL, StatType.BREAK_SPD, 0.2d);
 
-        this.armorStats = armorStats;
+        this.stats = stats;
     }
 
     protected void setLore() {

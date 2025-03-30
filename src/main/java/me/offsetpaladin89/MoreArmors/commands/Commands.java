@@ -2,11 +2,11 @@ package me.offsetpaladin89.MoreArmors.commands;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import me.offsetpaladin89.MoreArmors.MoreArmorsMain;
+import me.offsetpaladin89.MoreArmors.enums.*;
+import me.offsetpaladin89.MoreArmors.handlers.RecipeHandler;
 import me.offsetpaladin89.MoreArmors.items.armors.CustomArmor;
 import me.offsetpaladin89.MoreArmors.items.armors.DestroyerArmor;
 import me.offsetpaladin89.MoreArmors.items.armors.EmeraldArmor;
-import me.offsetpaladin89.MoreArmors.enums.*;
-import me.offsetpaladin89.MoreArmors.handlers.RecipeHandler;
 import me.offsetpaladin89.MoreArmors.items.materials.CustomMaterial;
 import me.offsetpaladin89.MoreArmors.items.misc.CustomItem;
 import me.offsetpaladin89.MoreArmors.utils.Util;

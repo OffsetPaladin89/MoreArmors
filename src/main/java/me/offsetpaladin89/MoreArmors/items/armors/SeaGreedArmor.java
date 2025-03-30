@@ -1,9 +1,6 @@
 package me.offsetpaladin89.MoreArmors.items.armors;
 
-import me.offsetpaladin89.MoreArmors.enums.ArmorType;
-import me.offsetpaladin89.MoreArmors.enums.Rarity;
-import me.offsetpaladin89.MoreArmors.enums.SlotType;
-import me.offsetpaladin89.MoreArmors.enums.Location;
+import me.offsetpaladin89.MoreArmors.enums.*;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
@@ -12,6 +9,7 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 
@@ -25,7 +23,10 @@ public class SeaGreedArmor extends CustomArmor {
 
     public SeaGreedArmor() {
         super();
-        if(config.getBoolean("sea_greed.enabled")) setStats.setDamageMultiplier(1d, Location.OVERWORLD);
+        if(config.getBoolean("sea_greed_armor.enabled")) {
+            setStats.setStat(Location.IN_WATER, StatType.MULT_DMG, 1d);
+            setStats.addPotionEffect(PotionEffectType.CONDUIT_POWER, 0, Location.IN_WATER);
+        }
     }
 
     public SeaGreedArmor(ItemStack item) {
@@ -178,12 +179,11 @@ public class SeaGreedArmor extends CustomArmor {
             default -> 0;
         };
         double armorToughness = 2;
-        double submergedMiningSpeed = 1;
 
-        ArmorStats armorStats = new ArmorStats(armor, armorToughness);
-        armorStats.setSubmergedMiningSpeed(submergedMiningSpeed);
+        ArmorStats stats = new ArmorStats(armor, armorToughness);
+        stats.setStat(Location.ALL, StatType.WATER_BREAK_SPD, 1d);
 
-        this.armorStats = armorStats;
+        this.stats = stats;
     }
     protected void setLore() {
         ItemMeta itemMeta = item.getItemMeta();
@@ -194,7 +194,7 @@ public class SeaGreedArmor extends CustomArmor {
         lore.addColoredLine("&7Gain &a+100% &7mining speed while underwater.");
         lore.addEmpty();
         lore.addColoredLine("&6Full Set Bonus: Sea's Greed");
-        lore.addColoredLine("&7Deal &c+100% &7damage in the &aOverworld&7.");
+        lore.addColoredLine("&7Deal &c+100% &7damage while in water.");
         lore.addColoredLine("&7Gain &a+200% &7swim speed while in water.");
         lore.addColoredLine("&7Gain &5Conduit Power &7while in water.");
         lore.addEmpty();

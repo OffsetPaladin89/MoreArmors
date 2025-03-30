@@ -1,8 +1,6 @@
 package me.offsetpaladin89.MoreArmors.items.armors;
 
-import me.offsetpaladin89.MoreArmors.enums.ArmorType;
-import me.offsetpaladin89.MoreArmors.enums.Rarity;
-import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.enums.*;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
 import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
@@ -20,7 +18,7 @@ public class TitanArmor extends CustomArmor {
 
     public TitanArmor() {
         super();
-        if(config.getBoolean("titan_armor.enabled")) setStats.setPlayerScale(0.5);
+        if(config.getBoolean("titan_armor.enabled")) setStats.setStat(Location.ALL, StatType.P_SCALE, 0.5d);
     }
 
     public TitanArmor(ItemStack item) {
@@ -174,12 +172,11 @@ public class TitanArmor extends CustomArmor {
             case LEGGINGS -> 5;
             default -> 0;
         };
-        double maxHealth = 2;
 
-        ArmorStats armorStats = new ArmorStats(armor);
-        armorStats.setMaxHealth(maxHealth);
+        ArmorStats stats = new ArmorStats(armor);
+        stats.setStat(Location.ALL, StatType.MAX_HP, 2d);
 
-        this.armorStats = armorStats;
+        this.stats = stats;
     }
 
     protected void setLore() {

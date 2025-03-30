@@ -1,6 +1,6 @@
 package me.offsetpaladin89.MoreArmors.enums;
 
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Entity;
 
 import java.util.ArrayList;
 
@@ -13,13 +13,13 @@ public enum Location {
         this.name = name;
     }
 
-    public static ArrayList<Location> getLocation(Player p) {
+    public static ArrayList<Location> getLocation(Entity e) {
 
         ArrayList<Location> locations = new ArrayList<>();
 
-        if(p.isInWater()) locations.add(IN_WATER);
+        if(e.isInWater()) locations.add(IN_WATER);
 
-        switch (p.getLocation().getWorld().getEnvironment()) {
+        switch (e.getLocation().getWorld().getEnvironment()) {
             case NORMAL -> locations.add(OVERWORLD);
             case NETHER -> locations.add(NETHER);
             case THE_END -> locations.add(END);

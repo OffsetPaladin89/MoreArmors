@@ -1,8 +1,6 @@
 package me.offsetpaladin89.MoreArmors.items.armors;
 
-import me.offsetpaladin89.MoreArmors.enums.ArmorType;
-import me.offsetpaladin89.MoreArmors.enums.Rarity;
-import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.enums.*;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
 import me.offsetpaladin89.MoreArmors.utils.stats.ArmorStats;
@@ -173,8 +171,10 @@ public class SpeedsterArmor extends CustomArmor {
             case LEGGINGS -> 4;
             default -> 0;
         };
+        ArmorStats stats = new ArmorStats(armor);
+        stats.setStat(Location.ALL, StatType.MOVE_SPD, 0.02d);
 
-        this.armorStats = new ArmorStats(armor);
+        this.stats = stats;
     }
     protected void setLore() {
         ItemMeta itemMeta = item.getItemMeta();

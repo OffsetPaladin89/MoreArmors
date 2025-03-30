@@ -1,10 +1,7 @@
 package me.offsetpaladin89.MoreArmors.items.armors;
 
 import de.tr7zw.changeme.nbtapi.NBT;
-import me.offsetpaladin89.MoreArmors.enums.ArmorType;
-import me.offsetpaladin89.MoreArmors.enums.Location;
-import me.offsetpaladin89.MoreArmors.enums.Rarity;
-import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.enums.*;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
@@ -18,7 +15,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.ArrayList;
 
 import static me.offsetpaladin89.MoreArmors.MoreArmorsMain.config;
-import static me.offsetpaladin89.MoreArmors.enums.SlotType.*;
+import static me.offsetpaladin89.MoreArmors.enums.SlotType.HELMET;
 
 public class DestroyerArmor extends CustomArmor {
 
@@ -28,7 +25,7 @@ public class DestroyerArmor extends CustomArmor {
     private static final int MAX_KILL_COUNT = 1000;
 
     private int killCount = 0;
-    private int damageBonus = 0;
+    private double damageBonus = 0d;
 
     public DestroyerArmor() {
         super();
@@ -215,16 +212,15 @@ public class DestroyerArmor extends CustomArmor {
         };
         double armorToughness = 2;
 
-        ArmorStats armorStats = new ArmorStats(armor, armorToughness);
-        armorStats.setAdditionalDamage(damageBonus);
-        if(slot == HELMET) armorStats.addPotionEffect(PotionEffectType.NIGHT_VISION, 0, Location.ALL);
-
-        this.armorStats = armorStats;
+        ArmorStats stats = new ArmorStats(armor, armorToughness);
+        stats.setStat(Location.ALL, StatType.ADD_DMG, damageBonus);
+        if(slot == HELMET) stats.addPotionEffect(PotionEffectType.NIGHT_VISION, 0, Location.ALL);
+        this.stats = stats;
     }
     protected void setLore() {
         updateDamage();
         int currentStage = killCount / UPGRADE_THRESHOLD;
-        int nextBonus = damageBonus + 1;
+        double nextBonus = damageBonus + 1;
         int upgradeProgress = killCount % UPGRADE_THRESHOLD;
         String integerLimit = killCount == Integer.MAX_VALUE ? "★" : "";
 
@@ -257,8 +253,8 @@ public class DestroyerArmor extends CustomArmor {
             lore.addColoredLine(String.format("&8%s Mobs Killed &6%s", Util.formatNumber(killCount), integerLimit));
         }
         else {
-            lore.addColoredLine(String.format("&7Current Bonus (&a%d&8/&a10&7): &e+%d Damage", currentStage, damageBonus));
-            lore.addColoredLine(String.format("&7Next Upgrade: &e+%d Damage &8(&a%d&7/&c100&8)", nextBonus, upgradeProgress));
+            lore.addColoredLine(String.format("&7Current Bonus (&a%d&8/&a10&7): &e+%f Damage", currentStage, damageBonus));
+            lore.addColoredLine(String.format("&7Next Upgrade: &e+%f Damage &8(&a%d&7/&c100&8)", nextBonus, upgradeProgress));
             lore.addColoredLine("&8Max +10 Damage");
         }
         lore.addEmpty();

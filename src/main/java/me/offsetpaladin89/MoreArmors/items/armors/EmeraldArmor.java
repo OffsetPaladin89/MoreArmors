@@ -1,9 +1,7 @@
 package me.offsetpaladin89.MoreArmors.items.armors;
 
 import de.tr7zw.changeme.nbtapi.NBT;
-import me.offsetpaladin89.MoreArmors.enums.ArmorType;
-import me.offsetpaladin89.MoreArmors.enums.Rarity;
-import me.offsetpaladin89.MoreArmors.enums.SlotType;
+import me.offsetpaladin89.MoreArmors.enums.*;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
@@ -24,7 +22,7 @@ public class EmeraldArmor extends CustomArmor {
     private static final int MAX_EMERALD_COUNT = 250;
 
     private int emeraldCount = 0;
-    private int healthBoost = 0;
+    private double healthBoost = 0d;
 
     public EmeraldArmor() {
         super();
@@ -51,7 +49,7 @@ public class EmeraldArmor extends CustomArmor {
 
     private void updateHealth() {
         if(emeraldCount >= 250) healthBoost = 10;
-        else healthBoost = 2 * (emeraldCount / UPGRADE_THRESHOLD);
+        else healthBoost = 2.0 * (emeraldCount / UPGRADE_THRESHOLD);
     }
 
     // Override Methods
@@ -207,14 +205,14 @@ public class EmeraldArmor extends CustomArmor {
         double armorToughness = 2;
 
         ArmorStats armorStats = new ArmorStats(armor, armorToughness);
-        armorStats.setMaxHealth(healthBoost);
+        armorStats.setStat(Location.ALL, StatType.MAX_HP, healthBoost);
 
-        this.armorStats = armorStats;
+        this.stats = armorStats;
     }
     protected void setLore() {
         updateHealth();
         int currentStage = emeraldCount / UPGRADE_THRESHOLD;
-        int nextBonus = healthBoost + 2;
+        double nextBonus = healthBoost + 2;
         int upgradeProgress = emeraldCount % UPGRADE_THRESHOLD;
         String integerLimit = emeraldCount == Integer.MAX_VALUE ? "★" : "";
 
@@ -228,8 +226,8 @@ public class EmeraldArmor extends CustomArmor {
             lore.addColoredLine(String.format("&8%s Emeralds Mined &6%s", Util.formatNumber(emeraldCount), integerLimit));
         }
         else {
-            lore.addColoredLine(String.format("&7Current Bonus (&a%d&8/&a5&7): &e+%d Health", currentStage, healthBoost));
-            lore.addColoredLine(String.format("&7Next Upgrade: &e+%d Health &8(&a%d&7/&c50&8)", nextBonus, upgradeProgress));
+            lore.addColoredLine(String.format("&7Current Bonus (&a%d&8/&a5&7): &e+%f Health", currentStage, healthBoost));
+            lore.addColoredLine(String.format("&7Next Upgrade: &e+%f Health &8(&a%d&7/&c50&8)", nextBonus, upgradeProgress));
             lore.addColoredLine("&8Max +10 Health");
         }
         lore.addArmorRarity(rarity);

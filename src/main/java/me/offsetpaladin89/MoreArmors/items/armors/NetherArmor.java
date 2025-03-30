@@ -1,9 +1,6 @@
 package me.offsetpaladin89.MoreArmors.items.armors;
 
-import me.offsetpaladin89.MoreArmors.enums.ArmorType;
-import me.offsetpaladin89.MoreArmors.enums.Rarity;
-import me.offsetpaladin89.MoreArmors.enums.SlotType;
-import me.offsetpaladin89.MoreArmors.enums.Location;
+import me.offsetpaladin89.MoreArmors.enums.*;
 import me.offsetpaladin89.MoreArmors.utils.Lore;
 import me.offsetpaladin89.MoreArmors.utils.Util;
 import me.offsetpaladin89.MoreArmors.utils.skills.SkillTreeNode;
@@ -12,6 +9,7 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 
@@ -26,8 +24,9 @@ public class NetherArmor extends CustomArmor {
     public NetherArmor() {
         super();
         if(config.getBoolean("nether_armor.enabled")) {
-            setStats.setDamageMultiplier(1d, Location.NETHER);
-            setStats.setDamageReduction(0.5, Location.NETHER);
+            setStats.setStat(Location.NETHER, StatType.MULT_DMG, 1d);
+            setStats.setStat(Location.NETHER, StatType.DMG_REDUC, 0.5d);
+            setStats.addPotionEffect(PotionEffectType.FIRE_RESISTANCE, 0, Location.NETHER);
         }
     }
 
@@ -184,9 +183,11 @@ public class NetherArmor extends CustomArmor {
         };
         double armorToughness = 2;
 
-        this.armorStats = new ArmorStats(armor, armorToughness);
+        ArmorStats stats = new ArmorStats(armor, armorToughness);
 
-        armorStats.setDamageMultiplier(0.1, Location.NETHER);
+        stats.setStat(Location.NETHER, StatType.MULT_DMG, 0.1d);
+
+        this.stats = stats;
     }
     protected void setLore() {
         ItemMeta itemMeta = item.getItemMeta();
