@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum ArmorType {
-    EMERALD, END, EXPERIENCE, MINER, NETHER, SEA_GREED, SPEEDSTER, TITAN, DESTROYER, INVALID;
+    EMERALD, END, EXPERIENCE, MINER, NETHER, SEA_GREED, SPEEDSTER, TITAN, DESTROYER, DEVELOPER, INVALID;
 
     public static ArmorType armorType(String s) {
         try {
@@ -31,6 +31,7 @@ public enum ArmorType {
             case SPEEDSTER -> new SpeedsterArmor(item);
             case TITAN -> new TitanArmor(item);
             case DESTROYER -> new DestroyerArmor(item);
+            case DEVELOPER -> new DeveloperArmor(item);
             case INVALID -> null;
         };
     }
@@ -46,6 +47,7 @@ public enum ArmorType {
             case SPEEDSTER -> new SpeedsterArmor();
             case TITAN -> new TitanArmor();
             case DESTROYER -> new DestroyerArmor();
+            case DEVELOPER -> new DeveloperArmor();
             case INVALID -> null;
         };
     }
@@ -61,6 +63,7 @@ public enum ArmorType {
             case SPEEDSTER -> new SpeedsterArmor(slot);
             case TITAN -> new TitanArmor(slot);
             case DESTROYER -> new DestroyerArmor(slot);
+            case DEVELOPER -> new DeveloperArmor(slot);
             case INVALID -> null;
         };
     }

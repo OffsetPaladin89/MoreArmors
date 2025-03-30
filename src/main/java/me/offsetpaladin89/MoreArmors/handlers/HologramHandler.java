@@ -83,9 +83,22 @@ public class HologramHandler {
 		}.runTaskLater(plugin, delay);
 	}
 
-	public void createDamageHologram(Player p, Location pLoc, LivingEntity e, Long duration, Double damage) {
+	public void createDamageHologram(Player p, Location pLoc, LivingEntity e, Long duration, Double damage, boolean isCrit, int critLevel) {
 		try {
-			createDamageHologram(p, pLoc, e, "&7" + new DecimalFormat("#.#").format(damage), duration);
+
+			String color;
+			if(!isCrit) color = "&7";
+			else {
+				color = switch (critLevel) {
+					case 1 -> "&e";
+					case 2 -> "&6";
+					case 3 -> "&c";
+					case 4 -> "&4";
+					default -> "&4&l";
+				};
+			}
+
+			createDamageHologram(p, pLoc, e, String.format("%s%,.1f", color, damage), duration);
 		}
 		catch(Throwable t) {
 			t.printStackTrace();

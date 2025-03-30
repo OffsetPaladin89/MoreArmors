@@ -13,6 +13,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+import java.util.Random;
+
 public class DamageHandler implements Listener {
 
 	private final MoreArmorsMain plugin;
@@ -59,11 +61,31 @@ public class DamageHandler implements Listener {
 
 		double damageMultiplier = 1 + e1stats.getStat(p, StatType.MULT_DMG);
 
-		double finalDamage = (initDamage + e1stats.getStat(p, StatType.ADD_DMG)) * damageMultiplier * (1 - e2stats.getStat(p2, StatType.DMG_REDUC));
+		Random r = new Random();
+
+		double critChance = e1stats.getStat(p, StatType.CRIT_CHANCE);
+		double critDamage = 0.5 + e1stats.getStat(p, StatType.CRIT_DMG);
+
+		int critLevel = 1 + (int) critChance;
+
+		double factoredCritChance = critChance % 1;
+
+		boolean isCrit = r.nextDouble() < factoredCritChance;
+
+		if(critLevel != 1 && !isCrit) {
+			isCrit = true;
+			critLevel -= 1;
+		}
+
+		System.out.println("Crit Damage: " + critDamage + " | Crit Level: " + critLevel);
+
+		double critDamageBonus = isCrit ? Math.pow(1 + critDamage, critLevel) : 1d;
+
+		double finalDamage = (initDamage + e1stats.getStat(p, StatType.ADD_DMG)) * damageMultiplier * (1 - e2stats.getStat(p2, StatType.DMG_REDUC)) * critDamageBonus;
 
 		if(config.getBoolean("damageindicators")) {
-			if(p != null) plugin.hologramHandler.createDamageHologram(p, damageLoc, (LivingEntity) e2, 20L, finalDamage);
-			if(p2 != null) plugin.hologramHandler.createDamageHologram(p2, damageLoc2, (LivingEntity) e2, 20L, finalDamage);
+			if(p != null) plugin.hologramHandler.createDamageHologram(p, damageLoc, (LivingEntity) e2, 20L, finalDamage, isCrit, critLevel);
+			if(p2 != null) plugin.hologramHandler.createDamageHologram(p2, damageLoc2, (LivingEntity) e2, 20L, finalDamage, isCrit, critLevel);
 
 		}
 		return finalDamage;
