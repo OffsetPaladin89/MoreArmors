@@ -66,20 +66,13 @@ public class DamageHandler implements Listener {
 		double critChance = e1stats.getStat(p, StatType.CRIT_CHANCE);
 		double critDamage = 0.5 + e1stats.getStat(p, StatType.CRIT_DMG);
 
-		int critLevel = 1 + (int) critChance;
+		int critLevel = (int) critChance;
 
-		double factoredCritChance = critChance % 1;
+		boolean isCrit = r.nextDouble() < (critChance % 1);
 
-		boolean isCrit = r.nextDouble() < factoredCritChance;
+		if(isCrit) critLevel++;
 
-		if(critLevel != 1 && !isCrit) {
-			isCrit = true;
-			critLevel -= 1;
-		}
-
-		System.out.println("Crit Damage: " + critDamage + " | Crit Level: " + critLevel);
-
-		double critDamageBonus = isCrit ? Math.pow(1 + critDamage, critLevel) : 1d;
+		double critDamageBonus = (isCrit || critLevel > 0) ? Math.pow(1 + critDamage, critLevel) : 1d;
 
 		double finalDamage = (initDamage + e1stats.getStat(p, StatType.ADD_DMG)) * damageMultiplier * (1 - e2stats.getStat(p2, StatType.DMG_REDUC)) * critDamageBonus;
 

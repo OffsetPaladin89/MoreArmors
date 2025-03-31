@@ -253,8 +253,8 @@ public class DestroyerArmor extends CustomArmor {
             lore.addColoredLine(String.format("&8%s Mobs Killed &6%s", Util.formatNumber(killCount), integerLimit));
         }
         else {
-            lore.addColoredLine(String.format("&7Current Bonus (&a%d&8/&a10&7): &e+%f Damage", currentStage, damageBonus));
-            lore.addColoredLine(String.format("&7Next Upgrade: &e+%f Damage &8(&a%d&7/&c100&8)", nextBonus, upgradeProgress));
+            lore.addColoredLine(String.format("&7Current Bonus (&a%d&8/&a10&7): &e+%.0f Damage", currentStage, damageBonus));
+            lore.addColoredLine(String.format("&7Next Upgrade: &e+%.0f Damage &8(&a%d&7/&c100&8)", nextBonus, upgradeProgress));
             lore.addColoredLine("&8Max +10 Damage");
         }
         lore.addEmpty();

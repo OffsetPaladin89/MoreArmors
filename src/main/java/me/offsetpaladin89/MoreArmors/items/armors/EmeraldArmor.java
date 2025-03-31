@@ -226,8 +226,8 @@ public class EmeraldArmor extends CustomArmor {
             lore.addColoredLine(String.format("&8%s Emeralds Mined &6%s", Util.formatNumber(emeraldCount), integerLimit));
         }
         else {
-            lore.addColoredLine(String.format("&7Current Bonus (&a%d&8/&a5&7): &e+%f Health", currentStage, healthBoost));
-            lore.addColoredLine(String.format("&7Next Upgrade: &e+%f Health &8(&a%d&7/&c50&8)", nextBonus, upgradeProgress));
+            lore.addColoredLine(String.format("&7Current Bonus (&a%d&8/&a5&7): &e+%.0f Health", currentStage, healthBoost));
+            lore.addColoredLine(String.format("&7Next Upgrade: &e+%.0f Health &8(&a%d&7/&c50&8)", nextBonus, upgradeProgress));
             lore.addColoredLine("&8Max +10 Health");
         }
         lore.addArmorRarity(rarity);

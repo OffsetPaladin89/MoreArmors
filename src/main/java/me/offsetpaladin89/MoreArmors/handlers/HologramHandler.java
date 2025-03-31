@@ -86,23 +86,24 @@ public class HologramHandler {
 	public void createDamageHologram(Player p, Location pLoc, LivingEntity e, Long duration, Double damage, boolean isCrit, int critLevel) {
 		try {
 
-			String color;
-			if(!isCrit) color = "&7";
-			else {
-				color = switch (critLevel) {
-					case 1 -> "&e";
-					case 2 -> "&6";
-					case 3 -> "&c";
-					case 4 -> "&4";
-					default -> "&4&l";
-				};
-			}
+			DecimalFormat decimalFormat = new DecimalFormat(",###.#");
 
-			createDamageHologram(p, pLoc, e, String.format("%s%,.1f", color, damage), duration);
+			createDamageHologram(p, pLoc, e, getDamageColor(critLevel) + decimalFormat.format(damage), duration);
 		}
 		catch(Throwable t) {
 			t.printStackTrace();
 		}
+	}
+
+	private String getDamageColor(int critLevel) {
+		return switch (critLevel) {
+			case 0 -> "&7";
+			case 1 -> "&e";
+			case 2 -> "&6";
+			case 3 -> "&c";
+			case 4 -> "&4";
+			default -> "&4&l";
+		};
 	}
 
 }

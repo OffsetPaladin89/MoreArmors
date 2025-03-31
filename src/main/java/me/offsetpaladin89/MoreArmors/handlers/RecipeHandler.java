@@ -95,7 +95,6 @@ public class RecipeHandler {
         plugin.getServer().addRecipe(leggingsRecipe);
         plugin.getServer().addRecipe(bootsRecipe);
     }
-
     private void registerEmeraldArmor(boolean register) {
         if(!register) return;
 
@@ -129,7 +128,6 @@ public class RecipeHandler {
         plugin.getServer().addRecipe(leggingsRecipe);
         plugin.getServer().addRecipe(bootsRecipe);
     }
-
     private void registerEndArmor(boolean register) {
         if(!register) return;
 
@@ -173,7 +171,6 @@ public class RecipeHandler {
         plugin.getServer().addRecipe(leggingsRecipe);
         plugin.getServer().addRecipe(bootsRecipe);
     }
-
     private void registerExperienceArmor(boolean register) {
         if(!register) return;
 
@@ -207,7 +204,6 @@ public class RecipeHandler {
         plugin.getServer().addRecipe(leggingsRecipe);
         plugin.getServer().addRecipe(bootsRecipe);
     }
-
     private void registerMinerArmor(boolean register) {
         if(!register) return;
 
@@ -243,7 +239,6 @@ public class RecipeHandler {
         plugin.getServer().addRecipe(leggingsRecipe);
         plugin.getServer().addRecipe(bootsRecipe);
     }
-
     private void registerNetherArmor(boolean register) {
         if(!register) return;
 
@@ -287,7 +282,6 @@ public class RecipeHandler {
         plugin.getServer().addRecipe(leggingsRecipe);
         plugin.getServer().addRecipe(bootsRecipe);
     }
-
     private void registerSeaGreedArmor(boolean register) {
         if(!register) return;
 
@@ -338,7 +332,6 @@ public class RecipeHandler {
         plugin.getServer().addRecipe(leggingsRecipe);
         plugin.getServer().addRecipe(bootsRecipe);
     }
-
     private void registerSpeedsterArmor(boolean register) {
         if(!register) return;
 
@@ -374,7 +367,6 @@ public class RecipeHandler {
         plugin.getServer().addRecipe(leggingsRecipe);
         plugin.getServer().addRecipe(bootsRecipe);
     }
-
     private void registerTitanArmor(boolean register) {
         if(!register) return;
 
