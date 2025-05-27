@@ -259,9 +259,12 @@ public class MoreArmorsListener implements Listener {
 	private void seaGreedArmorBlockMined(Player p, Block b) {
 		PlayerInventory inv = p.getInventory();
 		if (!(config.getBoolean("sea_greed_armor.enabled") && p.isInWater() && inv.getItemInMainHand().hasItemMeta()) || inv.getItemInMainHand().getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)) return;
+
+		Util.sendColoredMessage(p, "Sea Greed");
+
 		Random r = new Random();
 
-		float oreMulti = 1f;
+		float oreMulti = 0f;
 
 		if(Util.matchingCustomItem(inv.getHelmet(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
 		if(Util.matchingCustomItem(inv.getChestplate(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
@@ -272,7 +275,6 @@ public class MoreArmorsListener implements Listener {
 
 		if(oreMulti % 1 != 0 && r.nextDouble() <= oreMulti % 1) dropAmount++;
 
-		if (b.getType().toString().endsWith("_ORE")) return;
 		for (ItemStack i : b.getDrops()) b.getWorld().dropItemNaturally(b.getLocation(), new ItemStack(i.getType(), i.getAmount() * dropAmount));
 	}
 
