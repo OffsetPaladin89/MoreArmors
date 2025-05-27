@@ -214,7 +214,7 @@ public class DestroyerArmor extends CustomArmor {
 
         ArmorStats stats = new ArmorStats(armor, armorToughness);
         stats.setStat(Location.ALL, StatType.ADD_DMG, damageBonus);
-        if(slot == HELMET) stats.addPotionEffect(PotionEffectType.NIGHT_VISION, 0, Location.ALL);
+        if(slot == HELMET) stats.addPotionEffect(PotionEffectType.NIGHT_VISION, 210, 0, Location.ALL);
         this.stats = stats;
     }
     protected void setLore() {

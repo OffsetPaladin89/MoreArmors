@@ -64,6 +64,10 @@ public class BaseStats {
         this.potions.get(type).add(new PotionEffect(effectType, 30, level, false, false));
     }
 
+    public void addPotionEffect(PotionEffectType effectType, int duration, int level, Location type) {
+        this.potions.get(type).add(new PotionEffect(effectType, duration, level, false, false));
+    }
+
     public ArrayList<PotionEffect> getPotionEffects(Player p) {
         ArrayList<Location> locations = Location.getLocation(p);
 

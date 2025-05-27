@@ -275,7 +275,7 @@ public class MoreArmorsListener implements Listener {
 		if (!(config.getBoolean("sea_greed_armor.enabled") && p.isInWater() && inv.getItemInMainHand().hasItemMeta()) || inv.getItemInMainHand().getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)) return;
 		Random r = new Random();
 
-		float oreMulti = 0f;
+		float oreMulti = 1f;
 
 		if(Util.matchingCustomItem(inv.getHelmet(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
 		if(Util.matchingCustomItem(inv.getChestplate(), ArmorType.SEA_GREED)) oreMulti += 0.5f;
