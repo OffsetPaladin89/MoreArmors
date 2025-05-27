@@ -32,7 +32,7 @@ public class ArmorSetAbilityHandler {
 	private void destroyerArmor(Player p) {
 		if(!config.getBoolean("destroyer_armor.enabled")) return;
 		if (Util.matchingCustomItem(p.getInventory().getHelmet(), ArmorType.DESTROYER)) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 30, 0, false, false));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 210, 0, false, false));
 		}
 
 		if (Util.IsFullCustomSet(ArmorType.DESTROYER, p.getInventory())) {
