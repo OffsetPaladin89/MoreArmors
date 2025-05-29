@@ -64,7 +64,7 @@ public class MoreArmorsListener implements Listener {
 		if(!config.getBoolean("destroyer_armor.enabled")) return;
 		PlayerInventory inv = p.getInventory();
 		Random random = new Random();
-		if(!Util.isAirOrNull(inv.getChestplate()) || !(Util.matchingCustomItem(inv.getChestplate(), ArmorType.DESTROYER) && random.nextInt(4) != 0)) return;
+		if(!(Util.matchingCustomItem(inv.getChestplate(), ArmorType.DESTROYER) && random.nextInt(4) != 0)) return;
 		event.setDamage(0D);
 		p.playSound(p.getLocation(), XSound.ENTITY_PLAYER_ATTACK_CRIT.get(), 0.8f, 1f);
 	}
@@ -75,7 +75,7 @@ public class MoreArmorsListener implements Listener {
 		destroyerArmorFlying(event, p);
 	}
 	private void destroyerArmorFlying(PlayerToggleFlightEvent event, Player p) {
-		if(!config.getBoolean("destroyer_armor.enabled") || p.getGameMode().equals(GameMode.SPECTATOR) || p.getGameMode().equals(GameMode.CREATIVE) || !Util.isAirOrNull(p.getInventory().getBoots()) || !Util.matchingCustomItem(p.getInventory().getBoots(), ArmorType.DESTROYER)) return;
+		if(!config.getBoolean("destroyer_armor.enabled") || p.getGameMode().equals(GameMode.SPECTATOR) || p.getGameMode().equals(GameMode.CREATIVE) || !Util.matchingCustomItem(p.getInventory().getBoots(), ArmorType.DESTROYER)) return;
 		Location pLoc = p.getLocation();
 		event.setCancelled(true);
 		p.setFlying(false);
@@ -92,7 +92,7 @@ public class MoreArmorsListener implements Listener {
 		destroyerArmorExplode(event, p.getInventory());
 	}
 	private void destroyerArmorExplode(EntityExplodeEvent event, PlayerInventory inv) {
-		if(!config.getBoolean("destroyer_armor.enabled") || !Util.isAirOrNull(inv.getBoots()) || !Util.matchingCustomItem(inv.getBoots(), ArmorType.DESTROYER)) return;
+		if(!config.getBoolean("destroyer_armor.enabled") || !Util.matchingCustomItem(inv.getBoots(), ArmorType.DESTROYER)) return;
 		event.setCancelled(true);
 	}
 
@@ -103,7 +103,7 @@ public class MoreArmorsListener implements Listener {
 		seaGreedArmorMove(p);
 	}
 	private void destroyerArmorMove(Player p) {
-		if(!config.getBoolean("destroyer_armor.enabled") || p.getGameMode().equals(GameMode.SPECTATOR) || p.getGameMode().equals(GameMode.CREATIVE) || !Util.isAirOrNull(p.getInventory().getBoots()) || !Util.matchingCustomItem(p.getInventory().getBoots(), ArmorType.DESTROYER) || cooldowns.contains(p.getUniqueId())) return;
+		if(!config.getBoolean("destroyer_armor.enabled") || p.getGameMode().equals(GameMode.SPECTATOR) || p.getGameMode().equals(GameMode.CREATIVE) || !Util.matchingCustomItem(p.getInventory().getBoots(), ArmorType.DESTROYER) || cooldowns.contains(p.getUniqueId())) return;
 
 		p.setAllowFlight(true);
 		cooldowns.add(p.getUniqueId());
@@ -139,7 +139,7 @@ public class MoreArmorsListener implements Listener {
 	private void destroyerArmorEntityKill(PlayerInventory inv) {
 		for (int i = 0; i < inv.getSize(); i++) {
 			ItemStack currentItem = inv.getItem(i);
-			if(Util.isAirOrNull(currentItem) || !Util.matchingCustomItem(currentItem, ArmorType.DESTROYER)) continue;
+			if(!Util.matchingCustomItem(currentItem, ArmorType.DESTROYER)) continue;
 			DestroyerArmor destroyerArmor = new DestroyerArmor(currentItem);
 
 			destroyerArmor.createItemFromNBT();
@@ -248,7 +248,7 @@ public class MoreArmorsListener implements Listener {
 		if(!config.getBoolean("emerald_armor.enabled")) return;
 		for (int i = 0; i < inv.getSize(); i++) {
 			ItemStack currentItem = inv.getItem(i);
-			if(Util.isAirOrNull(currentItem) || !(Util.matchingCustomItem(currentItem, ArmorType.EMERALD) && b.getType().toString().endsWith("EMERALD_ORE"))) continue;
+			if(!(Util.matchingCustomItem(currentItem, ArmorType.EMERALD) && b.getType().toString().endsWith("EMERALD_ORE"))) continue;
 
 			EmeraldArmor emeraldArmor = new EmeraldArmor(currentItem);
 
