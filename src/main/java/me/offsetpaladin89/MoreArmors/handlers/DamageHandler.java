@@ -57,9 +57,9 @@ public class DamageHandler implements Listener {
 		PlayerInventory inv = p.getInventory();
 		int helmetBonus = 0, chestplateBonus = 0, leggingsBonus = 0, bootsBonus = 0;
 		if(Util.matchingCustomItem(inv.getHelmet(), ArmorType.DESTROYER)) helmetBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
-		if(Util.matchingCustomItem(inv.getChestplate(), ArmorType.DESTROYER)) chestplateBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
-		if(Util.matchingCustomItem(inv.getLeggings(), ArmorType.DESTROYER)) leggingsBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
-		if(Util.matchingCustomItem(inv.getBoots(), ArmorType.DESTROYER)) bootsBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
+		if(Util.matchingCustomItem(inv.getChestplate(), ArmorType.DESTROYER)) chestplateBonus = NBT.get(inv.getChestplate(), nbt -> (int) nbt.getInteger("DamageBonus"));
+		if(Util.matchingCustomItem(inv.getLeggings(), ArmorType.DESTROYER)) leggingsBonus = NBT.get(inv.getLeggings(), nbt -> (int) nbt.getInteger("DamageBonus"));
+		if(Util.matchingCustomItem(inv.getBoots(), ArmorType.DESTROYER)) bootsBonus = NBT.get(inv.getBoots(), nbt -> (int) nbt.getInteger("DamageBonus"));
 
 		return (float) (helmetBonus + chestplateBonus + leggingsBonus + bootsBonus);
 	}
