@@ -55,10 +55,11 @@ public class DamageHandler implements Listener {
 		if(!plugin.configHandler.getConfig("config").getBoolean("destroyer_armor.enabled")) return 0f;
 
 		PlayerInventory inv = p.getInventory();
-		int helmetBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
-		int chestplateBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
-		int leggingsBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
-		int bootsBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
+		int helmetBonus = 0, chestplateBonus = 0, leggingsBonus = 0, bootsBonus = 0;
+		if(Util.matchingCustomItem(inv.getHelmet(), ArmorType.DESTROYER)) helmetBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
+		if(Util.matchingCustomItem(inv.getChestplate(), ArmorType.DESTROYER)) chestplateBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
+		if(Util.matchingCustomItem(inv.getLeggings(), ArmorType.DESTROYER)) leggingsBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
+		if(Util.matchingCustomItem(inv.getBoots(), ArmorType.DESTROYER)) bootsBonus = NBT.get(inv.getHelmet(), nbt -> (int) nbt.getInteger("DamageBonus"));
 
 		return (float) (helmetBonus + chestplateBonus + leggingsBonus + bootsBonus);
 	}
